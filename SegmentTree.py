@@ -5,7 +5,8 @@ class Node:
     def __init__(self, num_from=None, num_to=None):
         self.num_from = num_from
         self.num_to = num_to
-        self.left = self.right = None
+        if num_from != num_to:
+            self.left = self.right = None
         self.values = []
 
     def get_left(self):
@@ -68,6 +69,9 @@ if __name__ == '__main__':
         insert(node, 3, 10, 3, value_range)
         insert(node, 1, 6, 4, value_range)
         insert(node, 0, 6, 5, value_range)
+        output = []
+        search(node, 3, 8, output)
+        print(output)
         input()
 
 

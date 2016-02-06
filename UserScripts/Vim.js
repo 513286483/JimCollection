@@ -80,15 +80,26 @@ addEventListener('keypress', event => {
                 dispatch(MATCH, char);
         }
 
-        event.stopImmediatePropagation();
         event.preventDefault();
+        event.stopImmediatePropagation();
     }
 }, true);
 
 // General
 $('<style>._click{box-shadow:0 0 10px 0 black}</style>').appendTo('html');
+$(`<style>._hint{
+    background-color: lightBlue;
+    border-radius: 3px;
+    box-shadow: 0 0 2px;
+    color: black;
+    font-family: consolas;
+    font-size: 13px;
+    opacity: 0.9;
+    position: fixed;
+    z-index: 2147483648}
+</style>}`).appendTo('html');
 
-// Worker
+// Employee
 var LINK_HINT;
 var ESCAPE;
 var MATCH;
@@ -116,8 +127,7 @@ var Page = {
             var additionalElements = $(clickableElements).find('div, span').addBack()
                                                          .filter((i, element) => $(element).css('cursor') == 'pointer');
             var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable], [tabindex]');
-            var cleanElements = purify(elements, additionalElements);
-            return cleanElements;
+            return purify(elements, additionalElements);
 
             function purify(elements, additionalElements) {
                 var $element = $(element);
@@ -198,8 +208,9 @@ var Page = {
             }
 
             for (i = 0; i < hints.length && (singleHints.length || unusedHints.length); i++) {
-                if (singleHints && singleHints.indexOf(hints[i].charAt(0)) !== -1) {
-                    hints[i] = hints[i].charAt(0);
+                var letter = hints[i].charAt(0);
+                if (singleHints && singleHints.indexOf(letter) !== -1) {
+                    hints[i] = letter;
                 } else if (unusedHints.length) {
                     hints[i] = unusedHints.pop();
                 }
@@ -217,21 +228,12 @@ var Page = {
                 map[hint] = element;
 
                 var style = {
-                    'background': 'lightBlue',
-                    'borderRadius': '3px',
-                    'boxShadow': '0 0 2px',
-                    'color': 'black',
-                    'font-family': 'consolas',
-                    'font-size': '13px',
                     'top': element._top,
-                    'left': element._left,
-                    'opacity': 0.9,
-                    'position': 'fixed',
-                    'z-index': 2147483648
+                    'left': element._left
                 };
-
-                $('<div class="_hint">' + hint + '</div>').css(style)
-                                                          .appendTo('html');
+                $('<div class="_hint">' + hint + '</div>')
+                    .css(style)
+                    .appendTo('html');
             }
 
             return map;
@@ -342,7 +344,6 @@ var Page = {
             && element.nodeName !== 'TEXTAREA' && !element.hasAttribute('contenteditable') && !event.ctrlKey;
     }
 };
-
 commandMap[LINK_HINT = ++commandCount] = Page.linkHint;
 commandMap[ESCAPE = ++commandCount] = Page.escape;
 commandMap[MATCH = ++commandCount] = Page.match;
@@ -353,10 +354,88 @@ commandMap[PLUS = ++commandCount] = Page.plus;
 commandMap[SWITCH_SCROLL = ++commandCount] = Page.switchScroll;
 commandMap[IS_READY = ++commandCount] = Page.isReady;
 
-// Worker
-var Tree = {};
+// Employee
+var TREE_RELOAD;
+var TREE_INSERT;
+var TREE_SEARCH;
 
-// Worker
+var SegmentTree = {
+    node: null,
+
+    reload: function () {
+        return SegmentTree.node = arguments.length === 1 ? arguments[0] : SegmentTree.create(arguments[0], arguments[1]);
+    },
+
+    create: (from, to) => {
+        return {
+            from: from,
+            to: to,
+            left: null,
+            right: null,
+            values: []
+        }
+    },
+
+    getLeft: (node) => {
+        if (node.left) {
+            return node.left
+        } else {
+            return node.left = SegmentTree.create(node.from, Math.floor((node.from + node.to) / 2));
+        }
+    },
+
+    getRight: (node) => {
+        if (node.right) {
+            return node.right
+        } else {
+            return node.right = SegmentTree.create(Math.floor((node.from + node.to) / 2) + 1, node.to);
+        }
+    },
+
+    insert: (from, to, value, range, node) => {
+        if (!node) {
+            node = SegmentTree.node;
+        }
+
+        if (node.from <= from && to <= node.to && node.to - node.from < range) {
+            node.values.push(value)
+        }
+        if (node.from === from && node.to === to) {
+            return;
+        }
+
+        var mid = Math.floor((node.from + node.to) / 2);
+        if (from <= mid) {
+            SegmentTree.insert(from, mid, value, range, SegmentTree.getLeft(node));
+        }
+        if (to > mid) {
+            SegmentTree.insert(mid + 1, to, value, range, SegmentTree.getRight(node));
+        }
+    },
+
+    search: (from, to, out, node) => {
+        if (!node) {
+            node = SegmentTree.node;
+        }
+
+        if (node.from === from && node.to === to) {
+            return out(node.values)
+        }
+
+        var mid = Math.floor((node.from + node.to) / 2);
+        if (from <= mid) {
+            SegmentTree.search(from, mid, out, SegmentTree.getLeft(node));
+        }
+        if (to > mid) {
+            SegmentTree.search(mid + 1, to, out, SegmentTree.getRight(node));
+        }
+    }
+};
+commandMap[TREE_RELOAD = ++commandCount] = SegmentTree.reload;
+commandMap[TREE_INSERT = ++commandCount] = SegmentTree.insert;
+commandMap[TREE_SEARCH = ++commandCount] = SegmentTree.search;
+
+// Employee
 var TAB_OPEN;
 var TAB_APPEND;
 var TAB_LEFT;
@@ -383,7 +462,6 @@ var Tab = {
 
     }
 };
-
 commandMap[TAB_OPEN = ++commandCount] = Tab.open;
 commandMap[TAB_APPEND = ++commandCount] = Tab.append;
 commandMap[TAB_LEFT = ++commandCount] = Tab.left;
