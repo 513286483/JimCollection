@@ -1,0 +1,391 @@
+// Handler
+var commandMap = {};
+var commandCount = 0;
+function dispatch(command, args) {
+    return commandMap[command](args);
+}
+
+// Global
+var clickableElements = [];
+
+// Hook
+Element.prototype._addEventListener = Element.prototype.addEventListener;
+Element.prototype.addEventListener = function (type, listener, userCapture) {
+    this._addEventListener(type, listener, userCapture);
+    if (type.search(/(mousedown|mouseup|click)/i) !== -1) {
+        clickableElements.push(this);
+    }
+};
+
+// Event
+$(window)
+    .on('click resize scroll', () => dispatch(ESCAPE))
+    .on('click', event => dispatch(SWITCH_SCROLL));
+
+addEventListener('keydown', event => {
+    var isTab = (event.code === 'Tab');
+    if (isTab) {
+        event.preventDefault();
+    }
+
+    if (dispatch(IS_READY, event)) {
+        if (isTab) {
+            dispatch(ESCAPE);
+        }
+        event.stopImmediatePropagation();
+    } else if (isTab) {
+        document.activeElement.blur();
+    }
+}, true);
+
+addEventListener('keyup', event => {
+    if (dispatch(IS_READY, event)) {
+        event.stopImmediatePropagation();
+    }
+}, true);
+
+addEventListener('keypress', event => {
+    if (dispatch(IS_READY, event)) {
+        var char = String.fromCharCode(event.keyCode).toUpperCase();
+        switch (char) {
+            case 'F':
+                dispatch(LINK_HINT);
+                break;
+
+            case 'J':
+                dispatch(DOWN);
+                break;
+
+            case 'K':
+                dispatch(UP);
+                break;
+
+            case 'X':
+                dispatch(CLOSE);
+                break;
+
+            case ' ':
+                dispatch(PLUS);
+                break;
+
+            case ',':
+                dispatch(TAB_LEFT);
+                break;
+
+            case '.':
+                dispatch(TAB_RIGHT);
+                break;
+
+            default:
+                dispatch(MATCH, char);
+        }
+
+        event.stopImmediatePropagation();
+        event.preventDefault();
+    }
+}, true);
+
+// General
+$('<style>._click{box-shadow:0 0 10px 0 black}</style>').appendTo('html');
+
+// Worker
+var LINK_HINT;
+var ESCAPE;
+var MATCH;
+var DOWN;
+var UP;
+var CLOSE;
+var PLUS;
+var SWITCH_SCROLL;
+var IS_READY;
+
+var Page = {
+    hintMap: {},
+    inChars: '',
+    inPlus: false,
+    scrollElement: null,
+
+    linkHint: () => {
+        dispatch(ESCAPE);
+
+        var elements = getElements();
+        var hints = getHints(elements);
+        Page.hintMap = popupHints(elements, hints);
+
+        function getElements() {
+            var additionalElements = $(clickableElements).find('div, span').addBack()
+                                                         .filter((i, element) => $(element).css('cursor') == 'pointer');
+            var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable], [tabindex]');
+            var cleanElements = purify(elements, additionalElements);
+            return cleanElements;
+
+            function purify(elements, additionalElements) {
+                var $element = $(element);
+                if ($element.css('visibility') === 'hidden' || $element.css('opacity') == 0) {
+                    return;
+                }
+                var rect = element.getBoundingClientRect();
+                if (rect.top >= 0 && rect.left >= 0 && rect.width && rect.height
+                    && rect.bottom <= document.documentElement.clientHeight
+                    && rect.right <= document.documentElement.clientWidth)
+
+                    var rect = element.getBoundingClientRect();
+                if (rect.top >= 0 && rect.left >= 0 && rect.width && rect.height
+                    && rect.bottom <= document.documentElement.clientHeight
+                    && rect.right <= document.documentElement.clientWidth) {
+
+                    var temp;
+                    var driftTop = (temp = parseInt($element.css('margin-top'))) < 0 ? Math.abs(temp) : 0;
+                    var driftLeft = (temp = parseInt($element.css('margin-left'))) < 0 ? Math.abs(temp) : 0;
+                }
+
+                var result = [];
+                $.map(cleanElements, element => {
+                    var drifts = [[element._left + 1, element._top + 1],
+                        [element._left + element._width - 1, element._top + element._height - 1]];
+
+                    for (var i = 0; i < drifts.length; i++) {
+                        var clickElement = document.elementFromPoint(drifts[i][0], drifts[i][1]);
+                        if (clickElement === element || clickElement.contains(element) || element.contains(clickElement)) {
+                            result.push(element);
+                            return;
+                        }
+                    }
+                });
+                return elements;
+            }
+        }
+
+        function getHints(elements) {
+            var hints = [];
+            var Y = 'ABCDEGHILM';
+            var X = '1234567890';
+            var B = 'NOPQRSTUVWYZ' + Y + X;
+            var lengthB = B.length;
+
+            var allHints = {};
+            for (var i = 0; i < B.length; i++) {
+                allHints[B.charAt(i)] = B;
+            }
+
+            for (i = 0; i < elements.length; i++) {
+                var element = elements[i];
+
+                var y = Y.charAt(Math.round(element._top / document.documentElement.clientHeight * (Y.length - 1)));
+                var x = X.charAt(Math.round(element._left / document.documentElement.clientWidth * (X.length - 1)));
+
+                if (allHints[y].indexOf(x) === -1) {
+                    y = B.charAt(0);
+                    x = allHints[y].charAt(0);
+                }
+
+                allHints[y] = allHints[y].replace(x, '');
+                if (allHints[y] === '') {
+                    B = B.replace(y, '');
+                }
+                hints.push(y + x);
+            }
+
+            var unusedHints = [];
+            var singleHints = [];
+            for (i = 0; i < B.length; i++) {
+                if (allHints[B.charAt(i)].length === lengthB) {
+                    unusedHints.push(B.charAt(i));
+                }
+                else if (allHints[B.charAt(i)].length === lengthB - 1) {
+                    singleHints.push(B.charAt(i));
+                }
+            }
+
+            for (i = 0; i < hints.length && (singleHints.length || unusedHints.length); i++) {
+                if (singleHints && singleHints.indexOf(hints[i].charAt(0)) !== -1) {
+                    hints[i] = hints[i].charAt(0);
+                } else if (unusedHints.length) {
+                    hints[i] = unusedHints.pop();
+                }
+            }
+
+            return hints;
+        }
+
+        function popupHints(elements, hints) {
+            var map = {};
+
+            for (var i = 0; i < elements.length; i++) {
+                var element = elements[i];
+                var hint = hints[i];
+                map[hint] = element;
+
+                var style = {
+                    'background': 'lightBlue',
+                    'borderRadius': '3px',
+                    'boxShadow': '0 0 2px',
+                    'color': 'black',
+                    'font-family': 'consolas',
+                    'font-size': '13px',
+                    'top': element._top,
+                    'left': element._left,
+                    'opacity': 0.9,
+                    'position': 'fixed',
+                    'z-index': 2147483648
+                };
+
+                $('<div class="_hint">' + hint + '</div>').css(style)
+                                                          .appendTo('html');
+            }
+
+            return map;
+        }
+    },
+
+    escape: () => {
+        $('._hint').remove();
+        Page.hintMap = {};
+        Page.inChars = '';
+        Page.inPlus = false;
+        Page.scrollElement = null;
+    },
+
+    match: char => {
+        var hints = $('._hint');
+        if (hints.length) {
+            Page.inChars += char;
+
+            if ((hints.length -
+                hints.filter((i, element) => !(element.innerText.startsWith(Page.inChars))).remove().length) === 1) {
+
+                var element = Page.hintMap[Page.inChars];
+                element.tagName === 'A' && Page.plusMode ? GM_openInTab(element.href, true) : Page.mouseClick(element);
+
+                var toggle;
+                (toggle = () => $(element).toggleClass('_click'))();
+                setTimeout(toggle, 500);
+                dispatch(ESCAPE);
+            }
+        }
+    },
+
+    down: ()=> Page.scrollElement ? Page.scrollElement.scrollTop += 100 : scrollBy(0, 100),
+
+    up: ()=> Page.scrollElement ? Page.scrollElement.scrollTop -= 100 : scrollBy(0, -100),
+
+    close: ()=> {
+        dispatch(TAB_CLOSE);
+        window.close();
+    },
+
+    plus: ()=> {
+        $('._hint').css('font-weight', 'bold');
+        Page.inPlus = true;
+    },
+
+    mouseClick: (element) => {
+        var $element = $(element);
+
+        if ((element.tagName === 'INPUT'
+            && element.type.search(/(button|checkbox|file|hidden|image|radio|reset|submit)/i) === -1)
+            || element.tagName === 'TEXTAREA') {
+
+            element.focus();
+            if (document.activeElement.tagName === 'BODY') {
+                $element.parent().find('input, textarea').focus();
+            }
+        }
+
+        else if (element.tagName === 'A') {
+            element.click();
+        }
+
+        else if (element.tagName === 'DIV' && element.hasAttribute('contenteditable')) {
+            element.focus();
+        }
+
+        else {
+            stimulateClick(element);
+        }
+
+        function stimulateClick(element) {
+            var names = ['mousedown', 'mouseup', 'click'];
+            var nodes = $(element).find('div, span').addBack();
+
+            Out:for (var i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
+                for (var j = 0; j < names.length; j++) {
+                    var name = names[j];
+
+                    var before = document.body.innerText;
+                    var event = new MouseEvent(name, {bubbles: true});
+                    node.dispatchEvent(event);
+                    if (document.body.innerText !== before) {
+                        break Out;
+                    }
+                }
+            }
+
+        }
+    },
+
+    switchScroll: (target) => {
+        target = $(target);
+        var elements = target.add(target.parentsUntil(document.body));
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            if (element.scrollHeight > element.clientHeight) {
+                Page.scrollElement = element;
+            }
+        }
+    },
+
+    isReady: (event) => {
+        var element = document.activeElement;
+        return element && element.nodeName !== 'INPUT'
+            && element.nodeName !== 'TEXTAREA' && !element.hasAttribute('contenteditable') && !event.ctrlKey;
+    }
+};
+
+commandMap[LINK_HINT = ++commandCount] = Page.linkHint;
+commandMap[ESCAPE = ++commandCount] = Page.escape;
+commandMap[MATCH = ++commandCount] = Page.match;
+commandMap[DOWN = ++commandCount] = Page.down;
+commandMap[UP = ++commandCount] = Page.up;
+commandMap[CLOSE = ++commandCount] = Page.close;
+commandMap[PLUS = ++commandCount] = Page.plus;
+commandMap[SWITCH_SCROLL = ++commandCount] = Page.switchScroll;
+commandMap[IS_READY = ++commandCount] = Page.isReady;
+
+// Worker
+var Tree = {};
+
+// Worker
+var TAB_OPEN;
+var TAB_APPEND;
+var TAB_LEFT;
+var TAB_RIGHT;
+var TAB_CLOSE;
+
+var Tab = {
+    open: function () {
+
+    },
+    append: function () {
+
+    },
+
+    left: function () {
+
+    },
+
+    right: function () {
+
+    },
+
+    close: function () {
+
+    }
+};
+
+commandMap[TAB_OPEN = ++commandCount] = Tab.open;
+commandMap[TAB_APPEND = ++commandCount] = Tab.append;
+commandMap[TAB_LEFT = ++commandCount] = Tab.left;
+commandMap[TAB_RIGHT = ++commandCount] = Tab.right;
+commandMap[TAB_CLOSE = ++commandCount] = Tab.close;
