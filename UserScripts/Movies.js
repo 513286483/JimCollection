@@ -5,7 +5,7 @@ var names = $('a > [data-type="name"]');
 for (var i = 0; i < names.length; i++) {
     var name = names[i];
 
-    (function (name) {
+    (name => {
         GM_xmlhttpRequest({
             method: 'GET',
             url: markLink + name.innerText,
@@ -14,7 +14,6 @@ for (var i = 0; i < names.length; i++) {
                 var subPage = $(data.responseText.replace(/<img[^>]*>/g, ''));
                 $(name.parentNode).find('[data-type="mark"]')
                                   .text(subPage.find('.rating_nums').first().text());
-
                 if (++count === names.length) {
                     sort();
                 }

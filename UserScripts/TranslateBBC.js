@@ -21,10 +21,10 @@ function translate(event) {
         var ts = new Date().getTime();
         var x = event.clientX;
         var y = event.clientY;
-        translate(word, ts);
+        request(word, ts);
     }
 
-    function translate(word, ts) {
+    function request(word, ts) {
         var reqUrl = 'http://fanyi.youdao.com/openapi.do?type=data&doctype=json&version=1.1&relatedUrl=' +
             encodeURIComponent('http://fanyi.youdao.com/#') +
             '&keyfrom=fanyiweb&key=null&translate=on' +

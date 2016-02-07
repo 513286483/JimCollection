@@ -45,8 +45,7 @@ function main() {
 
                     link = link.attr('href').match(/(url=)(.{5})/).pop();
                     mapFirst[link] = '-' +
-                        abstract.contents()
-                                .filter((i, element) => element.nodeType === 3 || element.tagName === 'EM')
+                        abstract.contents().filter((i, element) => element.nodeType === 3 || element.tagName === 'EM')
                                 .text();
 
                     var emList = abstract.find('em');
@@ -83,7 +82,11 @@ function main() {
 
     else {
         var record = GM_getValue('mapFirst');
-        mapFirst = record ? JSON.parse(record) : {};
+        if (record) {
+            mapFirst = JSON.parse(record);
+        } else {
+            return;
+        }
 
         var abstract;
         if (document.referrer.indexOf('baidu.com/link?url=') !== -1) {
@@ -100,7 +103,6 @@ function main() {
                 }
             });
         }
-
     }
 }
 
@@ -116,7 +118,7 @@ function filter(abstract) {
         var close = xPath(findNode(marks.pop()));
     }
 
-    var final = open && close && (open !== close) ? intersection(open, close) : close || open;
+    var final = open && close && (open !== close) ? intersection(open, close) : open || close;
     final = estimate(final);
     if (final == '') {
         return -1;
@@ -166,7 +168,6 @@ function xPath(node) {
     var siblings = node.parentNode.childNodes;
     for (var i = 0; i < siblings.length; i++) {
         var sibling = siblings[i];
-
         if (sibling.tagName === node.tagName) {
             count += 1;
         }
@@ -246,7 +247,7 @@ function estimate(xPath) {
     if (result.length === 0) {
         return xPath;
     } else {
-        var mid = result[Math.ceil(result.length / 3) - 1];
+        var mid = result[Math.round((result.length - 1) / 3)];
         var close = xPath.indexOf('/', mid);
         if (close !== -1) {
             return xPath.substr(0, close);
