@@ -1,5 +1,4 @@
 main();
-
 function main() {
     var href = location.href;
     var mapFirst;
@@ -88,17 +87,13 @@ function main() {
             return;
         }
 
-        var abstract;
         if (document.referrer.indexOf('baidu.com/link?url=') !== -1) {
             href = document.referrer.match(/(url=)(.{5})/).pop();
-            abstract = mapFirst[href];
-        } else {
-            abstract = mapFirst[href] || mapFirst[href = document.referrer];
         }
-
+        var abstract = mapFirst[href];
         if (abstract) {
             $(() => {
-                if (filter(abstract) === -1 && href !== document.referrer) {
+                if (filter(abstract) === -1) {
                     filter(JSON.parse(GM_getValue('mapSecond'))[href]);
                 }
             });
@@ -119,10 +114,10 @@ function filter(abstract) {
     }
 
     var final = open && close && (open !== close) ? intersection(open, close) : open || close;
-    final = estimate(final);
-    if (final == '') {
+    if (!final) {
         return -1;
     }
+    final = estimate(final);
 
     var node = document.evaluate(final).iterateNext();
     if (enoughText(node)) {
@@ -247,7 +242,7 @@ function estimate(xPath) {
     if (result.length === 0) {
         return xPath;
     } else {
-        var mid = result[Math.round((result.length - 1) / 3)];
+        var mid = result[Math.ceil(result.length / 3) - 1];
         var close = xPath.indexOf('/', mid);
         if (close !== -1) {
             return xPath.substr(0, close);
