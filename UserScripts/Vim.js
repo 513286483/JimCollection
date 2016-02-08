@@ -137,8 +137,7 @@ var Page = {
 
                         for (i = 0; i < positions.length; i++) {
                             var clickElement = document.elementFromPoint(positions[i][0], positions[i][1]);
-                            if (clickElement === element ||
-                                clickElement.contains(element) || element.contains(clickElement)) {
+                            if (clickElement === element) {
                                 return true;
                             }
                         }
@@ -322,7 +321,7 @@ var Page = {
             var names = ['mousedown', 'mouseup', 'click'];
             var nodes = $(element).find('div, span').addBack();
 
-            Out:for (var i = 0; i < nodes.length; i++) {
+            out:for (var i = 0; i < nodes.length; i++) {
                 var node = nodes[i];
                 for (var j = 0; j < names.length; j++) {
                     var name = names[j];
@@ -331,7 +330,7 @@ var Page = {
                     var event = new MouseEvent(name, {bubbles: true});
                     node.dispatchEvent(event);
                     if (document.body.innerText !== before) {
-                        break Out;
+                        break out;
                     }
                 }
             }
@@ -435,7 +434,14 @@ var Tree = {
     }
 };
 
-// Employee
+// General
+if (top === self) {
+    console.log('refer:', document.referrer);
+    console.log('length:', history.length);
+    debugger;
+}
+
+// Worker
 var Tab = {
     open: function () {
 
