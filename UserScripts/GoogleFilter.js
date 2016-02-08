@@ -34,8 +34,6 @@ function main() {
     }
 
     else if (isEngine = (href.indexOf('baidu.com/s?') !== -1)) {
-        $('<style>#content_right{display:none}</style>').prependTo('html');
-
         update = function () {
             var result = $('.c-container');
             result.map((i, element) => {

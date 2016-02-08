@@ -260,7 +260,7 @@ var Page = {
                     .remove().length) === 1) {
 
                 var element = Page.hintMap[Page.chars];
-                element.tagName === 'A' && Page.plusMode ? GM_openInTab(element.href, true) : Page.click(element);
+                element.tagName === 'A' && Page.isPlus ? GM_openInTab(element.href, true) : Page.click(element);
 
                 var toggle;
                 (toggle = () => $(element).toggleClass('_click'))();
