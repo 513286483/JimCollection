@@ -2,7 +2,7 @@
 var commandMap = {};
 var commandCount = 0;
 function dispatch(command, ...args) {
-    return commandMap[command].apply(args);
+    return commandMap[command].apply(null, args);
 }
 
 // Global
@@ -119,18 +119,22 @@ var Page = {
     linkHint: () => {
         dispatch(ESCAPE);
 
+
         var elements = getElements();
+
         var hints = getHints(elements);
         Page.hintMap = popupHints(elements, hints);
 
         function getElements() {
+
             var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable], [tabindex]');
             var additionalElements = $(clickableElements).find('div, span').addBack()
                                                          .filter((i, element) => $(element).css('cursor') == 'pointer');
             return purify(elements, additionalElements);
 
             function purify(elements, additionalElements) {
-                function canTouch(element) {
+
+                function canTouch(i, element) {
                     var $element = $(element);
 
                     if ($element.css('display') === 'none' ||
@@ -152,7 +156,7 @@ var Page = {
                         var positions = [[element._left + 1, element._top + 1],
                             [element._left + rect.width - 1, element._top + rect.height - 1]];
 
-                        for (var i = 0; i < positions.length; i++) {
+                        for (i = 0; i < positions.length; i++) {
                             var clickElement = document.elementFromPoint(positions[i][0], positions[i][1]);
                             if (clickElement === element ||
                                 clickElement.contains(element) || element.contains(clickElement)) {
@@ -162,46 +166,46 @@ var Page = {
                     }
                 }
 
-                elements = $.filter(elements, canTouch);
+                elements = elements.filter(canTouch);
+
                 var i, element;
 
-                var WIDTH = 6;
+                var WIDTH = 15;
                 var Xtree = dispatch(TREE_RELOAD, 0, document.documentElement.clientWidth);
                 for (i = 0; i < elements.length; i++) {
                     element = elements[i];
-                    dispatch(TREE_INSERT, element._left, element._left + WIDTH, element, WIDTH + 1);
+                    dispatch(TREE_INSERT, element._left, element._left + WIDTH, element, 2 * WIDTH + 1);
                 }
 
-                var HEIGHT = 17;
+                var HEIGHT = 16;
                 var Ytree = dispatch(TREE_RELOAD, 0, document.documentElement.clientHeight);
                 for (i = 0; i < elements.length; i++) {
                     element = elements[i];
-                    dispatch(TREE_INSERT, element._top, element._top + HEIGHT, element, HEIGHT + 1);
+                    dispatch(TREE_INSERT, element._top, element._top + HEIGHT, element, 2 * HEIGHT + 1);
                 }
-
-                additionalElements = $.filter(additionalElements, canTouch)
-                                      .filter(notOverlap);
-
-                function notOverlap(element) {
+                additionalElements = additionalElements.filter(canTouch);
+                additionalElements = additionalElements.filter(notOverlap);
+                function notOverlap(i, element) {
                     var overlapsX = $();
                     var overlapsY = $();
 
                     dispatch(TREE_RELOAD, Xtree);
-                    dispatch(TREE_SEARCH, element._left, element._left + WIDTH, (result)=> overlapsX.add(result));
-                    dispatch(TREE_RELOAD, Ytree);
-                    dispatch(TREE_SEARCH, element._top, element._top + HEIGHT, (result) => overlapsY.add(result));
+                    dispatch(TREE_SEARCH, element._left, element._left + WIDTH, result=>overlapsX = overlapsX.add(result));
 
+                    dispatch(TREE_RELOAD, Ytree);
+                    dispatch(TREE_SEARCH, element._top, element._top + HEIGHT, result=>overlapsY = overlapsY.add(result));
                     if (overlapsX.filter(overlapsY).length === 0) {
                         dispatch(TREE_RELOAD, Xtree);
-                        dispatch(TREE_INSERT, element._left, element._left + WIDTH, element, WIDTH + 1);
+                        dispatch(TREE_INSERT, element._left, element._left + WIDTH, element, 2 * WIDTH + 1);
                         dispatch(TREE_RELOAD, Ytree);
-                        dispatch(TREE_INSERT, element._top, element._top + HEIGHT, element, HEIGHT + 1);
+                        dispatch(TREE_INSERT, element._top, element._top + HEIGHT, element, 2 * HEIGHT + 1);
                         return true;
                     }
+
                 }
 
                 dispatch(TREE_RELOAD, null);
-                return element.add(additionalElements);
+                return elements.add(additionalElements);
             }
         }
 
@@ -406,6 +410,8 @@ var SegmentTree = {
     },
 
     create: (from, to) => {
+        from = parseInt(from);
+        to = parseInt(to);
         return {
             from: from,
             to: to,
@@ -432,41 +438,67 @@ var SegmentTree = {
     },
 
     insert: (from, to, value, range, node) => {
+        from = parseInt(from);
+        to = parseInt(to);
+
+        if (from > to) {
+            return;
+        }
+
         if (!node) {
             node = SegmentTree.node;
         }
 
-        if (node.from <= from && to <= node.to && node.to - node.from < range) {
-            node.values.push(value)
-        }
         if (node.from === from && node.to === to) {
+            node.values.push(value);
             return;
         }
 
         var mid = Math.floor((node.from + node.to) / 2);
-        if (from <= mid) {
-            SegmentTree.insert(from, mid, value, range, SegmentTree.getLeft(node));
+        if (from < mid) {
+            var leftNode = SegmentTree.getLeft(node);
+            SegmentTree.insert(from, Math.min(to, mid), value, range, leftNode);
         }
         if (to > mid) {
-            SegmentTree.insert(mid + 1, to, value, range, SegmentTree.getRight(node));
+            var rightNode = SegmentTree.getRight(node);
+            SegmentTree.insert(Math.max(from, mid + 1), to, value, range, rightNode);
         }
     },
 
     search: (from, to, out, node) => {
+        from = parseInt(from);
+        to = parseInt(to);
         if (!node) {
             node = SegmentTree.node;
         }
 
         if (node.from === from && node.to === to) {
-            return out(node.values)
+
+            SegmentTree.eat(node, out);
+            return;
+        }
+        if (node.values.length) {
+            out(node.values);
         }
 
         var mid = Math.floor((node.from + node.to) / 2);
-        if (from <= mid) {
-            SegmentTree.search(from, mid, out, SegmentTree.getLeft(node));
+        if (from < mid) {
+            SegmentTree.search(from, Math.min(to, mid), out, SegmentTree.getLeft(node));
         }
         if (to > mid) {
-            SegmentTree.search(mid + 1, to, out, SegmentTree.getRight(node));
+            SegmentTree.search(Math.max(from, mid + 1), to, out, SegmentTree.getRight(node));
+        }
+    },
+
+    eat: (node, out)=> {
+        if (node.values.length) {
+            out(node.values);
+        }
+        if (node.left) {
+            SegmentTree.eat(node.left, out)
+        }
+        if (node.right) {
+            SegmentTree.eat(node.right, out)
         }
     }
 };
