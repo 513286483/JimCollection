@@ -1,4 +1,6 @@
-main();
+if (top === self) {
+    main();
+}
 function main() {
     var href = location.href;
     var mapFirst;
