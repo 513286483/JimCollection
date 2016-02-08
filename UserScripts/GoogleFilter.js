@@ -129,12 +129,13 @@ function filter(abstract) {
     var node = document.evaluate(final).iterateNext();
     if (enoughText(node)) {
         toggleBy(node);
-
         $(document).keypress('B', event => {
             if (event.ctrlKey) {
                 toggleBy(node)
             }
         });
+    } else {
+        return -1;
     }
 }
 

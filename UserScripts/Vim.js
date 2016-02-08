@@ -70,7 +70,7 @@ addEventListener('keypress', event => {
 // General
 $('<style>._click{box-shadow:0 0 10px 0 black}</style>').appendTo('html');
 $(`<style>._hint{
-    background-color: rgba(173, 216, 230, 0.5);
+    background-color: rgba(173, 216, 230, 0.8);
     border-radius: 3px;
     box-shadow: 0 0 2px;
     color: black;
