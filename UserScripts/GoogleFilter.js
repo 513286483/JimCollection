@@ -90,13 +90,17 @@ function main() {
             return;
         }
 
+        var abstract;
         if (document.referrer.indexOf('baidu.com/link?url=') !== -1) {
             href = document.referrer.match(/(url=)(.{5})/).pop();
+            abstract = mapFirst[href];
+        } else {
+            abstract = mapFirst[href] || mapFirst[href = document.referrer];
         }
-        var abstract = mapFirst[href];
+
         if (abstract) {
             $(() => {
-                if (filter(abstract) === -1) {
+                if (filter(abstract) === -1 && href !== document.referrer) {
                     filter(JSON.parse(GM_getValue('mapSecond'))[href]);
                 }
             });
