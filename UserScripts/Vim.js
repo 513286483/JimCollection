@@ -58,14 +58,6 @@ addEventListener('keypress', event => {
                 Page.plus();
                 break;
 
-            case ',':
-                Tab.left();
-                break;
-
-            case '.':
-                Tab.right();
-                break;
-
             default:
                 Page.match(char);
         }
@@ -431,34 +423,5 @@ var Tree = {
                 include(node.right, outPipe)
             }
         }
-    }
-};
-
-// General
-if (top === self) {
-    console.log('refer:', document.referrer);
-    console.log('length:', history.length);
-    debugger;
-}
-
-// Worker
-var Tab = {
-    open: function () {
-
-    },
-    append: function () {
-
-    },
-
-    left: function () {
-
-    },
-
-    right: function () {
-
-    },
-
-    close: function () {
-
     }
 };
