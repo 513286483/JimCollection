@@ -6,8 +6,8 @@ for (var i = 0; i < fontQueue.length; i++) {
 
 $(window).load(() => {
         transformElement(document.body, true);
-        if (fontQueue.length > 100) {
-            fontQueue.slice(0, 100);
+        if (fontQueue.length > 50) {
+            fontQueue.slice(0, 50);
         }
         GM_setValue('fontQueue', fontQueue.join(','));
     }
