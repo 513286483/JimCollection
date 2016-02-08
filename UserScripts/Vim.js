@@ -71,12 +71,12 @@ addEventListener('keypress', event => {
 $('<style>._click{box-shadow:0 0 10px 0 black}</style>').appendTo('html');
 $(`<style>._hint{
     background-color: lightblue;
+    background-color: rgba(173, 216, 230, 0.5);
     border-radius: 3px;
     box-shadow: 0 0 2px;
     color: black;
     font-family: consolas;
     font-size: 13px;
-    opacity: 0.9;
     position: fixed;
     z-index: 2147483648
 }</style>`).appendTo('html');
