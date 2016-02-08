@@ -1,26 +1,16 @@
-// Handler
-var commandMap = {};
-var commandCount = 0;
-function dispatch(command, ...args) {
-    return commandMap[command].apply(null, args);
-}
-
-// Global
-var clickableElements = [];
-
 // Hook
 Element.prototype._addEventListener = Element.prototype.addEventListener;
 Element.prototype.addEventListener = function (type, listener, userCapture) {
     this._addEventListener(type, listener, userCapture);
     if (type.search(/(mousedown|mouseup|click)/i) !== -1) {
-        clickableElements.push(this);
+        Page.clickElements.push(this);
     }
 };
 
 // Event
 $(window)
-    .on('click resize scroll', () => dispatch(ESCAPE))
-    .on('click', event => dispatch(SWITCH_SCROLL));
+    .on('click resize scroll', () => Page.escape())
+    .on('click', event => Page.scrollWithin(event.target));
 
 addEventListener('keydown', event => {
     var isTab = (event.code === 'Tab');
@@ -28,56 +18,56 @@ addEventListener('keydown', event => {
         event.preventDefault();
     }
 
-    if (dispatch(IS_READY, event)) {
-        if (isTab) {
-            dispatch(ESCAPE);
-        }
+    if (Page.isReady(event)) {
         event.stopImmediatePropagation();
+        if (isTab) {
+            Page.escape();
+        }
     } else if (isTab) {
         document.activeElement.blur();
     }
 }, true);
 
 addEventListener('keyup', event => {
-    if (dispatch(IS_READY, event)) {
+    if (Page.isReady(event)) {
         event.stopImmediatePropagation();
     }
 }, true);
 
 addEventListener('keypress', event => {
-    if (dispatch(IS_READY, event)) {
+    if (Page.isReady(event)) {
         var char = String.fromCharCode(event.keyCode).toUpperCase();
         switch (char) {
             case 'F':
-                dispatch(LINK_HINT);
+                Page.linkHint();
                 break;
 
             case 'J':
-                dispatch(DOWN);
+                Page.down();
                 break;
 
             case 'K':
-                dispatch(UP);
+                Page.up();
                 break;
 
             case 'X':
-                dispatch(CLOSE);
+                Page.close();
                 break;
 
             case ' ':
-                dispatch(PLUS);
+                Page.plus();
                 break;
 
             case ',':
-                dispatch(TAB_LEFT);
+                Tab.left();
                 break;
 
             case '.':
-                dispatch(TAB_RIGHT);
+                Tab.right();
                 break;
 
             default:
-                dispatch(MATCH, char);
+                Page.match(char);
         }
 
         event.preventDefault();
@@ -88,7 +78,7 @@ addEventListener('keypress', event => {
 // General
 $('<style>._click{box-shadow:0 0 10px 0 black}</style>').appendTo('html');
 $(`<style>._hint{
-    background-color: lightBlue;
+    background-color: lightblue;
     border-radius: 3px;
     box-shadow: 0 0 2px;
     color: black;
@@ -99,41 +89,30 @@ $(`<style>._hint{
     z-index: 2147483648
 }</style>`).appendTo('html');
 
-// Employee
-var LINK_HINT;
-var ESCAPE;
-var MATCH;
-var DOWN;
-var UP;
-var CLOSE;
-var PLUS;
-var SWITCH_SCROLL;
-var IS_READY;
-
+// Worker
 var Page = {
+    clickElements: [],
+
+    chars: '',
     hintMap: {},
-    inChars: '',
-    inPlus: false,
+    isPlus: false,
     scrollElement: null,
 
     linkHint: () => {
-        dispatch(ESCAPE);
-
+        Page.escape();
 
         var elements = getElements();
-
         var hints = getHints(elements);
         Page.hintMap = popupHints(elements, hints);
 
         function getElements() {
-
             var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable], [tabindex]');
-            var additionalElements = $(clickableElements).find('div, span').addBack()
-                                                         .filter((i, element) => $(element).css('cursor') == 'pointer');
-            return purify(elements, additionalElements);
+            var clickElements =
+                $(Page.clickElements).find('div, span').addBack()
+                                     .filter((i, element) => $(element).css('cursor') === 'pointer');
+            return purify(elements, clickElements);
 
-            function purify(elements, additionalElements) {
-
+            function purify(elements, clickElements) {
                 function canTouch(i, element) {
                     var $element = $(element);
 
@@ -148,8 +127,8 @@ var Page = {
                         && rect.right <= document.documentElement.clientWidth) {
 
                         var temp;
-                        var driftTop = (temp = parseInt($element.css('margin-top'))) < 0 ? -temp : 0;
-                        var driftLeft = (temp = parseInt($element.css('margin-left'))) < 0 ? -temp : 0;
+                        var driftTop = (temp = parseInt($element.css('margin-top')) < 0) ? -temp : 0;
+                        var driftLeft = (temp = parseInt($element.css('margin-left')) < 0) ? -temp : 0;
                         element._top = rect.top + driftTop;
                         element._left = rect.left + driftLeft;
 
@@ -167,45 +146,34 @@ var Page = {
                 }
 
                 elements = elements.filter(canTouch);
-
-                var i, element;
-
                 var WIDTH = 15;
-                var Xtree = dispatch(TREE_RELOAD, 0, document.documentElement.clientWidth);
-                for (i = 0; i < elements.length; i++) {
-                    element = elements[i];
-                    dispatch(TREE_INSERT, element._left, element._left + WIDTH, element, 2 * WIDTH + 1);
+                var HEIGHT = 16;
+
+                var xTree = Tree.create(0, document.documentElement.clientWidth);
+                var yTree = Tree.create(0, document.documentElement.clientHeight);
+                for (var i = 0; i < elements.length; i++) {
+                    var element = elements[i];
+                    Tree.insert(xTree, element._left, element._left + WIDTH, element);
+                    Tree.insert(yTree, element._top, element._top + HEIGHT, element);
                 }
 
-                var HEIGHT = 16;
-                var Ytree = dispatch(TREE_RELOAD, 0, document.documentElement.clientHeight);
-                for (i = 0; i < elements.length; i++) {
-                    element = elements[i];
-                    dispatch(TREE_INSERT, element._top, element._top + HEIGHT, element, 2 * HEIGHT + 1);
-                }
-                additionalElements = additionalElements.filter(canTouch);
-                additionalElements = additionalElements.filter(notOverlap);
-                function notOverlap(i, element) {
+                clickElements = clickElements.filter(canTouch);
+                clickElements = clickElements.filter(hasPlace);
+
+                function hasPlace(ignore, element) {
                     var overlapsX = $();
                     var overlapsY = $();
+                    Tree.search(xTree, element._left, element._left + WIDTH, x => overlapsX = overlapsX.add(x));
+                    Tree.search(yTree, element._top, element._top + HEIGHT, x => overlapsY = overlapsY.add(x));
 
-                    dispatch(TREE_RELOAD, Xtree);
-                    dispatch(TREE_SEARCH, element._left, element._left + WIDTH, result=>overlapsX = overlapsX.add(result));
-
-                    dispatch(TREE_RELOAD, Ytree);
-                    dispatch(TREE_SEARCH, element._top, element._top + HEIGHT, result=>overlapsY = overlapsY.add(result));
                     if (overlapsX.filter(overlapsY).length === 0) {
-                        dispatch(TREE_RELOAD, Xtree);
-                        dispatch(TREE_INSERT, element._left, element._left + WIDTH, element, 2 * WIDTH + 1);
-                        dispatch(TREE_RELOAD, Ytree);
-                        dispatch(TREE_INSERT, element._top, element._top + HEIGHT, element, 2 * HEIGHT + 1);
+                        Tree.insert(xTree, element._left, element._left + WIDTH, element);
+                        Tree.insert(yTree, element._top, element._top + HEIGHT, element);
                         return true;
                     }
-
                 }
 
-                dispatch(TREE_RELOAD, null);
-                return elements.add(additionalElements);
+                return elements.add(clickElements);
             }
         }
 
@@ -236,26 +204,27 @@ var Page = {
                 if (allHints[y] === '') {
                     B = B.replace(y, '');
                 }
+
                 hints.push(y + x);
             }
 
-            var unusedHints = [];
-            var singleHints = [];
+            var availableChars = [];
+            var singletonChars = [];
             for (i = 0; i < B.length; i++) {
-                if (allHints[B.charAt(i)].length === lengthB) {
-                    unusedHints.push(B.charAt(i));
-                }
-                else if (allHints[B.charAt(i)].length === lengthB - 1) {
-                    singleHints.push(B.charAt(i));
+                var char = B.charAt(i);
+                if (allHints[char].length === lengthB) {
+                    availableChars.push(char);
+                } else if (allHints[char].length === lengthB - 1) {
+                    singletonChars.push(char);
                 }
             }
 
-            for (i = 0; i < hints.length && (singleHints.length || unusedHints.length); i++) {
-                var letter = hints[i].charAt(0);
-                if (singleHints && singleHints.indexOf(letter) !== -1) {
-                    hints[i] = letter;
-                } else if (unusedHints.length) {
-                    hints[i] = unusedHints.pop();
+            for (i = 0; i < hints.length && (singletonChars.length || availableChars.length); i++) {
+                var startChar = hints[i].charAt(0);
+                if (singletonChars.length && singletonChars.indexOf(startChar) !== -1) {
+                    hints[i] = startChar;
+                } else if (availableChars.length) {
+                    hints[i] = availableChars.pop();
                 }
             }
 
@@ -285,27 +254,28 @@ var Page = {
 
     escape: () => {
         $('._hint').remove();
+        Page.chars = '';
         Page.hintMap = {};
-        Page.inChars = '';
-        Page.inPlus = false;
+        Page.isPlus = false;
         Page.scrollElement = null;
     },
 
     match: char => {
         var hints = $('._hint');
         if (hints.length) {
-            Page.inChars += char;
+            Page.chars += char;
 
-            if ((hints.length -
-                hints.filter((i, element) => !element.innerText.startsWith(Page.inChars)).remove().length) === 1) {
+            if ((hints.length - hints
+                    .filter((i, element) => !element.innerText.startsWith(Page.chars))
+                    .remove().length) === 1) {
 
-                var element = Page.hintMap[Page.inChars];
-                element.tagName === 'A' && Page.plusMode ? GM_openInTab(element.href, true) : Page.mouseClick(element);
+                var element = Page.hintMap[Page.chars];
+                element.tagName === 'A' && Page.plusMode ? GM_openInTab(element.href, true) : Page.click(element);
 
                 var toggle;
                 (toggle = () => $(element).toggleClass('_click'))();
                 setTimeout(toggle, 500);
-                dispatch(ESCAPE);
+                Page.escape();
             }
         }
     },
@@ -315,16 +285,15 @@ var Page = {
     up: ()=> Page.scrollElement ? Page.scrollElement.scrollTop -= 100 : scrollBy(0, -100),
 
     close: ()=> {
-        dispatch(TAB_CLOSE);
         window.close();
     },
 
     plus: ()=> {
+        Page.isPlus = true;
         $('._hint').css('font-weight', 'bold');
-        Page.inPlus = true;
     },
 
-    mouseClick: (element) => {
+    click: (element) => {
         var $element = $(element);
 
         if ((element.tagName === 'INPUT'
@@ -366,11 +335,10 @@ var Page = {
                     }
                 }
             }
-
         }
     },
 
-    switchScroll: (target) => {
+    scrollWithin: (target) => {
         target = $(target);
         var elements = target.add(target.parentsUntil(document.body));
         for (var i = 0; i < elements.length; i++) {
@@ -387,37 +355,13 @@ var Page = {
             && element.nodeName !== 'TEXTAREA' && !element.hasAttribute('contenteditable') && !event.ctrlKey;
     }
 };
-commandMap[LINK_HINT = ++commandCount] = Page.linkHint;
-commandMap[ESCAPE = ++commandCount] = Page.escape;
-commandMap[MATCH = ++commandCount] = Page.match;
-commandMap[DOWN = ++commandCount] = Page.down;
-commandMap[UP = ++commandCount] = Page.up;
-commandMap[CLOSE = ++commandCount] = Page.close;
-commandMap[PLUS = ++commandCount] = Page.plus;
-commandMap[SWITCH_SCROLL = ++commandCount] = Page.switchScroll;
-commandMap[IS_READY = ++commandCount] = Page.isReady;
 
-// Employee
-var TREE_RELOAD;
-var TREE_INSERT;
-var TREE_SEARCH;
-
-var SegmentTree = {
-    node: null,
-
-    reload: function (...args) {
-        return SegmentTree.node = arguments.length === 1 ? args[0] : SegmentTree.create(args[0], args[1]);
-    },
-
+// Worker
+var Tree = {
     create: (from, to) => {
-        from = parseInt(from);
-        to = parseInt(to);
         return {
-            from: from,
-            to: to,
-            left: null,
-            right: null,
-            values: []
+            from: parseInt(from),
+            to: parseInt(to)
         }
     },
 
@@ -425,7 +369,7 @@ var SegmentTree = {
         if (node.left) {
             return node.left
         } else {
-            return node.left = SegmentTree.create(node.from, Math.floor((node.from + node.to) / 2));
+            return node.left = Tree.create(node.from, Math.floor((node.from + node.to) / 2));
         }
     },
 
@@ -433,86 +377,65 @@ var SegmentTree = {
         if (node.right) {
             return node.right
         } else {
-            return node.right = SegmentTree.create(Math.floor((node.from + node.to) / 2) + 1, node.to);
+            return node.right = Tree.create(Math.floor((node.from + node.to) / 2) + 1, node.to);
         }
     },
 
-    insert: (from, to, value, range, node) => {
+    insert: (node, from, to, value) => {
         from = parseInt(from);
         to = parseInt(to);
 
-        if (from > to) {
-            return;
-        }
-
-        if (!node) {
-            node = SegmentTree.node;
-        }
-
         if (node.from === from && node.to === to) {
-            node.values.push(value);
-            return;
+            if (node.values) {
+                return node.values.push(value);
+            } else {
+                return node.values = [value];
+            }
         }
 
         var mid = Math.floor((node.from + node.to) / 2);
         if (from < mid) {
-            var leftNode = SegmentTree.getLeft(node);
-            SegmentTree.insert(from, Math.min(to, mid), value, range, leftNode);
+            Tree.insert(Tree.getLeft(node), from, Math.min(to, mid), value);
         }
         if (to > mid) {
-            var rightNode = SegmentTree.getRight(node);
-            SegmentTree.insert(Math.max(from, mid + 1), to, value, range, rightNode);
+            Tree.insert(Tree.getRight(node), Math.max(from, mid + 1), to, value);
         }
     },
 
-    search: (from, to, out, node) => {
+    search: (node, from, to, outPipe) => {
         from = parseInt(from);
         to = parseInt(to);
-        if (!node) {
-            node = SegmentTree.node;
-        }
 
         if (node.from === from && node.to === to) {
-
-            SegmentTree.eat(node, out);
-            return;
+            return include(node, outPipe);
         }
-        if (node.values.length) {
-            out(node.values);
+        if (node.values && node.values.length) {
+            outPipe(node.values);
         }
 
         var mid = Math.floor((node.from + node.to) / 2);
         if (from < mid) {
-            SegmentTree.search(from, Math.min(to, mid), out, SegmentTree.getLeft(node));
+            Tree.search(Tree.getLeft(node), from, Math.min(to, mid), outPipe);
         }
         if (to > mid) {
-            SegmentTree.search(Math.max(from, mid + 1), to, out, SegmentTree.getRight(node));
+            Tree.search(Tree.getRight(node), Math.max(from, mid + 1), to, outPipe);
         }
-    },
 
-    eat: (node, out)=> {
-        if (node.values.length) {
-            out(node.values);
-        }
-        if (node.left) {
-            SegmentTree.eat(node.left, out)
-        }
-        if (node.right) {
-            SegmentTree.eat(node.right, out)
+        function include(node, outPipe) {
+            if (node.values && node.values.length) {
+                outPipe(node.values);
+            }
+            if (node.left) {
+                include(node.left, outPipe)
+            }
+            if (node.right) {
+                include(node.right, outPipe)
+            }
         }
     }
 };
-commandMap[TREE_RELOAD = ++commandCount] = SegmentTree.reload;
-commandMap[TREE_INSERT = ++commandCount] = SegmentTree.insert;
-commandMap[TREE_SEARCH = ++commandCount] = SegmentTree.search;
 
 // Employee
-var TAB_OPEN;
-var TAB_APPEND;
-var TAB_LEFT;
-var TAB_RIGHT;
-var TAB_CLOSE;
-
 var Tab = {
     open: function () {
 
@@ -533,8 +456,3 @@ var Tab = {
 
     }
 };
-commandMap[TAB_OPEN = ++commandCount] = Tab.open;
-commandMap[TAB_APPEND = ++commandCount] = Tab.append;
-commandMap[TAB_LEFT = ++commandCount] = Tab.left;
-commandMap[TAB_RIGHT = ++commandCount] = Tab.right;
-commandMap[TAB_CLOSE = ++commandCount] = Tab.close;

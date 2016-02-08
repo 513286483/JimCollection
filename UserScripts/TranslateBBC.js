@@ -113,7 +113,7 @@ function popup(x, y, result) {
         overlayPopup.appendChild(document.createTextNode(map['translation']));
     }
 
-    overlayPopup.style.background = 'lightBlue';
+    overlayPopup.style.background = 'lightblue';
     overlayPopup.style.borderRadius = '5px';
     overlayPopup.style.boxShadow = '0 0 5px';
     overlayPopup.style.color = 'black';
