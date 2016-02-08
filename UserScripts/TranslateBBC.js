@@ -23,22 +23,21 @@ function translate(event) {
         var y = event.clientY;
         request(word, ts);
     }
-
-    function request(word, ts) {
-        var reqUrl = 'http://fanyi.youdao.com/openapi.do?type=data&doctype=json&version=1.1&relatedUrl=' +
-            encodeURIComponent('http://fanyi.youdao.com/#') +
-            '&keyfrom=fanyiweb&key=null&translate=on' +
-            '&q=' + word +
-            '&ts=' + ts;
-
-        GM_xmlhttpRequest({
-            method: 'GET',
-            url: reqUrl,
-            onload: res => popup(x, y, res.response)
-        });
-    }
 }
 
+function request(word, ts) {
+    var reqUrl = 'http://fanyi.youdao.com/openapi.do?type=data&doctype=json&version=1.1&relatedUrl=' +
+        encodeURIComponent('http://fanyi.youdao.com/#') +
+        '&keyfrom=fanyiweb&key=null&translate=on' +
+        '&q=' + word +
+        '&ts=' + ts;
+
+    GM_xmlhttpRequest({
+        method: 'GET',
+        url: reqUrl,
+        onload: res => popup(x, y, res.response)
+    });
+}
 
 function popup(x, y, result) {
     var overlayPopup = document.createElement('div');

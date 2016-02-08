@@ -1,4 +1,4 @@
-$(function () {
+$(() => {
     var node;
     if (location.href.indexOf('comment') === -1) {
         node = $('.ep-content-main');
