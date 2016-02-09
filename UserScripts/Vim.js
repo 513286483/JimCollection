@@ -334,8 +334,8 @@ var Page = {
 var Tree = {
     create: (from, to) => {
         return {
-            from: parseInt(from),
-            to: parseInt(to)
+            from: Math.floor(from),
+            to: Math.floor(to)
         }
     },
 
@@ -356,8 +356,8 @@ var Tree = {
     },
 
     insert: (node, from, to, value) => {
-        from = parseInt(from);
-        to = parseInt(to);
+        from = Math.floor(from);
+        to = Math.floor(to);
 
         if (node.from === from && node.to === to) {
             if (node.values) {
@@ -377,8 +377,8 @@ var Tree = {
     },
 
     search: (node, from, to, outPipe) => {
-        from = parseInt(from);
-        to = parseInt(to);
+        from = Math.floor(from);
+        to = Math.floor(to);
 
         if (node.from === from && node.to === to) {
             return include(node, outPipe);
