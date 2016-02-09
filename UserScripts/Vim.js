@@ -371,7 +371,7 @@ var Tree = {
         if (from < mid) {
             Tree.insert(Tree.getLeft(node), from, Math.min(to, mid), value);
         }
-        if (to > mid) {
+        if (to > mid && Math.max(from, mid + 1) < to) {
             Tree.insert(Tree.getRight(node), Math.max(from, mid + 1), to, value);
         }
     },
@@ -391,7 +391,7 @@ var Tree = {
         if (from < mid) {
             Tree.search(Tree.getLeft(node), from, Math.min(to, mid), outPipe);
         }
-        if (to > mid) {
+        if (to > mid && Math.max(from, mid + 1) < to) {
             Tree.search(Tree.getRight(node), Math.max(from, mid + 1), to, outPipe);
         }
 
