@@ -9,7 +9,7 @@ $(() => {
     $('<style>@media screen and (max-width: 1120px){.zu-top{display:none;}}</style>').appendTo('head');
 });
 
-$(document).on('copy', function (event) {
+$(document).on('copy', event => {
     event.stopPropagation();
     event.preventDefault();
     event.originalEvent.clipboardData.setData('text/plain', getSelection().toString());

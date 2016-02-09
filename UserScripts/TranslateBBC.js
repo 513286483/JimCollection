@@ -1,6 +1,6 @@
 var prevWord = '';
 var audio = new AudioContext();
-document.body.addEventListener('mouseup', translate);
+addEventListener('mouseup', translate);
 
 function translate(event) {
     var prevPopup = document.querySelector('.overlay-popup');

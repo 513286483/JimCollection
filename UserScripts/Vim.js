@@ -70,7 +70,7 @@ addEventListener('keypress', event => {
 // General
 $('<style>._click{box-shadow:0 0 10px 0 black}</style>').appendTo('html');
 $(`<style>._hint{
-    background-color: rgba(173, 216, 230, 0.8);
+    background-color: rgba(173, 216, 230, 0.7);
     border-radius: 3px;
     box-shadow: 0 0 2px;
     color: black;
@@ -128,7 +128,8 @@ var Page = {
 
                         for (i = 0; i < positions.length; i++) {
                             var clickElement = document.elementFromPoint(positions[i][0], positions[i][1]);
-                            if (clickElement === element) {
+                            if (clickElement === element ||
+                                clickElement.contains(element) || element.contains(clickElement)) {
                                 return true;
                             }
                         }
@@ -136,6 +137,8 @@ var Page = {
                 }
 
                 elements = elements.filter(canTouch);
+                clickElements = clickElements.filter(canTouch);
+
                 var WIDTH = 15;
                 var HEIGHT = 16;
 
@@ -147,9 +150,7 @@ var Page = {
                     Tree.insert(yTree, element._top, element._top + HEIGHT, element);
                 }
 
-                clickElements = clickElements.filter(canTouch);
                 clickElements = clickElements.filter(hasPlace);
-
                 function hasPlace(ignore, element) {
                     var overlapsX = $();
                     var overlapsY = $();
@@ -190,9 +191,9 @@ var Page = {
                     x = allHints[y].charAt(0);
                 }
 
-                allHints[y] = allHints[y].replace(x, '');
+                allHints[y] = allHints[y].substr(1);
                 if (allHints[y] === '') {
-                    B = B.replace(y, '');
+                    B = B.substr(1);
                 }
 
                 hints.push(y + x);
@@ -233,6 +234,7 @@ var Page = {
                     'top': element._top,
                     'left': element._left
                 };
+
                 $('<div class="_hint">' + hint + '</div>')
                     .css(style)
                     .appendTo('html');
@@ -286,9 +288,9 @@ var Page = {
     click: (element) => {
         var $element = $(element);
 
-        if ((element.tagName === 'INPUT'
-            && element.type.search(/(button|checkbox|file|hidden|image|radio|reset|submit)/i) === -1)
-            || element.tagName === 'TEXTAREA') {
+        if ((element.tagName === 'INPUT' && element
+                .type.search(/(button|checkbox|file|hidden|image|radio|reset|submit)/i) === -1) ||
+            (element.tagName === 'DIV' && element.hasAttribute('contenteditable')) || element.tagName === 'TEXTAREA') {
 
             element.focus();
             if (document.activeElement.tagName === 'BODY') {
@@ -300,17 +302,13 @@ var Page = {
             element.click();
         }
 
-        else if (element.tagName === 'DIV' && element.hasAttribute('contenteditable')) {
-            element.focus();
-        }
-
         else {
-            stimulateClick(element);
+            mouseClick();
         }
 
-        function stimulateClick(element) {
+        function mouseClick() {
             var names = ['mousedown', 'mouseup', 'click'];
-            var nodes = $(element).find('div, span').addBack();
+            var nodes = $element.find('div, span').addBack();
 
             out:for (var i = 0; i < nodes.length; i++) {
                 var node = nodes[i];
