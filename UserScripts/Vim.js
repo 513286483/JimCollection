@@ -8,9 +8,7 @@ Element.prototype.addEventListener = function (type, listener, userCapture) {
 };
 
 // Event
-$(window)
-    .on('click resize scroll', () => Page.escape())
-    .on('click', event => Page.scrollWithin(event.target));
+$(window).on('click resize scroll', () => Page.escape());
 
 addEventListener('keydown', event => {
     var isTab = (event.code === 'Tab');
@@ -87,7 +85,6 @@ var Page = {
     chars: '',
     hintMap: {},
     isPlus: false,
-    scrollElement: null,
 
     linkHint: () => {
         Page.escape();
@@ -322,17 +319,6 @@ var Page = {
                         break out;
                     }
                 }
-            }
-        }
-    },
-
-    scrollWithin: (target) => {
-        target = $(target);
-        var elements = target.add(target.parentsUntil(document.body));
-        for (var i = 0; i < elements.length; i++) {
-            var element = elements[i];
-            if (element.scrollHeight > element.clientHeight) {
-                Page.scrollElement = element;
             }
         }
     },
