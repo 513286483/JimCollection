@@ -191,9 +191,9 @@ var Page = {
                     x = allHints[y].charAt(0);
                 }
 
-                allHints[y] = allHints[y].substr(1);
+                allHints[y] = allHints[y].replace(x, '');
                 if (allHints[y] === '') {
-                    B = B.substr(1);
+                    B = B.replace(y, '');
                 }
 
                 hints.push(y + x);
