@@ -33,12 +33,11 @@ class DoubleLinkedList:
             if count == index:
                 prev_node = curr_node.prev_node
                 next_node = curr_node.next_node
+                prev_node.next_node = next_node
+                next_node.prev_node = prev_node
 
                 curr_node.next_node = self.gc_node
                 self.gc_node = curr_node
-
-                prev_node.next_node = next_node
-                next_node.prev_node = prev_node
                 break
 
     def insert(self, index, value):
@@ -48,7 +47,7 @@ class DoubleLinkedList:
             if count == index:
                 prev_node = curr_node.prev_node
 
-                if self.gc_node is not None:
+                if self.gc_node:
                     insert_node = self.gc_node
                     self.gc_node = self.gc_node.next_node
 
@@ -65,7 +64,7 @@ class DoubleLinkedList:
         prev_node = self.sentinel.prev_node
         next_node = self.sentinel
 
-        if self.gc_node is not None:
+        if self.gc_node:
             insert_node = self.gc_node
             self.gc_node = self.gc_node.next_node
 
@@ -85,7 +84,7 @@ class SingleLinkedNode:
         self.next_node = next_node
 
     def __repr__(self):
-        return 'value: {}'.format(self.value)
+        return '{}'.format(self.value)
 
 
 class SingleLinkedList:
@@ -161,6 +160,7 @@ class SingleLinkedList:
         if self.gc_node:
             insert_node = self.gc_node
             self.gc_node = self.gc_node.next_node
+            insert_node.value = value
         else:
             insert_node = SingleLinkedNode(value)
 
@@ -191,7 +191,7 @@ class SingleLinkedList:
             curr_node = curr_node.next_node
 
 
-def db_test():
+def sg_test():
     double_link_list = SingleLinkedList()
     for i in range(4):
         double_link_list.insert(0, i)
@@ -200,9 +200,11 @@ def db_test():
 
     double_link_list.delete(0)
     double_link_list.delete(1)
-
-    double_link_list.insert(10000, 789)
     print([i for i in double_link_list])
+    double_link_list.insert(10000, 789)
+    double_link_list.insert(10000, 999)
+    print([i for i in double_link_list])
+    double_link_list.insert(10000, 999)
 
     for i in range(4):
         double_link_list.insert(0, i)
@@ -211,7 +213,7 @@ def db_test():
     print(double_link_list.search(789))
 
 
-def sg_test():
+def db_test():
     double_link_list = DoubleLinkedList()
     for i in range(4):
         double_link_list.insert(0, i)
@@ -234,3 +236,4 @@ def sg_test():
 
 
 sg_test()
+db_test()
