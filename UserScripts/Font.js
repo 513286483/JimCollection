@@ -67,5 +67,5 @@ function hasChinese(element) {
 }
 
 function notDefault(font) {
-    return font.search(/(sans-serif|serif|monospace)/) === -1;
+    return font && font.search(/(sans-serif|serif|monospace)/) === -1;
 }
