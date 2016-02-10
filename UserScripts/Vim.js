@@ -136,8 +136,8 @@ var Page = {
                 elements = elements.filter(canTouch);
                 clickElements = clickElements.filter(canTouch);
 
-                var WIDTH = 15;
-                var HEIGHT = 16;
+                var WIDTH = 18;
+                var HEIGHT = 19;
 
                 var xTree = Tree.create(0, document.documentElement.clientWidth);
                 var yTree = Tree.create(0, document.documentElement.clientHeight);
