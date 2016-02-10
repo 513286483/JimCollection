@@ -303,7 +303,7 @@ var Page = {
         }
 
         function mouseClick() {
-            var names = ['mousedown', 'mouseup', 'click'];
+            var names = ['function', 'mousedown', 'mouseup', 'click'];
             var nodes = $element.find('div, span').addBack();
 
             out:for (var i = 0; i < nodes.length; i++) {
@@ -312,8 +312,7 @@ var Page = {
                     var name = names[j];
 
                     var before = document.body.innerText;
-                    var event = new MouseEvent(name, {bubbles: true});
-                    node.dispatchEvent(event);
+                    name === 'function' ? node.click() : node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
                     if (document.body.innerText !== before) {
                         break out;
                     }

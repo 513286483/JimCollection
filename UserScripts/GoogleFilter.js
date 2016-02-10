@@ -61,18 +61,16 @@ function main() {
         mapFirst = {};
         mapSecond = {};
 
-        var change = true;
-        var observer = new MutationObserver(() => change = true);
-        var config = {childList: true, subtree: true};
-
+        commit();
         function commit() {
             update();
             GM_setValue('mapFirst', JSON.stringify(mapFirst));
             GM_setValue('mapSecond', JSON.stringify(mapSecond));
         }
 
-        commit();
-        observer.observe(document.body, config);
+        var change = true;
+        var observer = new MutationObserver(() => change = true);
+        observer.observe(document.body, {childList: true, subtree: true});
         setInterval(() => {
             if (change) {
                 commit();
