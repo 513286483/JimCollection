@@ -45,7 +45,8 @@ function main() {
 
                     link = link.attr('href').match(/(url=)(.{5})/).pop();
                     mapFirst[link] = '-' +
-                        abstract.contents().filter((i, element) => element.nodeType === 3 || element.tagName === 'EM')
+                        abstract.contents()
+                                .filter((i, element) => element.nodeType === 3 || element.tagName === 'EM')
                                 .text();
 
                     var emList = abstract.find('em');
@@ -82,11 +83,7 @@ function main() {
 
     else {
         var record = GM_getValue('mapFirst');
-        if (record) {
-            mapFirst = JSON.parse(record);
-        } else {
-            return;
-        }
+        mapFirst = record ? JSON.parse(record) : {};
 
         var abstract;
         if (document.referrer.indexOf('baidu.com/link?url=') !== -1) {
@@ -127,6 +124,7 @@ function filter(abstract) {
     var node = document.evaluate(final).iterateNext();
     if (enoughText(node)) {
         toggleBy(node);
+
         $(document).keypress('B', event => {
             if (event.ctrlKey) {
                 toggleBy(node)
