@@ -246,7 +246,6 @@ var Page = {
         Page.chars = '';
         Page.hintMap = {};
         Page.isPlus = false;
-        Page.scrollElement = null;
     },
 
     match: char => {
@@ -269,9 +268,9 @@ var Page = {
         }
     },
 
-    down: ()=> Page.scrollElement ? Page.scrollElement.scrollTop += 100 : scrollBy(0, 100),
+    down: ()=> scrollBy(0, 100),
 
-    up: ()=> Page.scrollElement ? Page.scrollElement.scrollTop -= 100 : scrollBy(0, -100),
+    up: ()=> scrollBy(0, -100),
 
     close: ()=> {
         window.close();
