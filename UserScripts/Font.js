@@ -4,8 +4,7 @@ for (var i = 0; i < fontQueue.length; i++) {
     inject(fontQueue[i])
 }
 
-$('<style>body{font-family:arial;}</style>').appendTo('html');
-$(window).load(() => {
+$(() => {
         transformElement(document.body, true);
         if (fontQueue.length > 30) {
             fontQueue.slice(0, 30);
