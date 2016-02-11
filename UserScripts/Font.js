@@ -4,8 +4,7 @@ for (var i = 0; i < fontQueue.length; i++) {
     inject(fontQueue[i])
 }
 
-$('<style>@font-face{font-family:宋体;unicode-range: U+0020-007F;src:local(arial);}</style>').appendTo('html');
-
+$('<style>body{font-family:arial;}</style>').appendTo('html');
 $(window).load(() => {
         transformElement(document.body, true);
         if (fontQueue.length > 30) {
@@ -35,7 +34,7 @@ function transformElement(element, check) {
         $element.css('font-family', fonts.join());
     }
 
-    if (check && (check = hasChinese(element)) && fontFamily !== cache) {
+    if (check && fontFamily !== cache && (check = hasChinese(element))) {
         fonts.map(
             font => {
                 var curr = fontQueue.indexOf(font);
