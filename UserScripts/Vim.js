@@ -143,8 +143,8 @@ var Page = {
                 var yTree = Tree.create(0, document.documentElement.clientHeight);
                 for (var i = 0; i < elements.length; i++) {
                     var element = elements[i];
-                    Tree.insert(xTree, element._left, element._left + WIDTH, element);
-                    Tree.insert(yTree, element._top, element._top + HEIGHT, element);
+                    Tree.insert(xTree, element._left, Math.min(element._left + WIDTH, xTree.to), element);
+                    Tree.insert(yTree, element._top, Math.min(element._top + HEIGHT, yTree.to), element);
                 }
 
                 clickElements = clickElements.get().reverse().filter(hasPlace);
@@ -303,7 +303,7 @@ var Page = {
         }
 
         function mouseClick() {
-            var names = ['function', 'mousedown', 'mouseup', 'click'];
+            var names = ['clickFunction', 'mousedown', 'mouseup', 'click'];
             var nodes = $element.find('div, span').addBack();
 
             out:for (var i = 0; i < nodes.length; i++) {
@@ -311,9 +311,9 @@ var Page = {
                 for (var j = 0; j < names.length; j++) {
                     var name = names[j];
 
-                    var before = document.body.innerText;
-                    name === 'function' ? node.click() : node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
-                    if (document.body.innerText !== before) {
+                    var before = document.body.innerHTML;
+                    name === 'clickFunction' ? node.click() : node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
+                    if (document.body.innerHTML !== before) {
                         break out;
                     }
                 }
@@ -369,7 +369,7 @@ var Tree = {
         if (from < mid) {
             Tree.insert(Tree.getLeft(node), from, Math.min(to, mid), value);
         }
-        if (to > mid && Math.max(from, mid + 1) < to) {
+        if (to > mid) {
             Tree.insert(Tree.getRight(node), Math.max(from, mid + 1), to, value);
         }
     },
@@ -389,7 +389,7 @@ var Tree = {
         if (from < mid) {
             Tree.search(Tree.getLeft(node), from, Math.min(to, mid), outPipe);
         }
-        if (to > mid && Math.max(from, mid + 1) < to) {
+        if (to > mid) {
             Tree.search(Tree.getRight(node), Math.max(from, mid + 1), to, outPipe);
         }
 
