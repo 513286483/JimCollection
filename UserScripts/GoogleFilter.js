@@ -1,7 +1,4 @@
-if (top === self) {
-    main();
-}
-
+main();
 function main() {
     var href = location.href;
     var mapFirst;
@@ -42,8 +39,8 @@ function main() {
                 var link = element.find('.t > a:first');
                 var abstract = element.find('.c-abstract');
                 if (link.length && abstract.length) {
-
                     link = link.attr('href').match(/(url=)(.{5})/).pop();
+
                     mapFirst[link] = '-' +
                         abstract.contents()
                                 .filter((i, element) => element.nodeType === 3 || element.tagName === 'EM')
@@ -57,7 +54,7 @@ function main() {
         }
     }
 
-    if (isEngine) {
+    if (isEngine && top === self) {
         mapFirst = {};
         mapSecond = {};
 
