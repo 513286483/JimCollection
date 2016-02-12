@@ -271,9 +271,9 @@ var Page = {
         }
     },
 
-    down: ()=> scrollBy(0, 100),
+    down: ()=> scrollBy(0, 200),
 
-    up: ()=> scrollBy(0, -100),
+    up: ()=> scrollBy(0, -200),
 
     close: ()=> {
         window.close();
