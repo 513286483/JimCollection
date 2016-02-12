@@ -2,7 +2,7 @@
 var record = GM_getValue('fontQueue');
 var fontQueue = record ? record.split(',') : ['arial'];
 for (var i = 0; i < fontQueue.length; i++) {
-    inject(fontQueue[i])
+    inject(fontQueue[i]);
 }
 
 $(() => {

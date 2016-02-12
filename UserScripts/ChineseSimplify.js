@@ -16,7 +16,7 @@ if (!lang || (lang.indexOf('ZH') !== -1 && lang.indexOf('CN') === -1)) {
 }
 
 function transformStr(str) {
-    if (str == '') {
+    if (str === '') {
         return str;
     }
 

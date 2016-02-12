@@ -15,7 +15,7 @@ function main() {
             for (var i = 0; i < links.length; i += 1) {
                 var link = links[i];
                 if (link.hasAttribute('onmousedown')) {
-                    link.removeAttribute('onmousedown')
+                    link.removeAttribute('onmousedown');
                 }
 
                 link = link.href;
@@ -26,9 +26,9 @@ function main() {
 
                 var emList = abstract.find('em');
                 mapSecond[link] =
-                    emList.length ? '-' + emList.first().text() + '...' + emList.last().text() : extract(mapFirst[link])
+                    emList.length ? '-' + emList.first().text() + '...' + emList.last().text() : extract(mapFirst[link]);
             }
-        }
+        };
     }
 
     else if (isEngine = (href.indexOf('baidu.com/s?') !== -1)) {
@@ -48,11 +48,11 @@ function main() {
                                 .text();
 
                     var emList = abstract.find('em');
-                    mapSecond[link] = emList.length
-                        ? '-' + emList.first().text() + '...' + emList.last().text() : extract(mapFirst[link]);
+                    mapSecond[link] = emList.length ?
+                    '-' + emList.first().text() + '...' + emList.last().text() : extract(mapFirst[link]);
                 }
             });
-        }
+        };
     }
 
     function commit() {
@@ -123,7 +123,7 @@ function filter(abstract) {
 
         $(document).keypress('B', event => {
             if (event.ctrlKey) {
-                toggleBy(node)
+                toggleBy(node);
             }
         });
     } else {
@@ -132,7 +132,7 @@ function filter(abstract) {
 }
 
 function findNode(mark) {
-    var result = undefined;
+    var result = null;
 
     function travelNode(node) {
         var childNodes = node.childNodes;
@@ -144,7 +144,7 @@ function findNode(mark) {
             }
         }
 
-        if (result === undefined &&
+        if (result === null &&
             node.tagName.search(/(SCRIPT|STYLE)/) === -1 && purify(getText(node)).indexOf(mark) !== -1) {
             result = node;
         }

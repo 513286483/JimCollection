@@ -12,6 +12,6 @@ for (var i = 0; i < topics.length; i++) {
 
             topic.innerText = counts.length > 0 ?
             topic.innerText + ' ' + counts.length + ':' + counts.first().text() : topic.innerText += ' ✓';
-        })
-    })(topic)
+        });
+    })(topic);
 }

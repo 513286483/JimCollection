@@ -13,7 +13,7 @@ function translate(event) {
     if (selection.anchorNode.nodeType === 3) {
         var word = selection.toString();
 
-        if (word == '' || word === prevWord) {
+        if (word === '' || word === prevWord) {
             return;
         } else {
             prevWord = word;
@@ -80,10 +80,10 @@ function popup(x, y, result) {
                             source.start(0);
                         });
                         header.appendChild(document.createTextNode('✓'));
-                    })
+                    });
                 }
 
-            })
+            });
         }
 
         header.style.color = 'darkBlue';
