@@ -102,8 +102,11 @@ var Page = {
 
             function purify(elements, clickElements) {
                 function canTouch(i, element) {
-                    var $element = $(element);
+                    if (blacklist(element)) {
+                        return;
+                    }
 
+                    var $element = $(element);
                     if ($element.css('display') === 'none' ||
                         $element.css('visibility') === 'hidden' || $element.css('opacity') == '0') {
                         return;
@@ -409,3 +412,9 @@ var Tree = {
         }
     }
 };
+
+function blacklist(element) {
+    if (location.href.indexOf('mail.google.com/mail') !== -1 && element.classList.contains('UW')) {
+        return true;
+    }
+}
