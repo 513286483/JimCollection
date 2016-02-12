@@ -1,3 +1,4 @@
+'use strict';
 var questions = $('div.content-inner > .question');
 for (var i = 0; i < questions.length; i++) {
     var question = $(questions[i]);

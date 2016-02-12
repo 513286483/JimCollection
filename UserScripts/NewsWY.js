@@ -1,3 +1,4 @@
+'use strict';
 $(() => {
     var node;
     if (location.href.indexOf('comment') === -1) {

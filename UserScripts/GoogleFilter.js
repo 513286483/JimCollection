@@ -1,3 +1,4 @@
+'use strict';
 main();
 function main() {
     var href = location.href;
@@ -54,17 +55,17 @@ function main() {
         }
     }
 
+    function commit() {
+        update();
+        GM_setValue('mapFirst', JSON.stringify(mapFirst));
+        GM_setValue('mapSecond', JSON.stringify(mapSecond));
+    }
+
     if (isEngine && top === self) {
         mapFirst = {};
         mapSecond = {};
 
         commit();
-        function commit() {
-            update();
-            GM_setValue('mapFirst', JSON.stringify(mapFirst));
-            GM_setValue('mapSecond', JSON.stringify(mapSecond));
-        }
-
         var change = true;
         var observer = new MutationObserver(() => change = true);
         observer.observe(document.body, {childList: true, subtree: true});

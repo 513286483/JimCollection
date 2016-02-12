@@ -1,3 +1,4 @@
+'use strict';
 // Hook
 Element.prototype._addEventListener = Element.prototype.addEventListener;
 Element.prototype.addEventListener = function (type, listener, userCapture) {

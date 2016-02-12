@@ -1,3 +1,4 @@
+'use strict';
 var links = $('.list-group-item-info');
 for (var i = 0; i < links.length; i++) {
     var link = links[i];

@@ -1,3 +1,4 @@
+'use strict';
 var topics = $('.topic-feed-item > a');
 for (var i = 0; i < topics.length; i++) {
     var topic = topics[i];
