@@ -26,7 +26,8 @@ function main() {
 
                 var emList = abstract.find('em');
                 mapSecond[link] =
-                    emList.length ? '-' + emList.first().text() + '...' + emList.last().text() : extract(mapFirst[link]);
+                    emList.length ?
+                    '-' + emList.first().text() + '...' + emList.last().text() : extract(mapFirst[link]);
             }
         };
     }
