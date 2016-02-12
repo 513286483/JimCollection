@@ -151,12 +151,15 @@ var Page = {
                 function hasPlace(element) {
                     var overlapsX = $();
                     var overlapsY = $();
-                    Tree.search(xTree, element._left, element._left + WIDTH, x => overlapsX = overlapsX.add(x));
-                    Tree.search(yTree, element._top, element._top + HEIGHT, x => overlapsY = overlapsY.add(x));
+
+                    var leftTo = Math.min(element._left + WIDTH, xTree.to);
+                    var topTo = Math.min(element._top + HEIGHT, yTree.to);
+                    Tree.search(xTree, element._left, leftTo, x => overlapsX = overlapsX.add(x));
+                    Tree.search(yTree, element._top, topTo, x => overlapsY = overlapsY.add(x));
 
                     if (overlapsX.filter(overlapsY).length === 0) {
-                        Tree.insert(xTree, element._left, element._left + WIDTH, element);
-                        Tree.insert(yTree, element._top, element._top + HEIGHT, element);
+                        Tree.insert(xTree, element._left, leftTo, element);
+                        Tree.insert(yTree, element._top, topTo, element);
                         return true;
                     }
                 }
