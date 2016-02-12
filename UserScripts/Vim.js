@@ -418,7 +418,9 @@ var Tree = {
 };
 
 function blacklist(element) {
-    if (location.href.indexOf('mail.google.com/mail') !== -1 && element.classList.contains('UW')) {
-        return true;
+    if (location.href.indexOf('mail.google.com/mail') !== -1) {
+        if (element.classList.contains('UW') || element.classList.contains('J-N-Jz')) {
+            return true;
+        }
     }
 }
