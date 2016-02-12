@@ -94,7 +94,7 @@ var Page = {
         Page.hintMap = popupHints(elements, hints);
 
         function getElements() {
-            var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable], [tabindex]');
+            var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable]');
             var clickElements = $(Page.clickElements)
                 .find('div, span').addBack()
                 .filter((i, element) => $(element).css('cursor').search(/(pointer|default)/) !== -1);
@@ -109,8 +109,8 @@ var Page = {
                         return;
                     }
 
-                    var rect = element.getBoundingClientRect();
-                    if (rect.top >= 0 && rect.left >= 0 && rect.width > 1 && rect.height > 1
+                    var rect = element.getClientRects()[0];
+                    if (rect && rect.top >= 0 && rect.left >= 0 && rect.width > 1 && rect.height > 1
                         && rect.bottom <= document.documentElement.clientHeight
                         && rect.right <= document.documentElement.clientWidth) {
 
@@ -121,7 +121,7 @@ var Page = {
                         element._left = rect.left + driftLeft;
 
                         var positions = [[element._left + 1, element._top + 1],
-                            [element._left + rect.width - 1, element._top + rect.height - 1]];
+                            [element._left + rect.width * 0.1, element._top + rect.height * 0.1]];
 
                         for (i = 0; i < positions.length; i++) {
                             var clickElement = document.elementFromPoint(positions[i][0], positions[i][1]);
