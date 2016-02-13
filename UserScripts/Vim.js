@@ -219,8 +219,10 @@ var Page = {
                 if (singletonChars.indexOf(startChar) !== -1) {
                     hints[i] = startChar;
                 } else if (availableChars.length) {
-                    (allHints[startChar] += '.').length === lengthB - 1 ?
-                        singletonChars.push(startChar) : hints[i] = availableChars.pop();
+                    hints[i] = availableChars.pop();
+                    if ((allHints[startChar] += '.').length === lengthB - 1) {
+                        singletonChars.push(startChar)
+                    }
                 }
             }
 
