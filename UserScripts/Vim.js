@@ -266,7 +266,7 @@ var Page = {
             var removeElements = [];
             hints = hints.filter((i, element) => {
                 if (element.innerText.startsWith(char)) {
-                    return element.innerText = element.innerText.slice(-1);
+                    return element.innerText = element.innerText.substr(-1);
                 } else {
                     removeElements.push(element);
                 }
