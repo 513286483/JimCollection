@@ -62,7 +62,7 @@ function main() {
         GM_setValue('mapSecond', JSON.stringify(mapSecond));
     }
 
-    if (isEngine && top === self) {
+    if (isEngine) {
         mapFirst = {};
         mapSecond = {};
 
@@ -78,7 +78,7 @@ function main() {
         }, 500);
     }
 
-    else {
+    else if (top === self) {
         var record = GM_getValue('mapFirst');
         mapFirst = record ? JSON.parse(record) : {};
 
