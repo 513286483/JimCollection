@@ -214,15 +214,13 @@ var Page = {
                 }
             }
 
-            var recyclePool = {};
             for (i = 0; i < hints.length && (singletonChars.length || availableChars.length); i++) {
                 var startChar = hints[i].charAt(0);
-                if (singletonChars.length && singletonChars.indexOf(startChar) !== -1) {
+                if (singletonChars.indexOf(startChar) !== -1) {
                     hints[i] = startChar;
                 } else if (availableChars.length) {
-                    hints[i] = availableChars.pop();
-                    recyclePool[startChar] = startChar in recyclePool && ++recyclePool[startChar] === lengthB ?
-                        availableChars += startChar : 0;
+                    (allHints[startChar] += '.').length === lengthB - 1 ?
+                        singletonChars.push(startChar) : hints[i] = availableChars.pop();
                 }
             }
 
