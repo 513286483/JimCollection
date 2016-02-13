@@ -263,10 +263,17 @@ var Page = {
         if (hints.length) {
             Page.chars += char;
 
-            if ((hints.length - hints
-                    .filter((i, element) => !element.innerText.startsWith(Page.chars))
-                    .remove().length) === 1) {
+            var removeElements = [];
+            hints = hints.filter((i, element) => {
+                if (element.innerText.startsWith(char)) {
+                    return element.innerText = element.innerText.slice(-1);
+                } else {
+                    removeElements.push(element);
+                }
+            });
+            $(removeElements).remove();
 
+            if (hints.length === 1) {
                 var element = Page.hintMap[Page.chars];
                 element.tagName === 'A' && Page.isPlus ? GM_openInTab(element.href, true) : Page.click(element);
 
@@ -321,9 +328,9 @@ var Page = {
                 for (var j = 0; j < names.length; j++) {
                     var name = names[j];
 
-                    var before = document.body.innerHTML;
+                    var before = document.body.innerText;
                     name === 'clickFunction' ? node.click() : node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
-                    if (document.body.innerHTML !== before) {
+                    if (document.body.innerText !== before) {
                         break out;
                     }
                 }
