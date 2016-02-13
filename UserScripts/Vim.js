@@ -103,7 +103,7 @@ var Page = {
 
             function purify(elements, clickElements) {
                 function canTouch(i, element) {
-                    if (blacklist(element)) {
+                    if (isBlack(element)) {
                         return;
                     }
 
@@ -221,7 +221,7 @@ var Page = {
                 } else if (availableChars.length) {
                     hints[i] = availableChars.pop();
                     if ((allHints[startChar] += '.').length === lengthB - 1) {
-                        singletonChars.push(startChar)
+                        singletonChars.push(startChar);
                     }
                 }
             }
@@ -425,7 +425,7 @@ var Tree = {
     }
 };
 
-function blacklist(element) {
+function isBlack(element) {
     if (location.href.indexOf('mail.google.com/mail') !== -1) {
         if (element.classList.contains('UW') || element.classList.contains('J-N-Jz')) {
             return true;
