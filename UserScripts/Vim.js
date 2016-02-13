@@ -320,7 +320,7 @@ var Page = {
         }
 
         function mouseClick() {
-            var names = ['clickFunction', 'mousedown', 'mouseup', 'click'];
+            var names = ['invokeFunction', 'mousedown', 'mouseup', 'click'];
             var nodes = $element.find('div, span').addBack();
 
             out:for (var i = 0; i < nodes.length; i++) {
@@ -328,9 +328,10 @@ var Page = {
                 for (var j = 0; j < names.length; j++) {
                     var name = names[j];
 
-                    var before = document.body.innerText;
-                    name === 'clickFunction' ? node.click() : node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
-                    if (document.body.innerText !== before) {
+                    var beforeHTML = document.body.innerHTML;
+                    var beforeText = document.body.innerText;
+                    name === 'invokeFunction' ? node.click() : node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
+                    if (document.body.innerHTML !== beforeHTML && document.body.innerText !== beforeText) {
                         break out;
                     }
                 }
