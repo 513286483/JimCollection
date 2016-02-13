@@ -5,6 +5,7 @@ for (var i = 0; i < fontQueue.length; i++) {
     inject(fontQueue[i]);
 }
 
+$('<style>body{font-family:arial;}</style>').appendTo('html');
 $(() => {
         transformElement(document.body, true);
         if (fontQueue.length > 30) {
