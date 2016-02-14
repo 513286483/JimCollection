@@ -1,4 +1,5 @@
 'use strict';
+
 $(() => {
     var sign = 'link.zhihu.com/?target=';
     var links = $('a.external');

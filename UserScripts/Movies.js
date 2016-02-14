@@ -1,4 +1,5 @@
 'use strict';
+
 var count = 0;
 var markLink = 'http://movie.douban.com/subject_search?search_text=';
 

@@ -1,4 +1,5 @@
 'use strict';
+
 var prevWord = '';
 var audio = new AudioContext();
 addEventListener('mouseup', translate);

@@ -1,4 +1,5 @@
 'use strict';
+
 var lang = document.documentElement.lang.toUpperCase();
 var map = {};
 
