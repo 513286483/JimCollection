@@ -103,10 +103,6 @@ var Page = {
 
             function purify(elements, clickElements) {
                 function canTouch(i, element) {
-                    if (isBlack(element)) {
-                        return;
-                    }
-
                     var $element = $(element);
                     if ($element.css('display') === 'none' ||
                         $element.css('visibility') === 'hidden' || $element.css('opacity') == '0') {
@@ -424,11 +420,3 @@ var Tree = {
         }
     }
 };
-
-function isBlack(element) {
-    if (location.href.indexOf('mail.google.com/mail') !== -1) {
-        if (element.classList.contains('UW') || element.classList.contains('J-N-Jz')) {
-            return true;
-        }
-    }
-}
