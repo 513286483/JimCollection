@@ -1,6 +1,7 @@
 'use strict';
+
 var record = GM_getValue('fontQueue');
-var fontQueue = record ? record.split(',') : ['arial'];
+var fontQueue = record ? record.split(',') : [];
 for (var i = 0; i < fontQueue.length; i++) {
     inject(fontQueue[i]);
 }
