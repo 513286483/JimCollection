@@ -7,12 +7,13 @@ for (var i = 0; i < topics.length; i++) {
     (topic => {
         $.get(topic.href, data => {
 
-            var subPage = $(data.replace(/<img[^>]*>/g, ''));
-            var counts = subPage.find('.count');
-            counts.sort((x, y) => -(x.innerText - y.innerText));
+            var page = $(data.replace(/<img[^>]*>/g, ''));
+            var counts = page.find('.count');
+            counts.sort((a, b) => -(a.innerText - b.innerText));
 
-            topic.innerText = counts.length > 0 ?
-            topic.innerText + ' ' + counts.length + ':' + counts.first().text() : topic.innerText += ' ✓';
+            counts.length > 0 ?
+                topic.innerText = topic.innerText + ' ' + counts.length + ':' + counts.first().text() :
+                topic.innerText += ' ✓';
         });
     })(topic);
 }
