@@ -178,7 +178,7 @@ var Page = {
                 var y = Y.charAt(Math.round(element._top / document.documentElement.clientHeight * (Y.length - 1)));
                 var x = X.charAt(Math.round(element._left / document.documentElement.clientWidth * (X.length - 1)));
 
-                if (allHints[y].indexOf(x) === -1) {
+                if (!allHints[y].includes(x)) {
                     y = B.charAt(0);
                     x = allHints[y].charAt(0);
                 }

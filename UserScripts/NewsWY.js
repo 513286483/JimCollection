@@ -2,7 +2,7 @@
 
 $(() => {
     var node;
-    if (location.href.indexOf('comment') === -1) {
+    if (!location.href.includes('comment')) {
         node = $('.ep-content-main');
         node.add(node.parentsUntil(document.body)).siblings().hide();
         node.find('.ep-share-tip, .ep-share-top, .ep-icon-tie')
