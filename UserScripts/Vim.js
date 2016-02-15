@@ -121,8 +121,7 @@ var Page = {
 
                         for (i = 0; i < positions.length; i++) {
                             var targetElement = document.elementFromPoint(positions[i][0], positions[i][1]);
-                            if (targetElement === element ||
-                                targetElement.contains(element) || element.contains(targetElement)) {
+                            if (targetElement === element || element.contains(targetElement)) {
                                 return true;
                             }
                         }
