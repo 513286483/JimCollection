@@ -120,7 +120,7 @@ function displayPopup(x, y, response) {
 }
 
 document.body.innerHTML += `<style>._popup {
-    background: lightblue scroll;
+    background: lightblue;
     border-radius: 5px;
     box-shadow: 0 0 5px;
     color: black;
