@@ -8,7 +8,7 @@ function main() {
 
     var update;
     var isEngine;
-    if (isEngine = (href.indexOf('google.co.uk/') !== -1)) {
+    if (isEngine = (href.includes('google.co.uk/'))) {
         update = function () {
             var rc = $('.srg > .g > .rc');
             var links = rc.find('.r > a');
@@ -22,7 +22,7 @@ function main() {
                 link = link.href;
                 var abstract = $(abstracts[i]);
 
-                mapFirst[link] = abstract.find('span').length < 1 ? '-' : '';
+                mapFirst[link] = abstract.find('span').length ? '' : '-';
                 mapFirst[link] += abstract.text();
 
                 var emList = abstract.find('em');
@@ -33,7 +33,7 @@ function main() {
         };
     }
 
-    else if (isEngine = (href.indexOf('baidu.com/s?') !== -1)) {
+    else if (isEngine = (href.includes('baidu.com/s?'))) {
         update = function () {
             var result = $('.c-container');
             result.map((i, element) => {
@@ -50,8 +50,9 @@ function main() {
                                 .text();
 
                     var emList = abstract.find('em');
-                    mapSecond[link] = emList.length ?
-                    '-' + emList.first().text() + '...' + emList.last().text() : extract(mapFirst[link]);
+                    mapSecond[link] =
+                        emList.length ?
+                        '-' + emList.first().text() + '...' + emList.last().text() : extract(mapFirst[link]);
                 }
             });
         };
@@ -68,7 +69,7 @@ function main() {
         mapSecond = {};
 
         commit();
-        var change = true;
+        var change;
         var observer = new MutationObserver(() => change = true);
         observer.observe(document.body, {childList: true, subtree: true});
         setInterval(() => {
@@ -84,7 +85,7 @@ function main() {
         mapFirst = record ? JSON.parse(record) : {};
 
         var abstract;
-        if (document.referrer.indexOf('baidu.com/link?url=') !== -1) {
+        if (document.referrer.includes('baidu.com/link?url=')) {
             href = document.referrer.match(/(url=)(.{5})/).pop();
             abstract = mapFirst[href];
         } else {
@@ -108,24 +109,23 @@ function filter(abstract) {
         .map(purify)
         .filter(Boolean);
 
-    var open = xPath(findNode(marks.shift()));
+    var open = xPath(findElement(marks.shift()));
     if (marks.length) {
-        var close = xPath(findNode(marks.pop()));
+        var close = xPath(findElement(marks.pop()));
     }
 
-    var final = open && close && (open !== close) ? intersection(open, close) : open || close;
-    if (!final) {
+    var path = open && close && (open !== close) ? intersection(open, close) : open || close;
+    if (!path) {
         return -1;
     }
-    final = estimate(final);
+    path = estimate(path);
 
-    var node = document.evaluate(final).iterateNext();
-    if (enoughText(node)) {
-        toggleBy(node);
-
+    var element = document.evaluate(path).iterateNext();
+    if (enoughText(element)) {
+        toggleExcept(element);
         $(document).keypress('B', event => {
             if (event.ctrlKey) {
-                toggleBy(node);
+                toggleExcept(element);
             }
         });
     } else {
@@ -133,31 +133,28 @@ function filter(abstract) {
     }
 }
 
-function findNode(mark) {
+function findElement(mark) {
     var result = null;
 
-    function travelNode(node) {
-        var childNodes = node.childNodes;
-        for (var i = 0; i < childNodes.length; i++) {
-            var childNode = childNodes[i];
-
-            if (childNode.nodeType === 1) {
-                travelNode(childNode);
-            }
+    function travelElement(element) {
+        var children = element.children;
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            travelElement(child);
         }
 
         if (result === null &&
-            node.tagName.search(/(SCRIPT|STYLE)/) === -1 && purify(getText(node)).indexOf(mark) !== -1) {
-            result = node;
+            element.tagName.search(/(SCRIPT|STYLE)/) === -1 && purify(getText(element)).includes(mark)) {
+            result = element;
         }
     }
 
-    travelNode(document.body);
+    travelElement(document.body);
     return result;
 }
 
 function xPath(node) {
-    if (!node || node.nodeType !== 1) {
+    if (!(node && node.nodeType === 1)) {
         return '';
     }
 
@@ -178,17 +175,15 @@ function xPath(node) {
 }
 
 $.fn.visibleToggle = function () {
-    return this.css('visibility', function (i, visibility) {
-        return (visibility === 'visible') ? 'hidden' : 'visible';
-    });
+    return this.css('visibility', (i, visibility) => visibility === 'visible' ? 'hidden' : 'visible');
 };
 
-function toggleBy(node) {
-    var _hide = $('._hide');
-    if (_hide.length === 0) {
-        node.scrollIntoView();
-        node = $(node);
-        node.add(node.parentsUntil(document.body)).siblings().map(
+function toggleExcept(element) {
+    var hide = $('._hide');
+    if (hide.length === 0) {
+        element.scrollIntoView();
+        element = $(element);
+        element.add(element.parentsUntil(document.body)).siblings().map(
             (i, x) => {
                 x = $(x);
                 if (x.is(':visible')) {
@@ -196,7 +191,7 @@ function toggleBy(node) {
                 }
             });
     } else {
-        _hide.visibleToggle();
+        hide.visibleToggle();
     }
 }
 
@@ -205,11 +200,10 @@ function purify(text) {
 }
 
 function extract(abstract) {
-    var marks = abstract.split(/[^a-zA-Z\u4E00-\u9FFF]/g);
-    if (marks) {
-        marks = marks.sort((a, b) => a.length - b.length);
-        return '-' + marks.pop() + '...' + marks.pop();
-    }
+    var marks = abstract
+        .split(/[^a-zA-Z\u4E00-\u9FFF]/)
+        .sort((a, b) => a.length - b.length);
+    return '-' + marks.pop() + '...' + marks.pop();
 }
 
 function intersection(a, b) {
@@ -233,19 +227,18 @@ function intersection(a, b) {
 }
 
 function estimate(xPath) {
-    var result = [];
-
+    var breakPoints = [];
     var match;
     var re = /(DIV|ARTICLE|SECTION)/g;
     while ((match = re.exec(xPath))) {
-        result.push(match.index);
+        breakPoints.push(match.index);
     }
 
-    if (result.length === 0) {
+    if (breakPoints.length === 0) {
         return xPath;
     } else {
-        var mid = result[Math.ceil(result.length / 3) - 1];
-        var close = xPath.indexOf('/', mid);
+        var anchor = breakPoints[Math.ceil(breakPoints.length / 3) - 1];
+        var close = xPath.indexOf('/', anchor);
         if (close !== -1) {
             return xPath.substr(0, close);
         } else {
@@ -254,14 +247,14 @@ function estimate(xPath) {
     }
 }
 
-function getText(node) {
-    if ($(node).is(':visible') && node.innerText) {
-        return node.innerText;
+function getText(element) {
+    if ($(element).is(':visible') && element.innerText) {
+        return element.innerText;
     } else {
         return '';
     }
 }
 
-function enoughText(node) {
-    return purify(getText(node)).length > purify(getText(document.body)).length / 5;
+function enoughText(element) {
+    return purify(getText(element)).length > purify(getText(document.body)).length / 5;
 }
