@@ -4,7 +4,7 @@
 Element.prototype._addEventListener = Element.prototype.addEventListener;
 Element.prototype.addEventListener = function (type, listener, userCapture) {
     this._addEventListener(type, listener, userCapture);
-    if (type.search(/(mousedown|mouseup|click)/i) !== -1) {
+    if (type.match(/(mousedown|mouseup|click)/i)) {
         Page.clickElements.push(this);
     }
 };
@@ -17,7 +17,6 @@ addEventListener('keydown', event => {
     if (isTab) {
         event.preventDefault();
     }
-
     if (Page.isReady(event)) {
         event.stopImmediatePropagation();
         if (isTab) {
@@ -99,35 +98,31 @@ var Page = {
             var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable]');
             var clickElements = $(Page.clickElements)
                 .find('div, span').addBack()
-                .filter((i, element) => $(element).css('cursor').search(/(pointer|default)/) !== -1);
+                .filter((i, element) => getComputedStyle(element).cursor === 'pointer');
             return purify(elements, clickElements);
 
             function purify(elements, clickElements) {
                 function canTouch(i, element) {
-                    var $element = $(element);
-                    if ($element.css('display') === 'none' ||
-                        $element.css('visibility') === 'hidden' || $element.css('opacity') == '0') {
+                    var computedStyle = getComputedStyle(element);
+                    if (computedStyle.display === 'none' ||
+                        computedStyle.visibility === 'hidden' || computedStyle.opacity === '0') {
                         return;
                     }
 
                     var rect = element.getClientRects()[0];
-                    if (rect && rect.top >= 0 && rect.left >= 0 && rect.width > 1 && rect.height > 1
-                        && rect.bottom <= document.documentElement.clientHeight
-                        && rect.right <= document.documentElement.clientWidth) {
+                    if (rect && rect.left >= 0 && rect.top >= 0 && rect.width && rect.height
+                        && rect.right <= document.documentElement.clientWidth
+                        && rect.bottom <= document.documentElement.clientHeight) {
 
-                        var temp;
-                        var driftTop = (temp = parseInt($element.css('margin-top')) < 0) ? -temp : 0;
-                        var driftLeft = (temp = parseInt($element.css('margin-left')) < 0) ? -temp : 0;
-                        element._top = rect.top + driftTop;
-                        element._left = rect.left + driftLeft;
-
+                        element._left = rect.left;
+                        element._top = rect.top;
                         var positions = [[element._left + 1, element._top + 1],
-                            [element._left + rect.width * 0.1, element._top + rect.height * 0.1]];
+                            [element._left + rect.width * 0.5, element._top + rect.height * 0.5]];
 
                         for (i = 0; i < positions.length; i++) {
-                            var clickElement = document.elementFromPoint(positions[i][0], positions[i][1]);
-                            if (clickElement === element ||
-                                clickElement.contains(element) || element.contains(clickElement)) {
+                            var targetElement = document.elementFromPoint(positions[i][0], positions[i][1]);
+                            if (targetElement === element ||
+                                targetElement.contains(element) || element.contains(targetElement)) {
                                 return true;
                             }
                         }
@@ -142,12 +137,8 @@ var Page = {
 
                 var xTree = Tree.create(0, document.documentElement.clientWidth);
                 var yTree = Tree.create(0, document.documentElement.clientHeight);
-                for (var i = 0; i < elements.length; i++) {
-                    var element = elements[i];
-                    Tree.insert(xTree, element._left, Math.min(element._left + WIDTH, xTree.to), element);
-                    Tree.insert(yTree, element._top, Math.min(element._top + HEIGHT, yTree.to), element);
-                }
 
+                elements = elements.filter((i, element) => hasPlace(element));
                 clickElements = clickElements.get().reverse().filter(hasPlace);
                 function hasPlace(element) {
                     var overlapsX = $();
@@ -156,7 +147,7 @@ var Page = {
                     var leftTo = Math.min(element._left + WIDTH, xTree.to);
                     var topTo = Math.min(element._top + HEIGHT, yTree.to);
                     Tree.search(xTree, element._left, leftTo, x => overlapsX = overlapsX.add(x));
-                    Tree.search(yTree, element._top, topTo, x => overlapsY = overlapsY.add(x));
+                    Tree.search(yTree, element._top, topTo, y => overlapsY = overlapsY.add(y));
 
                     if (overlapsX.filter(overlapsY).length === 0) {
                         Tree.insert(xTree, element._left, leftTo, element);
@@ -213,7 +204,7 @@ var Page = {
 
             for (i = 0; i < hints.length && (singletonChars.length || availableChars.length); i++) {
                 var startChar = hints[i].charAt(0);
-                if (singletonChars.indexOf(startChar) !== -1) {
+                if (singletonChars.includes(startChar)) {
                     hints[i] = startChar;
                 } else if (availableChars.length) {
                     hints[i] = availableChars.pop();
@@ -327,7 +318,8 @@ var Page = {
 
                     var beforeHTML = document.body.innerHTML;
                     var beforeText = document.body.innerText;
-                    name === 'invokeFunction' ? node.click() : node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
+                    name === 'invokeFunction' ? node.click() :
+                        node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
                     if (document.body.innerHTML !== beforeHTML && document.body.innerText !== beforeText) {
                         break out;
                     }
