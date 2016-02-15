@@ -1,32 +1,26 @@
 'use strict';
 
-var prevWord = '';
+var prevWord;
 var audio = new AudioContext();
 addEventListener('mouseup', translate);
 
 function translate(event) {
-    var prevPopup = document.querySelector('.overlay-popup');
+    var prevPopup = document.querySelector('._popup');
     if (prevPopup) {
         document.body.removeChild(prevPopup);
     }
 
-    var selection = document.getSelection();
+    var selection = getSelection();
     if (selection.anchorNode.nodeType === 3) {
         var word = selection.toString();
-
-        if (word === '' || word === prevWord) {
-            return;
-        } else {
+        if (word && word !== prevWord) {
             prevWord = word;
+            request();
         }
-
-        var ts = new Date().getTime();
-        var x = event.clientX;
-        var y = event.clientY;
-        request(word, ts);
     }
 
-    function request(word, ts) {
+    function request() {
+        var ts = Date.now();
         var requestLink = 'http://fanyi.youdao.com/openapi.do?type=data&doctype=json&version=1.1&relatedUrl=' +
             encodeURIComponent('http://fanyi.youdao.com/#') +
             '&keyfrom=fanyiweb&key=null&translate=on' +
@@ -36,16 +30,16 @@ function translate(event) {
         GM_xmlhttpRequest({
             method: 'GET',
             url: requestLink,
-            onload: res => popup(x, y, res.response)
+            onload: res => displayPopup(event.clientX, event.clientY, res.response)
         });
     }
 }
 
-function popup(x, y, result) {
-    var overlayPopup = document.createElement('div');
-    overlayPopup.classList.add('overlay-popup');
+function displayPopup(x, y, response) {
+    var popup = document.createElement('div');
+    popup.classList.add('_popup');
 
-    var map = JSON.parse(result);
+    var map = JSON.parse(response);
     'basic' in map ? word() : sentence();
 
     function word() {
@@ -62,6 +56,7 @@ function popup(x, y, result) {
         if (phonetic) {
             var phoneticElement = document.createElement('span');
             phoneticElement.innerText = '[' + phonetic + ']';
+            phoneticElement.style.color = 'darkBlue';
             phoneticElement.style.cursor = 'pointer';
             phoneticElement.addEventListener('mouseup', event => event.stopPropagation());
             header.appendChild(phoneticElement);
@@ -87,14 +82,13 @@ function popup(x, y, result) {
             });
         }
 
-        header.style.color = 'darkBlue';
         header.style.margin = '0px';
         header.style.padding = '0px';
-        overlayPopup.appendChild(header);
+        popup.appendChild(header);
 
         var hr = document.createElement('hr');
         hr.style.margin = '0px';
-        overlayPopup.appendChild(hr);
+        popup.appendChild(hr);
 
         var ul = document.createElement('ul');
         basic['explains'].map(explain => {
@@ -107,30 +101,32 @@ function popup(x, y, result) {
         ul.style.margin = '0px';
         ul.style.padding = '0px';
         ul.style.textAlign = 'left';
-        overlayPopup.appendChild(ul);
+        popup.appendChild(ul);
     }
 
     function sentence() {
-        overlayPopup.appendChild(document.createTextNode(map['translation']));
+        popup.appendChild(document.createTextNode(map['translation']));
     }
 
-    overlayPopup.style.background = 'lightblue';
-    overlayPopup.style.borderRadius = '5px';
-    overlayPopup.style.boxShadow = '0 0 5px';
-    overlayPopup.style.color = 'black';
-    overlayPopup.style.fontSize = '13px';
-    overlayPopup.style.maxWidth = '200px';
-    overlayPopup.style.padding = '5px';
-    overlayPopup.style.position = 'fixed';
-    overlayPopup.style.zIndex = '1024';
+    popup.style.left =
+        x + popup.offsetWidth > document.documentElement.clientWidth ?
+        x - popup.offsetWidth + 'px' : x + 'px';
 
-    overlayPopup.style.left =
-        x + overlayPopup.offsetWidth > document.documentElement.clientWidth ?
-        x - overlayPopup.offsetWidth + 'px' : x + 'px';
+    popup.style.top =
+        y + popup.offsetHeight > document.documentElement.clientHeight ?
+        y - popup.offsetHeight + 'px' : y + 'px';
 
-    overlayPopup.style.top =
-        y + overlayPopup.offsetHeight > document.documentElement.clientHeight ?
-        y - overlayPopup.offsetHeight + 'px' : y + 'px';
-
-    document.body.appendChild(overlayPopup);
+    document.body.appendChild(popup);
 }
+
+document.body.innerHTML += `<style>._popup {
+    background: lightblue scroll;
+    border-radius: 5px;
+    box-shadow: 0 0 5px;
+    color: black;
+    font-size: 13px;
+    max-width: 200px;
+    padding: 5px;
+    position: fixed;
+    z-index: 1024;
+}</style>`;
