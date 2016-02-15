@@ -6,13 +6,9 @@ for (var i = 0; i < fontQueue.length; i++) {
     inject(fontQueue[i]);
 }
 
-$('<style>body{font-family:arial;}</style>').appendTo('html');
 $(() => {
-        transformElement(document.body, true);
-        if (fontQueue.length > 30) {
-            fontQueue.slice(0, 30);
-        }
-        GM_setValue('fontQueue', fontQueue.join(','));
+        transformElement(document.body);
+        GM_setValue('fontQueue', fontQueue.slice(0, 30).join(','));
     }
 );
 
@@ -20,23 +16,23 @@ function inject(font) {
     var style =
         '<style>' +
         '@font-face{font-family:' + font + ';src:local(' + font + ');}' +
-        '@font-face{font-family:' + font + ';unicode-range: U+4E00-9FFF;src:local(Noto Sans CJK SC);}' +
+        '@font-face{font-family:' + font + ';unicode-range:U+4E00-9FFF;src:local(Noto Sans CJK SC);}' +
         '</style>';
     $(style).prependTo('html');
 }
 
 var cache;
-function transformElement(element, check) {
+function transformElement(element, probe) {
     var $element = $(element);
     var fontFamily = $element.css('font-family').replace(/'|"/g, '').toLowerCase();
     var fonts = fontFamily.split(', ').filter(notDefault);
 
-    if (fonts.indexOf('arial') === -1) {
+    if (!fonts.includes('arial')) {
         fonts.push('arial');
         $element.css('font-family', fonts.join());
     }
 
-    if (check && fontFamily !== cache && (check = hasChinese(element))) {
+    if ((probe || probe === undefined) && fontFamily !== cache && (probe = hasChinese(element))) {
         fonts.map(
             font => {
                 var curr = fontQueue.indexOf(font);
@@ -54,12 +50,10 @@ function transformElement(element, check) {
         cache = fontFamily;
     }
 
-    var childNodes = element.childNodes;
-    for (var i = 0; i < childNodes.length; i++) {
-        var childNode = childNodes[i];
-        if (childNode.nodeType === 1) {
-            transformElement(childNode, check);
-        }
+    var children = element.children;
+    for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        transformElement(child, probe);
     }
 }
 
