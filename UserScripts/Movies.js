@@ -13,9 +13,9 @@ for (var i = 0; i < names.length; i++) {
             url: markLink + name.innerText,
 
             onload: data => {
-                var subPage = $(data.responseText.replace(/<img[^>]*>/g, ''));
-                $(name.parentNode).find('[data-type="mark"]')
-                                  .text(subPage.find('.rating_nums').first().text());
+                var page = $(data.responseText.replace(/<img[^>]*>/g, ''));
+                $(name).parent().find('[data-type="mark"]')
+                       .text(page.find('.rating_nums').first().text());
                 if (++count === names.length) {
                     sort();
                 }
