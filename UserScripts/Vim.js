@@ -318,8 +318,8 @@ var Page = {
 
                     var beforeHTML = document.body.innerHTML;
                     var beforeText = document.body.innerText;
-                    name === 'invokeFunction' ? node.click() :
-                        node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
+                    var event = new MouseEvent(name, {bubbles: true});
+                    name === 'invokeFunction' ? node.click() : node.dispatchEvent(event);
                     if (document.body.innerHTML !== beforeHTML && document.body.innerText !== beforeText) {
                         break out;
                     }
