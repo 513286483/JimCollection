@@ -292,7 +292,7 @@ if __name__ == '__main__':
 
         rb = RedBlackTree()
         right_list = []
-        for i in range(5000):
+        for i in range(50000):
             rand = randint(0, 100)
             rb.insert(rand, rand)
             right_list.append(rand)
@@ -305,7 +305,7 @@ if __name__ == '__main__':
 
         for i in [j for j in rb]:
             rb.delete(i)
-
+        print('after Del')
         for i in rb:
             print(i)
 
