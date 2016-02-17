@@ -13,28 +13,26 @@ Element.prototype.addEventListener = function (type, listener, userCapture) {
 $(window).on('click resize scroll', () => Page.escape());
 
 addEventListener('keydown', event => {
+    var isFree = Page.isFree(event);
     var isTab = (event.code === 'Tab');
+
     if (isTab) {
         event.preventDefault();
-    }
-    if (Page.isReady(event)) {
         event.stopImmediatePropagation();
-        if (isTab) {
-            Page.escape();
-        }
-    } else if (isTab) {
-        document.activeElement.blur();
+        isFree ? Page.escape() : document.activeElement.blur();
+    } else if (isFree) {
+        event.stopImmediatePropagation();
     }
 }, true);
 
 addEventListener('keyup', event => {
-    if (Page.isReady(event)) {
+    if (Page.isFree(event)) {
         event.stopImmediatePropagation();
     }
 }, true);
 
 addEventListener('keypress', event => {
-    if (Page.isReady(event)) {
+    if (Page.isFree(event)) {
         var char = String.fromCharCode(event.keyCode).toUpperCase();
         switch (char) {
             case 'F':
@@ -136,11 +134,10 @@ var Page = {
                 elements = elements.filter((i, element) => hasPlace(element));
                 clickElements = clickElements.get().reverse().filter(hasPlace);
                 function hasPlace(element) {
-                    const WIDTH = 15;
-                    const HEIGHT = 16;
-
                     var overlapsX = $();
                     var overlapsY = $();
+                    const WIDTH = 15;
+                    const HEIGHT = 16;
 
                     var leftTo = Math.min(element._left + WIDTH, xTree.to);
                     var topTo = Math.min(element._top + HEIGHT, yTree.to);
@@ -326,10 +323,10 @@ var Page = {
         }
     },
 
-    isReady: (event) => {
+    isFree: (event) => {
         var element = document.activeElement;
-        return element && element.nodeName !== 'INPUT'
-            && element.nodeName !== 'TEXTAREA' && !element.hasAttribute('contenteditable') && !event.ctrlKey;
+        return element && element.tagName !== 'INPUT'
+            && element.tagName !== 'TEXTAREA' && !element.hasAttribute('contenteditable') && !event.ctrlKey;
     }
 };
 
