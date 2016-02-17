@@ -118,7 +118,6 @@ class RedBlackTree:
         new_node.parent = old_node.parent
 
     def delete(self, del_node):
-        print('Del')
         # 默认情况，消失的颜色就是删除节点的
         missing_color = del_node.color
 
@@ -178,7 +177,6 @@ class RedBlackTree:
         # 如果弄丢的颜色是红色，就无所谓了。只是把超重的节点，瘦身了一下。
         # 如果是黑色的，子树就变得营养不良了，需要修复。
         if missing_color == BLACK:
-            print('Fix Up')
             self.delete_fix(anchor)
 
     def delete_fix(self, anchor: RedBlackNode):
@@ -290,18 +288,21 @@ class RedBlackTree:
 if __name__ == '__main__':
 
     def main():
+        from random import randint
+
         rb = RedBlackTree()
         right_list = []
-        numbers = [3, 3, 5, 7, 9]
-        for i in range(5):
-            rand = numbers[i]
+        for i in range(5000):
+            rand = randint(0, 100)
             rb.insert(rand, rand)
             right_list.append(rand)
 
-        for i in rb:
+        right_list.sort()
+        for i, j in zip(rb, right_list):
             print(i)
+            if i.key != j:
+                raise Exception
 
-        print("after del")
         for i in [j for j in rb]:
             rb.delete(i)
 
