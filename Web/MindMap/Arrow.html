@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas height="800px" width="800px" id="my-canvas"></canvas>
+<script>
+    var canvas = document.getElementById("my-canvas");
+    var context = canvas.getContext('2d');
+    context.beginPath();
+    context.moveTo(100, 100);
+    context.lineTo(0, 200);
+    context.lineTo(200, 200);
+    context.moveTo(50, 200);
+    context.lineTo(50, 400);
+    context.lineTo(150, 400);
+    context.lineTo(150, 200);
+
+    context.fill();
+    context.stroke();
+    context.closePath();
+
+    context = canvas.getContext('2d');
+    context.beginPath();
+    context.moveTo(50, 500);
+    context.lineTo(50, 600);
+    context.lineTo(150, 600);
+    context.lineTo(150, 500);
+    context.fill();
+    context.stroke();
+
+    context.font = '30px arial';
+    context.fillText('Include', 50, 450);
+
+    function rads(x) {
+        return Math.PI * x / 180;
+    }
+
+    context.beginPath();
+    context.arc(275, 200, 50, 0, rads(360), false);
+
+    context.moveTo(200, 100);
+    context.arc(300, 100, 50, rads(-180), rads(0), false);
+    context.fill();
+</script>
+</body>
+</html>
