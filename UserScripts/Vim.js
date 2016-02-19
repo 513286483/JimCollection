@@ -197,7 +197,7 @@ var Page = {
                 }
             }
 
-            for (i = 0; i < hints.length && (singletonChars.length || availableChars.length); i++) {
+            for (i = 0; i < hints.length; i++) {
                 var startChar = hints[i].charAt(0);
                 if (singletonChars.includes(startChar)) {
                     hints[i] = startChar;
