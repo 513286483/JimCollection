@@ -1,0 +1,7 @@
+.glyphicon {
+    margin-right: 5px;
+}
+
+.dash-board-update, .dash-board-content {
+    word-break: break-all;
+}
