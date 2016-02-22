@@ -10,7 +10,7 @@ $(document)
     .on('click', event => {
         var link = event.target;
         if (link.classList.contains('external')) {
-            var sign = 'link.zhihu.com/?target=';
+            const sign = 'link.zhihu.com/?target=';
             link.href = decodeURIComponent(link.href.substr(link.href.indexOf(sign) + sign.length));
         }
     });
