@@ -80,7 +80,7 @@ def set_value(priority_q: List[Number], current_node: int, value: Number):
     elif original_value > value:
         heapify(priority_q, current_node)
 
-
+print(sample)
 set_value(sample, 2, 10)
 print(sample)
 
