@@ -8,9 +8,9 @@ $(document)
         event.originalEvent.clipboardData.setData('text/plain', getSelection().toString());
     })
     .on('click', event => {
+        const sign = 'link.zhihu.com/?target=';
         var link = event.target;
         if (link.classList.contains('external')) {
-            const sign = 'link.zhihu.com/?target=';
             link.href = decodeURIComponent(link.href.substr(link.href.indexOf(sign) + sign.length));
         }
     });
