@@ -1,6 +1,6 @@
 'use strict';
 
-$('<style>@media screen and (max-width: 1120px){.zu-top{display:none;}}</style>').appendTo('head');
+$('<style>@media screen and (max-width: 1120px){.zu-top{display:none;}}</style>').appendTo('html');
 $(document)
     .on('copy', event => {
         event.preventDefault();
