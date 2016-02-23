@@ -173,8 +173,10 @@ var Page = {
                 var y = Y.charAt(Math.round(element._top / document.documentElement.clientHeight * (Y.length - 1)));
                 var x = X.charAt(Math.round(element._left / document.documentElement.clientWidth * (X.length - 1)));
 
-                if (!allHints[y].includes(x)) {
+                if (allHints[y].length === 0) {
                     y = B.charAt(0);
+                }
+                if (!allHints[y].includes(x)) {
                     x = allHints[y].charAt(0);
                 }
 
@@ -183,7 +185,7 @@ var Page = {
                     B = B.replace(y, '');
                 }
 
-                hints.push(y + x);
+                hints.splice(Math.round(hints.length * 0.618 % 1 * hints.length), 0, y + x);
             }
 
             var availableChars = [];
