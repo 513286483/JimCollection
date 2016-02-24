@@ -18,7 +18,7 @@ function inject(font) {
         '@font-face{font-family:' + font + ';src:local(' + font + ');}' +
         '@font-face{font-family:' + font + ';unicode-range:U+4E00-9FFF;src:local(Noto Sans CJK SC);}' +
         '</style>';
-    $(style).prependTo('html');
+    $(style).prependTo(document.body);
 }
 
 var cache;
@@ -32,7 +32,7 @@ function transformElement(element, probe) {
         $element.css('font-family', fonts.join());
     }
 
-    if ((probe || probe === undefined) && fontFamily !== cache && (probe = hasChinese(element))) {
+    if ((probe || probe === undefined) && (probe = (fontFamily !== cache) && hasChinese(element))) {
         fonts.map(
             font => {
                 var curr = fontQueue.indexOf(font);
