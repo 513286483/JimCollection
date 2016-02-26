@@ -21,7 +21,6 @@ function inject(font) {
     $(style).appendTo('html');
 }
 
-var cache;
 function transformElement(element, probe) {
     var $element = $(element);
     var fontFamily = $element.css('font-family').replace(/'|"/g, '').toLowerCase();
@@ -32,7 +31,7 @@ function transformElement(element, probe) {
         $element.css('font-family', fonts.join());
     }
 
-    if ((probe || probe === undefined) && (probe = (fontFamily !== cache) && hasChinese(element))) {
+    if ((probe || probe === undefined) && (probe = hasChinese(element))) {
         fonts.map(
             font => {
                 var curr = fontQueue.indexOf(font);
