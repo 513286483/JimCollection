@@ -115,7 +115,7 @@ var Page = {
                         element._left = rect.left;
                         element._top = rect.top;
                         var positions = [[element._left + 1, element._top + 1],
-                            [element._left + rect.width * 0.5, element._top + rect.height * 0.5]];
+                            [element._left + rect.width / 3, element._top + rect.height / 3]];
 
                         for (i = 0; i < positions.length; i++) {
                             var targetElement = document.elementFromPoint(positions[i][0], positions[i][1]);
