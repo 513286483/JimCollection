@@ -5,6 +5,15 @@
     <title>Sheffield Water Centre - Dashboard - Home Page</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        select, input {
+            display: block;
+        }
+
+        button {
+            margin: 5px;
+        }
+    </style>
 </head>
 <body>
 <div class="container-fluid">
@@ -15,152 +24,146 @@
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-search"></span>
                 </span>
-                <input type="text" class="form-control" placeholder="Quick Search">
+                <input id="search-input" type="text" class="form-control" placeholder="Quick Search">
             </div>
             <div class="list-group" style="margin-top: 10px">
-                <a href="#" class="list-group-item">
+                <a href="dashboard.html" class="list-group-item">
                     <span class="glyphicon glyphicon-home"></span>
                     Dashboard
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="portfolios.html" class="list-group-item">
                     <span class="glyphicon glyphicon-folder-open"></span>
                     Portfolios
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="projects.html" class="list-group-item">
                     <span class="glyphicon glyphicon-file"></span>
                     Projects
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="" class="list-group-item">
                     <span class="glyphicon glyphicon-list-alt"></span>
                     Activity
                 </a>
                 <hr>
-                <a href="#" class="list-group-item">
+                <a href="profile.html" class="list-group-item">
                     <span class="glyphicon glyphicon-user"></span>
                     Profile
                 </a>
             </div>
-            <div style="box-shadow: 0 -2px 0 gray">
-                <div style="overflow-y: scroll;overflow-x:hidden;max-height: 350px; margin-left: 5px">
-                    <h5 style="margin-left: 10px">
-                        <span class="glyphicon glyphicon-play"></span>
-                        Update
-                    </h5>
-                    <div class="dash-board-update">
-                        <a>Rob commented on - project A011</a>
-                        <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        <hr>
-                    </div>
-                    <div class="dash-board-update">
-                        <a>Chell commented on - project B02</a>
-                        <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        <hr>
-                    </div>
-                    <div class="dash-board-update">
-                        <a>Chell commented on - project B02</a>
-                        <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        <hr>
-                    </div>
-                    <div class="dash-board-update">
-                        <a>Chell commented on - project B02</a>
-                        <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        <hr>
-                    </div>
-                    <div class="dash-board-update">
-                        <a>Chell commented on - project B02</a>
-                        <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        <hr>
-                    </div>
+            <div style="box-shadow: 0 -2px 0 gray;padding-left: 10px">
+                <h4 class="text-center" style="padding-top: 5px;margin-bottom: 15px">
+                    Filter Options
+                </h4>
+                <label for="filter-status">Filter by</label>
+                <select id="filter-status">
+                    <option>Project Status</option>
+                </select>
+                <label for="result-from">Only show results from</label>
+                <select id="result-from">
+                    <option>Portfolio List</option>
+                </select>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox">
+                        only my projects
+                    </label></div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox">
+                        only public projects
+                    </label>
+                </div>
+                <div class="checkbox" style="margin-top: 20px">
+                    <label>
+                        <input type="checkbox">
+                        only projects
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox">
+                        only portfolios
+                    </label>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-10 dash-board-content" style="overflow-y: scroll;overflow-x: hidden;height: 800px">
+        <div class="col-md-10 dash-board-content">
             <div class="row">
-                <h1 class="text-center">Sheffield Water Centre - Search Result</h1>
+                <h1 class="text-center">Sheffield Water Centre - Search</h1>
             </div>
-
-            <div class="row">
-                <div class="col-md-offset-1 col-md-8">
-                    <a>a link</a>
-                    <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                </div>
-                <div class="col-md-3">
-                    <img src="" class="img-responsive">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-offset-1 col-md-8">
-                    <a>a link</a>
-                    <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                </div>
-                <div class="col-md-3">
-                    <img src="" class="img-responsive">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-offset-1 col-md-8">
-                    <a>a link</a>
-                    <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                </div>
-                <div class="col-md-3">
-                    <img src="" class="img-responsive">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-offset-1 col-md-8">
-                    <a>a link</a>
-                    <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                </div>
-                <div class="col-md-3">
-                    <img src="" class="img-responsive">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-offset-1 col-md-8">
-                    <a>a link</a>
-                    <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                </div>
-                <div class="col-md-3">
-                    <img src="" class="img-responsive">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-offset-1">
-                    <label>Relate Keywords:</label>
-                    <a>a link</a>
-                    <a>a link</a>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="text-center">
-                    <nav>
-                        <ul class="pagination">
-                            <li>
-                                <a href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li>
-                                <a href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
+            <div class="row" style="box-shadow: 0 -2px 0 gray; padding: 5px">
+                <div class="col-md-12" style="box-shadow: 0 2px 0 gray;padding-bottom: 5px;font-size: 20px">
+                    <span style="box-shadow: 2px 0 0 gray;padding-right: 10px">Sort By</span>
+                    <div class="dropdown" style="display: inline-flex;width: 100px;margin: 0">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-name"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Name
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdown-name">
+                            <li><a href="#">Name - 0</a></li>
+                            <li><a href="#">Name - 1</a></li>
                         </ul>
-                    </nav>
+                    </div>
+                    <button class="btn btn-default">Portfolios ID</button>
+                    <button class="btn btn-default">Date Modified</button>
+                    <button class="btn btn-default">Owner</button>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-1" style="font-size: 30px">
+                    <span class="glyphicon glyphicon-folder-open"></span>
+                </div>
+                <div class="col-md-10">
+                    <p>Project Name</p>
+                    <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-1" style="font-size: 30px">
+                    <span class="glyphicon glyphicon-folder-open"></span>
+                </div>
+                <div class="col-md-10">
+                    <p>Project Name</p>
+                    <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-1" style="font-size: 30px">
+                    <span class="glyphicon glyphicon-file"></span>
+                </div>
+                <div class="col-md-10">
+                    <p>Project Name</p>
+                    <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-1 col-md-1" style="font-size: 30px">
+                    <span class="glyphicon glyphicon-file"></span>
+                </div>
+                <div class="col-md-10">
+                    <p>Project Name</p>
+                    <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
+                </div>
+            </div>
+            <nav class="text-center">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">«</span>
+                        </a>
+                    </li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">»</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

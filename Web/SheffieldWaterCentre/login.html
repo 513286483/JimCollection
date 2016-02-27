@@ -15,21 +15,24 @@
                 <h3 style="margin-top: 0">Research Project Management</h3>
                 <div class="form-group">
                     <label for="username">Username / Email</label>
-                    <input type="email" class="form-control" id="username" placeholder="Username / Email">
+                    <input type="text" class="form-control" id="username" placeholder="Username / Email" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password">
+                    <input type="password" class="form-control" id="password" placeholder="Password" required>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="btn btn-default">Request Access</div>
                         <button type="submit" class="btn btn-default pull-right" style="width: 30%">Login</button>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-md-12">
                         <a class="pull-right">Forgot Password</a>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="warning" class="alert alert-warning" role="alert" style="padding: 10px; display: none">
+                            Username or Password is Wrong!
+                        </div>
                     </div>
                 </div>
             </form>
@@ -38,5 +41,29 @@
 </div>
 <script src="js/jquery-2.2.0.js"></script>
 <script src="js/bootstrap.js"></script>
+<script>
+    $('form').on('submit', function () {
+        var username = $('#username').val();
+        var password = $('#password').val();
+
+        $.ajax('ajax/login', {
+             method: 'POST',
+             data: {
+                 username: username,
+                 password: password
+             },
+             dataType: 'json'
+         })
+         .done(function (result) {
+             if (result === 'warning') {
+                 $('#warning').show();
+             } else {
+                 localStorage.setItem('username', username);
+                 localStorage.setItem('password', password);
+                 location.replace('dashboard.html')
+             }
+         })
+    })
+</script>
 </body>
 </html>

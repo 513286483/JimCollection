@@ -15,66 +15,48 @@
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-search"></span>
                 </span>
-                <input type="text" class="form-control" placeholder="Quick Search">
+                <input id="search-input" type="text" class="form-control" placeholder="Quick Search">
             </div>
             <div class="list-group" style="margin-top: 10px">
-                <a href="#" class="list-group-item">
+                <a href="dashboard.html" class="list-group-item">
                     <span class="glyphicon glyphicon-home"></span>
                     Dashboard
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="portfolios.html" class="list-group-item">
                     <span class="glyphicon glyphicon-folder-open"></span>
                     Portfolios
                 </a>
-                <a href="#" class="list-group-item active">
+                <a href="projects.html" class="list-group-item active">
                     <span class="glyphicon glyphicon-file"></span>
                     Projects
                 </a>
-                <a href="#" class="list-group-item">
+                <a href="" class="list-group-item">
                     <span class="glyphicon glyphicon-list-alt"></span>
                     Activity
                 </a>
                 <hr>
-                <a href="#" class="list-group-item">
+                <a href="profile.html" class="list-group-item">
                     <span class="glyphicon glyphicon-user"></span>
                     Profile
                 </a>
             </div>
             <div style="box-shadow: 0 -2px 0 gray">
-                <div style="overflow-y: scroll;overflow-x:hidden;max-height: 350px; margin-left: 5px">
-                    <h5 style="margin-left: 10px">
-                        <span class="glyphicon glyphicon-play"></span>
-                        Update
+                <h4 class="text-center" style="padding-top: 5px;margin-bottom: 15px">
+                    Project Relationships
+                </h4>
+                <div>
+                    <h5>
+                        Member of portfolio
                     </h5>
-                    <div class="dash-board-update">
-                        <a>Rob commented on - project A011</a>
-                        <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        <hr>
-                    </div>
-                    <div class="dash-board-update">
-                        <a>Chell commented on - project B02</a>
-                        <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        <hr>
-                    </div>
-                    <div class="dash-board-update">
-                        <a>Chell commented on - project B02</a>
-                        <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        <hr>
-                    </div>
-                    <div class="dash-board-update">
-                        <a>Chell commented on - project B02</a>
-                        <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        <hr>
-                    </div>
-                    <div class="dash-board-update">
-                        <a>Chell commented on - project B02</a>
-                        <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        <hr>
-                    </div>
+                    <p>QQQQQQQQQQQQQQQQQ</p>
+                    <hr>
+                </div>
+                <div>
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Add New Relationship
                 </div>
             </div>
         </div>
-
         <div class="col-md-10 dash-board-content">
             <div class="row">
                 <h1 class="text-center">Projects</h1>
@@ -84,10 +66,12 @@
                     <button class="btn btn-default">My Projects</button>
                     <button class="btn btn-default active">All Projects</button>
                     <button class="btn btn-default">Recently Edited Projects</button>
-                    <select class="pull-right" style="margin-top: 5px">
-                        <option>Ordered By</option>
-                        <option>Data Recent - Lastest</option>
-                    </select>
+                    <div class="pull-right">
+                        <label for="order-by">Ordered By:</label>
+                        <select id="order-by" style="margin-top: 5px">
+                            <option>Data Recent</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="row">
