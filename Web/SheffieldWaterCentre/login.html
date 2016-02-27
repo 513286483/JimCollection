@@ -41,29 +41,5 @@
 </div>
 <script src="js/jquery-2.2.0.js"></script>
 <script src="js/bootstrap.js"></script>
-<script>
-    $('form').on('submit', function () {
-        var username = $('#username').val();
-        var password = $('#password').val();
-
-        $.ajax('ajax/login', {
-             method: 'POST',
-             data: {
-                 username: username,
-                 password: password
-             },
-             dataType: 'json'
-         })
-         .done(function (result) {
-             if (result === 'warning') {
-                 $('#warning').show();
-             } else {
-                 localStorage.setItem('username', username);
-                 localStorage.setItem('password', password);
-                 location.replace('dashboard.html')
-             }
-         })
-    })
-</script>
 </body>
 </html>
