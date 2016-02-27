@@ -95,8 +95,8 @@ var Page = {
         function getElements() {
             var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable]');
             var clickElements = $(Page.clickElements)
-                .find('div, span').addBack()
-                .filter((i, element) => getComputedStyle(element).cursor === 'pointer');
+                .find('div, span')
+                .filter((i, element) => getComputedStyle(element).cursor.search(/(pointer|default)/i) !== -1);
             return purify(elements, clickElements);
 
             function purify(elements, clickElements) {
