@@ -1,6 +1,7 @@
 'use strict';
 
 $(() => {
+    $('iframe').remove();
     var node;
     if (!location.href.includes('comment')) {
         node = $('.ep-content-main');
