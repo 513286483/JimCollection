@@ -69,13 +69,29 @@ class BTree:
     def delete(self):
         pass
 
+    def __iter__(self):
+        def travel(init_node: BTreeNode):
+            if init_node.is_leaf:
+                for node in init_node.nodes:
+                    yield node
+            else:
+                for index, node in enumerate(init_node.nodes):
+                    for sub_node in travel(init_node.children[index]):
+                        yield sub_node
+                    yield node
+                for sub_node in travel(init_node.children[index + 1]):
+                    yield sub_node
+
+        return travel(self.root)
+
 
 if __name__ == '__main__':
     def main():
         tree = BTree(min_degree=2)
         for i in range(1, 8):
             tree.insert(i, i)
-        print()
+        for i in tree:
+            print(i)
 
 
     main()
