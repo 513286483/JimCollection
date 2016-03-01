@@ -1,14 +1,25 @@
 from typing import List
 from bisect import bisect, insort
+from functools import total_ordering
 
 
+@total_ordering
 class Node:
     def __init__(self, key, value):
         self.key = key
         self.value = value
 
     def __lt__(self, other):
-        return self.key < other.key
+        if isinstance(other, Node):
+            return self.key < other.key
+        else:
+            return self.key < other
+
+    def __eq__(self, other):
+        if isinstance(other, Node):
+            return self.key == other.key
+        else:
+            return self.key == other
 
     def __repr__(self):
         return str(self.key)
@@ -63,10 +74,17 @@ class BTree:
             cursor = child
         insort(cursor.nodes, insert_node)
 
-    def search(self):
-        pass
+    def search(self, key):
+        def travel(init_node: BTreeNode):
+            index = bisect(init_node.nodes, key)
+            if init_node.nodes[index - 1] == key:
+                return init_node.nodes[index - 1]
+            elif not init_node.is_leaf:
+                return travel(init_node.children[index])
 
-    def delete(self):
+        return travel(self.root)
+
+    def delete(self, key):
         pass
 
     def __iter__(self):
@@ -88,10 +106,11 @@ class BTree:
 if __name__ == '__main__':
     def main():
         tree = BTree(min_degree=2)
-        for i in range(1, 8):
+        for i in range(1, 800):
             tree.insert(i, i)
         for i in tree:
             print(i)
+            print(tree.search(i.key))
 
 
     main()
