@@ -194,8 +194,8 @@ if __name__ == '__main__':
         for i in range(1, 800):
             print('del {}'.format(i))
             tree.delete(i)
-            for i in tree:
-                pass
+            for j in tree:
+                assert j
 
         for i in tree:
             print(i)
