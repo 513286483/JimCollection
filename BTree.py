@@ -125,15 +125,15 @@ class BTree:
                 if len(cursor.nodes) < self.min_degree:
                     if left_sibling and len(left_sibling.nodes) >= self.min_degree:
                         cursor.nodes.insert(0, init_node.nodes[key_index])
-                        last_node = left_sibling.nodes[-1]
-                        init_node.nodes[key_index] = last_node
-                        travel(left_sibling, last_node)
+                        if not cursor.is_leaf:
+                            cursor.children.insert(0, left_sibling.children.pop())
+                        init_node.nodes[key_index] = left_sibling.nodes.pop()
 
                     elif right_sibling and len(right_sibling.nodes) >= self.min_degree:
                         cursor.nodes.append(init_node.nodes[key_index + 1])
-                        first_node = right_sibling.nodes[0]
-                        init_node.nodes[key_index + 1] = first_node
-                        travel(right_sibling, first_node)
+                        if not cursor.is_leaf:
+                            cursor.children.append(right_sibling.children.pop(0))
+                        init_node.nodes[key_index + 1] = right_sibling.nodes.pop(0)
 
                     else:
                         if left_sibling:
