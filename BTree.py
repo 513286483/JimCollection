@@ -113,11 +113,12 @@ class BTree:
 
                         left_child.nodes.append(del_node)
                         left_child.nodes.extend(right_child.nodes)
-                        left_child.children.extend(right_child.children)
+                        if not left_child.is_leaf:
+                            left_child.children.extend(right_child.children)
                         travel(left_child, del_node.key)
 
             elif not init_node.is_leaf:
-                left_sibling, cursor, right_sibling = (init_node.children[key_index + i]  # type: BTreeNode
+                left_sibling, cursor, right_sibling = (init_node.children[key_index + i]
                                                        if 0 <= key_index + i < len(init_node.children)
                                                        else False for i in range(3))
 
@@ -184,9 +185,18 @@ class BTree:
 if __name__ == '__main__':
     def main():
         tree = BTree(min_degree=2)
-        for i in range(1, 8):
+        for i in range(1, 800):
             tree.insert(i, i)
-        tree.delete(1)
+        for i in tree:
+            print(i)
+            print(tree.search(i.key))
+
+        for i in range(1, 800):
+            print('del {}'.format(i))
+            tree.delete(i)
+            for i in tree:
+                pass
+
         for i in tree:
             print(i)
             print(tree.search(i.key))
