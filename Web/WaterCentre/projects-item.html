@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sheffield Water Centre - Dashboard - Projects</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table td, table th {
+            border: 1px solid black;
+        }
+
+        table tr:first-child th {
+            border-top: 0;
+        }
+
+        table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        table tr td:first-child,
+        table tr th:first-child {
+            border-left: 0;
+        }
+
+        table tr td:last-child,
+        table tr th:last-child {
+            border-right: 0;
+        }
+    </style>
+</head>
+<body>
+<!-- use json for table -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 dash-board-nav" style="box-shadow: 2px 0 0 gray;">
+            <img src="img/company-logo.jpg" class="img-responsive">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search"></span>
+                </span>
+                <input id="search-input" type="text" class="form-control" placeholder="Quick Search">
+            </div>
+            <div class="list-group" style="margin-top: 10px">
+                <a href="dashboard.html" class="list-group-item">
+                    <span class="glyphicon glyphicon-home"></span>
+                    Dashboard
+                </a>
+                <a href="portfolios.html" class="list-group-item">
+                    <span class="glyphicon glyphicon-folder-open"></span>
+                    Portfolios
+                </a>
+                <a href="projects.html" class="list-group-item active">
+                    <span class="glyphicon glyphicon-file"></span>
+                    Projects
+                </a>
+                <a href="" class="list-group-item">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                    Activity
+                </a>
+                <hr>
+                <a href="profile.html" class="list-group-item">
+                    <span class="glyphicon glyphicon-user"></span>
+                    Profile
+                </a>
+            </div>
+            <div style="box-shadow: 0 -2px 0 gray">
+                <h4 class="text-center" style="padding-top: 5px;margin-bottom: 10px">
+                    Project Relationships
+                </h4>
+                <!-- T -->
+                <div>
+                    <h5>
+                        Member of Portfolio
+                    </h5>
+                    <p>QQQQQQQQQQQQQQQQQ</p>
+                    <hr>
+                </div>
+                <!-- end -->
+                <div>
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Add New Relationship
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10 dash-board-content">
+            <div class="row">
+                <div class="col-md-4 pull-left">
+                    <h2>BIP-29</h2>
+                    <h1>Project name</h1>
+                    <p>Change Project Name or Number</p>
+                </div>
+                <div class="col-md-4 pull-right">
+                    <p>Created by:</p>
+                    <h1>Username</h1>
+                    <p>Change Project Permissions</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <tr>
+                            <th>A</th>
+                            <th>B</th>
+                        </tr>
+                        <tr>
+                            <td>Priority</td>
+                            <td>QQQQQQQQQQQQQQQ</td>
+                        </tr>
+                        <tr>
+                            <td>Duration</td>
+                            <td>QQQQQQQQQQQQQQQ</td>
+                        </tr>
+                        <tr>
+                            <td>Aims</td>
+                            <td>QQQQQQQQQQQQQQQ</td>
+                        </tr>
+                        <tr>
+                            <td>Add Custom Field <span class="glyphicon glyphicon-plus"></span></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <h3>Comments</h3>
+                    <!-- T -->
+                    <div class="col-md-12">
+                        <div class="col-md-1">
+                            <img class="img-responsive" src="">
+                        </div>
+                        <div class="col-md-11">
+                            <h4>QQQQQQQQQQQQQQQQQQQQQQQQ</h4>
+                            <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
+                        </div>
+                    </div>
+                    <!-- end -->
+                    <div class="col-md-12">
+                        <div class="col-md-1">
+                            <img src="">
+                        </div>
+                        <div class="col-md-11">
+                            <h4>QQQQQQQQQQQQQQQQQQQQQQQQ</h4>
+                            <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-offset-1 col-md-5">
+                    <h3>Update Log</h3>
+                    <!-- end -->
+                    <div class="col-md-12">
+                        <div class="col-md-1">
+                            <img class="img-responsive" src="">
+                        </div>
+                        <div class="col-md-11">
+                            <h4>QQQQQQQQQQQQQQQQQQQQQQQQ</h4>
+                            <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
+                        </div>
+                    </div>
+                    <!-- end -->
+                    <div class="col-md-12">
+                        <div class="col-md-1">
+                            <img src="">
+                        </div>
+                        <div class="col-md-11">
+                            <h4>QQQQQQQQQQQQQQQQQQQQQQQQ</h4>
+                            <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/jquery-2.2.0.js"></script>
+<script src="js/bootstrap.js"></script>
+</body>
+</html>

@@ -16,6 +16,7 @@
     </style>
 </head>
 <body>
+<!-- use json for search page -->
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 dash-board-nav" style="box-shadow: 2px 0 0 gray;">
@@ -50,38 +51,39 @@
                 </a>
             </div>
             <div style="box-shadow: 0 -2px 0 gray;padding-left: 10px">
-                <h4 class="text-center" style="padding-top: 5px;margin-bottom: 15px">
+                <h4 class="text-center" style="padding-top: 5px;margin-bottom: 10px">
                     Filter Options
                 </h4>
                 <label for="filter-status">Filter by</label>
                 <select id="filter-status">
                     <option>Project Status</option>
                 </select>
-                <label for="result-from">Only show results from</label>
+                <label for="result-from">Only results from</label>
                 <select id="result-from">
                     <option>Portfolio List</option>
                 </select>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox">
-                        only my projects
-                    </label></div>
+                        Only My Projects
+                    </label>
+                </div>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox">
-                        only public projects
+                        Only Public Projects
                     </label>
                 </div>
                 <div class="checkbox" style="margin-top: 20px">
                     <label>
                         <input type="checkbox">
-                        only projects
+                        Only Projects
                     </label>
                 </div>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox">
-                        only portfolios
+                        Only Portfolios
                     </label>
                 </div>
             </div>
@@ -92,8 +94,8 @@
             </div>
             <div class="row" style="box-shadow: 0 -2px 0 gray; padding: 5px">
                 <div class="col-md-12" style="box-shadow: 0 2px 0 gray;padding-bottom: 5px;font-size: 20px">
-                    <span style="box-shadow: 2px 0 0 gray;padding-right: 10px">Sort By</span>
-                    <div class="dropdown" style="display: inline-flex;width: 100px;margin: 0">
+                    <span>Sort By</span>
+                    <div class="dropdown" style="display: inline-flex;width: 100px">
                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-name"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             Name
@@ -104,13 +106,26 @@
                             <li><a href="#">Name - 1</a></li>
                         </ul>
                     </div>
+
                     <button class="btn btn-default">Portfolios ID</button>
                     <button class="btn btn-default">Date Modified</button>
                     <button class="btn btn-default">Owner</button>
                 </div>
             </div>
+
+            <!-- T -->
             <div class="row">
-                <div class="col-md-offset-1 col-md-1" style="font-size: 30px">
+                <div class="col-md-offset-1 col-md-1">
+                    <span class="glyphicon glyphicon-folder-open"></span>
+                </div>
+                <div class="col-md-10">
+                    <p>Project Name</p>
+                    <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
+                </div>
+            </div>
+            <!-- end -->
+            <div class="row">
+                <div class="col-md-offset-1 col-md-1">
                     <span class="glyphicon glyphicon-folder-open"></span>
                 </div>
                 <div class="col-md-10">
@@ -119,16 +134,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-offset-1 col-md-1" style="font-size: 30px">
-                    <span class="glyphicon glyphicon-folder-open"></span>
-                </div>
-                <div class="col-md-10">
-                    <p>Project Name</p>
-                    <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-offset-1 col-md-1" style="font-size: 30px">
+                <div class="col-md-offset-1 col-md-1">
                     <span class="glyphicon glyphicon-file"></span>
                 </div>
                 <div class="col-md-10">
@@ -137,7 +143,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-offset-1 col-md-1" style="font-size: 30px">
+                <div class="col-md-offset-1 col-md-1">
                     <span class="glyphicon glyphicon-file"></span>
                 </div>
                 <div class="col-md-10">
@@ -145,6 +151,7 @@
                     <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
                 </div>
             </div>
+
             <nav class="text-center">
                 <ul class="pagination">
                     <li>

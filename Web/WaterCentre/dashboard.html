@@ -5,6 +5,11 @@
     <title>Sheffield Water Centre - Dashboard - Home Page</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        h2 + div {
+            margin-left: 30px;
+        }
+    </style>
 </head>
 <body>
 <div class="container-fluid">
@@ -41,16 +46,18 @@
                 </a>
             </div>
             <div style="box-shadow: 0 -2px 0 gray">
-                <div style="overflow-y: scroll;overflow-x: hidden;max-height: 350px">
-                    <div style="margin-left: 10px;margin-top: 5px">
+                <div id="scroll-fix" style="overflow-y: scroll;overflow-x: hidden;min-height: 60px">
+                    <div style="margin: 10px;">
                         <span class="glyphicon glyphicon-upload"></span>
                         Update
                     </div>
+                    <!-- T -->
                     <div>
                         <a>Rob commented on - project A011</a>
                         <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
                         <hr>
                     </div>
+                    <!-- end -->
                     <div>
                         <a>Chell commented on - project B02</a>
                         <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
@@ -71,13 +78,15 @@
         </div>
         <div class="col-md-10 dash-board-content">
             <h1 class="text-center">Sheffield Water Centre - Dashboard</h1>
-            <div style="box-shadow: 0 2px 0 gray">
+            <div style="box-shadow: 0 2px 0 gray;min-height: 40vh">
                 <h2>Recently Modified Portfolios</h2>
-                <div style="margin-left: 30px;">
+                <div>
+                    <!-- T -->
                     <div>
                         <span class="glyphicon glyphicon-folder-open"></span>
                         QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
                     </div>
+                    <!-- end -->
                     <div>
                         <span class="glyphicon glyphicon-folder-open"></span>
                         QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
@@ -92,13 +101,15 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div style="min-height: 40vh">
                 <h2>Recently Modified Projects</h2>
-                <div style="margin-left: 30px;">
+                <div>
+                    <!-- T -->
                     <div>
                         <span class="glyphicon glyphicon glyphicon-file"></span>
                         QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
                     </div>
+                    <!-- end -->
                     <div>
                         <span class="glyphicon glyphicon glyphicon-file"></span>
                         QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
@@ -118,5 +129,19 @@
 </div>
 <script src="js/jquery-2.2.0.js"></script>
 <script src="js/bootstrap.js"></script>
+<script>
+    'use strict';
+    var scrollElement = document.querySelector('#scroll-fix');
+    function scrollFix() {
+        var rect = scrollElement.getBoundingClientRect();
+
+        if (rect.left >= 0 && rect.top >= 0) {
+            $(scrollElement).css('height', document.documentElement.clientHeight - rect.top);
+        }
+    }
+
+    $(scrollFix);
+    $(window).on('resize', scrollFix);
+</script>
 </body>
 </html>

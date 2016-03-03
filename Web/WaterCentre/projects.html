@@ -5,33 +5,6 @@
     <title>Sheffield Water Centre - Dashboard - Projects</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <style>
-        table {
-            border-collapse: collapse;
-        }
-
-        table td, table th {
-            border: 1px solid black;
-        }
-
-        table tr:first-child th {
-            border-top: 0;
-        }
-
-        table tr:last-child td {
-            border-bottom: 0;
-        }
-
-        table tr td:first-child,
-        table tr th:first-child {
-            border-left: 0;
-        }
-
-        table tr td:last-child,
-        table tr th:last-child {
-            border-right: 0;
-        }
-    </style>
 </head>
 <body>
 <div class="container-fluid">
@@ -68,16 +41,18 @@
                 </a>
             </div>
             <div style="box-shadow: 0 -2px 0 gray">
-                <h4 class="text-center" style="padding-top: 5px;margin-bottom: 15px">
+                <h4 class="text-center" style="padding-top: 5px;margin-bottom: 10px">
                     Project Relationships
                 </h4>
+                <!-- T -->
                 <div>
                     <h5>
-                        Member of portfolio
+                        Member of Portfolio
                     </h5>
                     <p>QQQQQQQQQQQQQQQQQ</p>
                     <hr>
                 </div>
+                <!-- end -->
                 <div>
                     <span class="glyphicon glyphicon-plus"></span>
                     Add New Relationship
@@ -86,85 +61,45 @@
         </div>
         <div class="col-md-10 dash-board-content">
             <div class="row">
-                <div class="col-md-4 pull-left">
-                    <h2>BIP-29</h2>
-                    <h1>Project name</h1>
-                    <p>Change Project Name or Number</p>
-                </div>
-                <div class="col-md-4 pull-right">
-                    <p>Created by:</p>
-                    <h2>Username</h2>
-                    <p>Change Project Permissions</p>
+                <h1 class="text-center">Projects</h1>
+            </div>
+            <div class="row" style="box-shadow: 0 -2px 0 gray; padding: 5px">
+                <div class="col-md-12" style="box-shadow: 0 2px 0 gray;padding-bottom: 5px">
+                    <button class="btn btn-default">My Projects</button>
+                    <button class="btn btn-default active">All Projects</button>
+                    <button class="btn btn-default">Recently Edited Projects</button>
+                    <div class="pull-right">
+                        <label for="order-by">Ordered By:</label>
+                        <select id="order-by" style="margin-top: 5px">
+                            <option>Data Recent</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-11">
-                    <table class="table">
-                        <tr>
-                            <th>A</th>
-                            <th>B</th>
-                        </tr>
-                        <tr>
-                            <td>Priority</td>
-                            <td>QQQQQQQQQQQQQQQ</td>
-                        </tr>
-                        <tr>
-                            <td>Duration</td>
-                            <td>QQQQQQQQQQQQQQQ</td>
-                        </tr>
-                        <tr>
-                            <td>Aims</td>
-                            <td>QQQQQQQ</td>
-                        </tr>
-                        <tr>
-                            <td>Add Custom Field <span class="glyphicon glyphicon-plus"></span></td>
-                            <td></td>
-                        </tr>
-                    </table>
+                <div class="col-md-offset-1">
+                    <h3>All Projects</h3>
                 </div>
-                <div class="col-md-1" style="font-size: 40px">▼</div>
             </div>
             <div class="row">
-                <div class="col-md-5">
-                    <h3>Comments</h3>
-                    <div class="col-md-12">
-                        <div class="col-md-1">
-                            <img class="img-responsive" src="">
-                        </div>
-                        <div class="col-md-11">
-                            <h4>QQQQQQQQQQQQQQQQQQQQQQQQ</h4>
-                            <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        </div>
+                <div class="col-md-offset-1">
+                    <!-- T -->
+                    <div onclick="location.href='projects-item.html'">
+                        <span class="glyphicon glyphicon glyphicon-file"></span>
+                        QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
                     </div>
-                    <div class="col-md-12">
-                        <div class="col-md-1">
-                            <img src="">
-                        </div>
-                        <div class="col-md-11">
-                            <h4>QQQQQQQQQQQQQQQQQQQQQQQQ</h4>
-                            <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        </div>
+                    <!-- end -->
+                    <div>
+                        <span class="glyphicon glyphicon glyphicon-file"></span>
+                        QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
                     </div>
-                </div>
-                <div class="col-md-offset-1 col-md-5">
-                    <h3>Update Log</h3>
-                    <div class="col-md-12">
-                        <div class="col-md-1">
-                            <img class="img-responsive" src="">
-                        </div>
-                        <div class="col-md-11">
-                            <h4>QQQQQQQQQQQQQQQQQQQQQQQQ</h4>
-                            <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        </div>
+                    <div>
+                        <span class="glyphicon glyphicon glyphicon-file"></span>
+                        QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
                     </div>
-                    <div class="col-md-12">
-                        <div class="col-md-1">
-                            <img src="">
-                        </div>
-                        <div class="col-md-11">
-                            <h4>QQQQQQQQQQQQQQQQQQQQQQQQ</h4>
-                            <p>QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ</p>
-                        </div>
+                    <div>
+                        <span class="glyphicon glyphicon glyphicon-file"></span>
+                        QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
                     </div>
                 </div>
             </div>

@@ -1,7 +1,19 @@
+body {
+    word-break: break-all;
+}
+
 .glyphicon {
     margin-right: 5px;
 }
 
-.dash-board-nav, .dash-board-content {
-    word-break: break-all;
+.dash-board-nav {
+    min-height: 100vh;
+}
+
+.dash-board-content .glyphicon {
+    font-size: 30px;
+}
+
+.dash-board-content table .glyphicon {
+    font-size: inherit;
 }
