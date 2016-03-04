@@ -94,7 +94,25 @@ var Page = {
 
         function getElements() {
             var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable]');
-            var clickElements = $(Page.clickElements)
+
+            function removeDuplicate(elements) {
+                var result = [];
+
+                elements.map(
+                    element => {
+                        for (var i = 0; i < result.length; i++) {
+                            if (result[i].contains(element)) {
+                                return;
+                            }
+                        }
+                        result.push(element);
+                    }
+                );
+
+                return result;
+            }
+
+            var clickElements = $(removeDuplicate(Page.clickElements))
                 .find('div, span')
                 .filter((i, element) => getComputedStyle(element).cursor.search(/(pointer|default)/i) !== -1);
             return purify(elements, clickElements);
@@ -134,10 +152,10 @@ var Page = {
                 elements = elements.filter((i, element) => hasPlace(element));
                 clickElements = clickElements.get().reverse().filter(hasPlace);
                 function hasPlace(element) {
-                    var overlapsX = $();
-                    var overlapsY = $();
                     const WIDTH = 15;
                     const HEIGHT = 16;
+                    var overlapsX = $();
+                    var overlapsY = $();
 
                     var leftTo = Math.min(element._left + WIDTH, xTree.to);
                     var topTo = Math.min(element._top + HEIGHT, yTree.to);
