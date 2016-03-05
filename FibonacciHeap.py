@@ -62,7 +62,7 @@ class FibHeap:
             node.parent = FibNode
         self.children.extend(self.min_node.children)
         self.children.remove(self.min_node)
-        pair = (self.min_node.key, self.min_node.value)
+        pop_node = self.min_node
 
         def merge(a: FibNode, b: FibNode) -> FibNode:
             if a < b:
@@ -70,6 +70,8 @@ class FibHeap:
             else:
                 small, big = b, a
 
+            big.parent = small
+            big.is_child_deleted = False
             small.children.append(big)
             return small
 
@@ -87,7 +89,7 @@ class FibHeap:
             self.min_node = min(self.children)
         else:
             self.min_node = FibNode
-        return pair
+        return pop_node
 
 
 def fib_heap_test():
