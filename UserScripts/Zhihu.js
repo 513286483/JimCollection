@@ -7,6 +7,9 @@ $(document)
     })
     .on('click', event => {
         var link = event.target;
+        if (link.parentElement.tagName === 'A') {
+            link = link.parentElement;
+        }
         const sign = 'link.zhihu.com/?target=';
         if (link.classList.contains('external') && link.href.includes(sign)) {
             link.href = decodeURIComponent(link.href.substr(link.href.indexOf(sign) + sign.length));
