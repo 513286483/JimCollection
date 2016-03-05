@@ -131,6 +131,8 @@ def fib_heap_test():
         fib_heap.push(i, i)
     for i in fib_heap:
         print(i)
+        if i.key == 6:
+            i.key = 1
         fib_heap.decrease(i, i.key - 1)
 
     for i in fib_heap:

@@ -77,7 +77,6 @@ $(`<style>._hint{
     z-index: 2147483648
 }</style>`).appendTo('html');
 
-// Worker
 var Page = {
     clickElements: [],
 
@@ -97,7 +96,6 @@ var Page = {
 
             function removeDuplicate(elements) {
                 var result = [];
-
                 elements.map(
                     element => {
                         for (var i = 0; i < result.length; i++) {
@@ -108,7 +106,6 @@ var Page = {
                         result.push(element);
                     }
                 );
-
                 return result;
             }
 
@@ -151,6 +148,7 @@ var Page = {
 
                 elements = elements.filter((i, element) => hasPlace(element));
                 clickElements = clickElements.get().reverse().filter(hasPlace);
+
                 function hasPlace(element) {
                     const WIDTH = 15;
                     const HEIGHT = 16;
@@ -168,7 +166,6 @@ var Page = {
                         return true;
                     }
                 }
-
                 return elements.add(clickElements);
             }
         }
@@ -350,7 +347,6 @@ var Page = {
     }
 };
 
-// Worker
 var Tree = {
     create: (from, to) => {
         return {
