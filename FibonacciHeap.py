@@ -42,6 +42,11 @@ class FibNode:
     def __repr__(self):
         return str(self.key)
 
+    def __iter__(self):
+        yield self
+        for node in self.children:
+            yield from node
+
 
 class FibHeap:
     def __init__(self):
@@ -85,17 +90,52 @@ class FibHeap:
             bucket[degree] = node
 
         self.children = list(bucket.values())
-        if self.children:
-            self.min_node = min(self.children)
-        else:
-            self.min_node = FibNode
+        self.min_node = min(self.children + [FibNode])
         return pop_node
+
+    def decrease(self, decrease_node: FibNode, key):
+        assert key < decrease_node.key
+        decrease_node.key = key
+
+        def dispatch(dispatch_node: FibNode, parent: FibNode):
+            parent.children.remove(dispatch_node)
+
+            dispatch_node.parent = FibNode
+            dispatch_node.is_child_deleted = False
+            self.children.append(dispatch_node)
+
+            grandparent = parent.parent
+            if grandparent is not FibNode:
+                if parent.is_child_deleted:
+                    dispatch(parent, grandparent)
+                else:
+                    parent.is_child_deleted = True
+
+        parent = decrease_node.parent
+        if parent is not FibNode and parent > decrease_node:
+            dispatch(decrease_node, parent)
+        self.min_node = min(self.min_node, decrease_node)
+
+    def delete(self, delete_node: FibNode):
+        self.decrease(delete_node, -inf)
+        self.pop()
+
+    def __iter__(self):
+        for node in self.children:
+            yield from node
 
 
 def fib_heap_test():
     fib_heap = FibHeap()
     for i in range(10):
         fib_heap.push(i, i)
+    for i in fib_heap:
+        print(i)
+        fib_heap.decrease(i, i.key - 1)
+
+    for i in fib_heap:
+        print(i)
+
     for i in range(10):
         print(fib_heap.pop())
 
