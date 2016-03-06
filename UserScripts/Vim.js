@@ -166,6 +166,7 @@ var Page = {
                         return true;
                     }
                 }
+
                 return elements.add(clickElements);
             }
         }
@@ -238,8 +239,8 @@ var Page = {
                 map[hint] = element;
 
                 var style = {
-                    'top': element._top,
-                    'left': element._left
+                    top: element._top,
+                    left: element._left
                 };
 
                 $('<div class="_hint">' + hint + '</div>')
