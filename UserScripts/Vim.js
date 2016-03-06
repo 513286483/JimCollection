@@ -150,13 +150,12 @@ var Page = {
                 clickElements = clickElements.get().reverse().filter(hasPlace);
 
                 function hasPlace(element) {
-                    const WIDTH = 15;
-                    const HEIGHT = 16;
+                    const length = 16;
                     var overlapsX = $();
                     var overlapsY = $();
 
-                    var leftTo = Math.min(element._left + WIDTH, xTree.to);
-                    var topTo = Math.min(element._top + HEIGHT, yTree.to);
+                    var leftTo = Math.min(element._left + length, xTree.to);
+                    var topTo = Math.min(element._top + length, yTree.to);
                     Tree.search(xTree, element._left, leftTo, x => overlapsX = overlapsX.add(x));
                     Tree.search(yTree, element._top, topTo, y => overlapsY = overlapsY.add(y));
 
