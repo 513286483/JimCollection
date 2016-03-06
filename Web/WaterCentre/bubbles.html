@@ -11,10 +11,14 @@
             position: absolute;
             width: 60px;
         }
+
+        body {
+            background-repeat: no-repeat;
+        }
     </style>
 </head>
 <body>
-<canvas id="default-canvas"></canvas>
+<canvas id="default-canvas" style="display: none"></canvas>
 <script src="js/jquery-2.2.0.js"></script>
 <script src="js/tree.js"></script>
 <script>
@@ -312,6 +316,8 @@
                     }
                 }
             }
+
+            $(document.body).css('background-image', 'url(' + canvas.toDataURL() + ')');
         }
     };
 </script>
