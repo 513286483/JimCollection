@@ -5,10 +5,11 @@
     <title>Bubbles</title>
     <style>
         .bubble {
-            position: absolute;
+            background: white;
             border: 1px solid black;
-            width: 60px;
             height: 60px;
+            position: absolute;
+            width: 60px;
         }
     </style>
 </head>
@@ -23,21 +24,30 @@
         var h = Math.sqrt(Math.pow(to.left - from.left, 2) + Math.pow(to.top - from.top, 2));
         var b = from.top - to.top;
 
-        var radian = Math.acos(b / h);
+        var radians = Math.acos(b / h);
         if (to.left < from.left) {
-            radian = 2 * Math.PI - radian;
+            radians = 2 * Math.PI - radians;
         }
 
         var context = canvas.getContext('2d');
-        var centerX = (to.left + from.left) / 2;
-        var centerY = (to.top + from.top) / 2;
+        var middle = {
+            left: (to.left + from.left) / 2,
+            top: (to.top + from.top) / 2
+        };
+        to = {
+            left: middle.left,
+            top: middle.top - h / 2
+        };
+        from = {
+            left: middle.left,
+            top: middle.top + h / 2
+        };
 
         context.save();
-        context.translate(centerX, centerY);
-        context.rotate(radian);
-        context.translate(-centerX, -centerY);
-
-        connect(context, {left: centerX, top: to.top}, {left: centerX, top: from.top});
+        context.translate(middle.left, middle.top);
+        context.rotate(radians);
+        context.translate(-middle.left, -middle.top);
+        connect(context, to, from);
         context.restore();
 
         function connect(context, to, from) {
@@ -55,7 +65,6 @@
 
             context.fill();
         }
-
     }
 </script>
 <script>
@@ -247,28 +256,28 @@
         },
 
         connect: function () {
-            function getTopPosition(element) {
+            function getTop(element) {
                 return {
                     left: parseInt(element.style.left) + bubbleLength / 2,
                     top: parseInt(element.style.top)
                 }
             }
 
-            function getRightPosition(element) {
+            function getRight(element) {
                 return {
                     left: parseInt(element.style.left) + bubbleLength,
                     top: parseInt(element.style.top) + bubbleLength / 2
                 }
             }
 
-            function getBottomPosition(element) {
+            function getBottom(element) {
                 return {
                     left: parseInt(element.style.left) + bubbleLength / 2,
                     top: parseInt(element.style.top) + bubbleLength
                 }
             }
 
-            function getLeftPosition(element) {
+            function getLeft(element) {
                 return {
                     left: parseInt(element.style.left),
                     top: parseInt(element.style.top) + bubbleLength / 2
@@ -288,16 +297,16 @@
 
                     switch (bubble.direction) {
                         case 'bottom':
-                            arrowLineConnect(canvas, getBottomPosition(element), getTopPosition(parentElement));
+                            arrowLineConnect(canvas, getBottom(element), getTop(parentElement));
                             break;
                         case 'left':
-                            arrowLineConnect(canvas, getLeftPosition(element), getRightPosition(parentElement));
+                            arrowLineConnect(canvas, getLeft(element), getRight(parentElement));
                             break;
                         case 'top':
-                            arrowLineConnect(canvas, getTopPosition(element), getBottomPosition(parentElement));
+                            arrowLineConnect(canvas, getTop(element), getBottom(parentElement));
                             break;
                         case 'right':
-                            arrowLineConnect(canvas, getRightPosition(element), getLeftPosition(parentElement));
+                            arrowLineConnect(canvas, getRight(element), getLeft(parentElement));
                             break;
                     }
                 }
