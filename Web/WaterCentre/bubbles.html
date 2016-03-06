@@ -6,6 +6,9 @@
     <style>
         .bubble {
             position: absolute;
+            border: 1px solid black;
+            width: 60px;
+            height: 60px;
         }
     </style>
 </head>
@@ -15,7 +18,7 @@
 <script>
     'use strict';
 
-    const offset = 10;
+    const offset = 30;
     const bubbleLength = 60;
 
     var Bubble = {
@@ -86,12 +89,12 @@
                 var overlapsY = [];
 
                 Tree.search(xTree, leftFrom, leftTo, function (x) {
-                            overlapsX.push(x)
+                            overlapsX.push.apply(overlapsX, x);
                         }
                 );
 
                 Tree.search(yTree, topFrom, topTo, function (y) {
-                            overlapsY.push(y)
+                            overlapsY.push.apply(overlapsY, y);
                         }
                 );
 
@@ -124,7 +127,7 @@
                     attemptTime = attemptTime || 0;
                     attemptTime++;
 
-                    var command = Math.round(attemptTime * 0.618 % 1 * 3);
+                    var command = Math.round(attemptTime * id * 0.618 % 1 * 3);
                     if ((command + 2) % 4 === prevCommand) {
                         command = (command + 1 ) % 4;
                     }
@@ -132,18 +135,24 @@
                     switch (command) {
                         case 0:
                             topFrom -= offset;
+                            leftFrom += offset;
                             break;
                         case 1:
                             leftFrom += offset;
+                            topFrom += offset;
                             break;
                         case 2:
                             topFrom += offset;
+                            leftFrom -= offset;
                             break;
                         case 3:
                             leftFrom -= offset;
+                            topFrom -= offset;
                             break;
                     }
 
+                    leftFrom = Math.min(Math.max(0, leftFrom), xTree.to - bubbleLength);
+                    topFrom = Math.min(Math.max(0, topFrom), yTree.to - bubbleLength);
                     return positionPop(
                             leftFrom, leftFrom + bubbleLength, topFrom, topFrom + bubbleLength, command, attemptTime);
                 }
@@ -196,7 +205,7 @@
 
 </script>
 <script>
-    const distance = 100;
+    const distance = 200;
 
     /* Sample */
     Bubble.create(1, '<div>1</div>');
@@ -206,6 +215,8 @@
     Bubble.create(5, '<div>5</div>', 'right', distance, 1);
     Bubble.create(6, '<div>6</div>', 'right', distance, 5);
     Bubble.create(7, '<div>7</div>', 'bottom', distance, 6);
+    Bubble.create(8, '<div>8</div>', 'bottom', distance, 6);
+    Bubble.create(9, '<div>9</div>', 'bottom', distance, 6);
     /* end */
 
     Bubble.display();
