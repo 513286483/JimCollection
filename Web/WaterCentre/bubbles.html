@@ -29,6 +29,7 @@
             radians = 2 * Math.PI - radians;
         }
 
+        const padding = 10;
         var context = canvas.getContext('2d');
         var middle = {
             left: (to.left + from.left) / 2,
@@ -36,11 +37,11 @@
         };
         to = {
             left: middle.left,
-            top: middle.top - h / 2
+            top: middle.top - h / 2 + padding
         };
         from = {
             left: middle.left,
-            top: middle.top + h / 2
+            top: middle.top + h / 2 - padding
         };
 
         context.save();
