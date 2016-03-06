@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Bubbles</title>
+    <style>
+        .bubble {
+            position: absolute;
+        }
+    </style>
 </head>
 <body>
 <script src="js/jquery-2.2.0.js"></script>
@@ -11,7 +16,7 @@
     'use strict';
 
     const offset = 10;
-    const length = 60;
+    const bubbleLength = 60;
 
     var Bubble = {
         dic: {},
@@ -26,34 +31,31 @@
                 distance: distance,
                 parent: parent
             };
-            return id;
         },
 
-        getRectTo: function (id) {
+        getRect: function (id) {
             var bubble = Bubble.dic[id];
 
             if (!bubble.xTo) {
-                bubble.xTo = bubble.yTo = length;
+                bubble.xTo = bubble.yTo = bubbleLength;
 
                 if (bubble.parent) {
-                    var parentRect = Bubble.getRectTo(bubble.parent);
+                    var parentRect = Bubble.getRect(bubble.parent);
 
-                    if (bubble.direction === 'left' || bubble.direction === 'right') {
+                    if (bubble.direction.match(/left|right/)) {
                         bubble.xTo += (parentRect.xTo + bubble.distance);
                         bubble.yTo = parentRect.yTo;
                     } else {
                         bubble.xTo = parentRect.xTo;
                         bubble.yTo += (parentRect.yTo + bubble.distance);
                     }
-                }
-
-                else {
+                } else {
                     Bubble.initArray.push(id);
                 }
             }
+
             Bubble.xMax = Math.max(Bubble.xMax, bubble.xTo);
             Bubble.yMax = Math.max(Bubble.yMax, bubble.yTo);
-
             return {
                 xTo: bubble.xTo,
                 yTo: bubble.yTo
@@ -61,23 +63,21 @@
         },
 
         display: function () {
-            var keys = Object.keys(Bubble.dic);
-            for (var i = 0; i < keys.length; i++) {
-                Bubble.getRectTo(keys[i])
+            for (var id in Bubble.dic) {
+                Bubble.getRect(id)
             }
 
             var xTree = Tree.create(0, Bubble.xMax * 2);
             var yTree = Tree.create(0, Bubble.yMax * 2);
 
-            for (i = 0; i < Bubble.initArray; i++) {
-                var id = Bubble.initArray[i];
+            for (var i = 0; i < Bubble.initArray; i++) {
+                id = Bubble.initArray[i];
                 var position = positionPop(
-                        Bubble.xMax - length, Bubble.xMax, Bubble.yMax - length, Bubble.yMax);
+                        Bubble.xMax - bubbleLength, Bubble.xMax, Bubble.yMax - bubbleLength, Bubble.yMax);
                 place(id, position);
             }
 
-            for (i = 0; i < keys.length; i++) {
-                id = keys[i];
+            for (id in Bubble.dic) {
                 place(id);
             }
 
@@ -125,8 +125,8 @@
                     attemptTime++;
 
                     var command = Math.round(attemptTime * 0.618 % 1 * 3);
-                    if ((command + 2 ? command <= 1 : command - 2) === prevCommand) {
-                        command = command + 1 ? command <= 2 : 0;
+                    if ((command + 2) % 4 === prevCommand) {
+                        command = (command + 1 ) % 4;
                     }
 
                     switch (command) {
@@ -141,10 +141,11 @@
                             break;
                         case 3:
                             leftFrom -= offset;
+                            break;
                     }
 
                     return positionPop(
-                            leftFrom, leftFrom + length, topFrom, topFrom + length, command, attemptTime);
+                            leftFrom, leftFrom + bubbleLength, topFrom, topFrom + bubbleLength, command, attemptTime);
                 }
             }
 
@@ -152,8 +153,8 @@
                 var element = document.getElementById(id);
                 if (element) {
                     return {
-                        left: element.style.left,
-                        top: element.style.top
+                        left: parseInt(element.style.left),
+                        top: parseInt(element.style.top)
                     }
                 }
 
@@ -161,8 +162,8 @@
                 if (position) {
                     $(bubble.innerHTML)
                             .attr('id', id)
+                            .addClass('bubble')
                             .css({
-                                position: 'absolute',
                                 left: position.left,
                                 top: position.top
                             })
@@ -173,20 +174,21 @@
                     var topFrom = position.top;
 
                     switch (bubble.direction) {
-                        case 'top':
+                        case 'bottom':
                             topFrom -= bubble.distance;
                             break;
-                        case 'right':
+                        case 'left':
                             leftFrom += bubble.distance;
                             break;
-                        case 'bottom':
+                        case 'top':
                             topFrom += bubble.distance;
                             break;
-                        case 'left':
+                        case 'right':
                             leftFrom -= bubble.distance;
+                            break;
                     }
 
-                    place(id, positionPop(leftFrom, leftFrom + length, topFrom, topFrom + length));
+                    place(id, positionPop(leftFrom, leftFrom + bubbleLength, topFrom, topFrom + bubbleLength));
                 }
             }
         }
