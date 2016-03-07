@@ -5,6 +5,11 @@
     <title>Sheffield Water Centre - Dashboard - Portfolios</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        iframe {
+            border-style: none;
+        }
+    </style>
 </head>
 <body>
 <div class="container-fluid">
@@ -68,6 +73,11 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-12">
+                    <iframe id="graph-iframe" src="bubbles.html"></iframe>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-offset-1 col-md-10">
                     <table class="table table-bordered">
                         <!-- T -->
@@ -102,5 +112,14 @@
 </div>
 <script src="js/jquery-2.2.0.js"></script>
 <script src="js/bootstrap.js"></script>
+<script>
+    $(window).on('load', function () {
+        var iframe = document.getElementById('graph-iframe');
+        var graph = iframe.contentWindow.document.getElementById('default-canvas');
+        iframe.width = graph.width;
+        iframe.height = graph.height;
+        $('.dash-board-nav').css('height', $(document).height());
+    })
+</script>
 </body>
 </html>
