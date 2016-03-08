@@ -19,8 +19,6 @@
 </head>
 <body>
 <canvas id="default-canvas" style="display: none"></canvas>
-<script src="js/jquery-2.2.0.js"></script>
-<script src="js/tree.js"></script>
 <script>
     'use strict';
 
@@ -114,6 +112,7 @@
 
             Bubble.xMax = Math.max(Bubble.xMax, bubble.xTo);
             Bubble.yMax = Math.max(Bubble.yMax, bubble.yTo);
+
             return {
                 xTo: bubble.xTo,
                 yTo: bubble.yTo
@@ -159,9 +158,9 @@
                             })
                             .appendTo(document.body);
                 } else {
-                    position = place(bubble.parent);
-                    var leftFrom = position.left;
-                    var topFrom = position.top;
+                    var parentPosition = place(bubble.parent);
+                    var leftFrom = parentPosition.left;
+                    var topFrom = parentPosition.top;
 
                     switch (bubble.direction) {
                         case 'bottom':
@@ -253,6 +252,7 @@
 
                     leftFrom = Math.min(Math.max(0, leftFrom), xTree.to - bubbleLength);
                     topFrom = Math.min(Math.max(0, topFrom), yTree.to - bubbleLength);
+
                     return positionPop(
                             id, leftFrom, leftFrom + bubbleLength, topFrom, topFrom + bubbleLength,
                             command, attemptTime);
@@ -260,7 +260,7 @@
             }
         },
 
-        connect: function () {
+        link: function () {
             function getTop(element) {
                 return {
                     left: parseInt(element.style.left) + bubbleLength / 2,
@@ -337,7 +337,7 @@
     /* end */
 
     Bubble.display();
-    Bubble.connect();
+    Bubble.link();
 </script>
 </body>
 </html>
