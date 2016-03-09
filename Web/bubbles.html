@@ -22,7 +22,7 @@
 <script>
     'use strict';
 
-    function arrowLineConnect(canvas, to, from) {
+    function lineConnect(canvas, to, from) {
         var h = Math.sqrt(Math.pow(to.left - from.left, 2) + Math.pow(to.top - from.top, 2));
         var b = from.top - to.top;
 
@@ -302,16 +302,16 @@
 
                     switch (bubble.direction) {
                         case 'bottom':
-                            arrowLineConnect(canvas, getBottom(element), getTop(parentElement));
+                            lineConnect(canvas, getBottom(element), getTop(parentElement));
                             break;
                         case 'left':
-                            arrowLineConnect(canvas, getLeft(element), getRight(parentElement));
+                            lineConnect(canvas, getLeft(element), getRight(parentElement));
                             break;
                         case 'top':
-                            arrowLineConnect(canvas, getTop(element), getBottom(parentElement));
+                            lineConnect(canvas, getTop(element), getBottom(parentElement));
                             break;
                         case 'right':
-                            arrowLineConnect(canvas, getRight(element), getLeft(parentElement));
+                            lineConnect(canvas, getRight(element), getLeft(parentElement));
                             break;
                     }
                 }
