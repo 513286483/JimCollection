@@ -19,7 +19,7 @@ function main() {
                     link.removeAttribute('onmousedown');
                 }
 
-                link = link.href;
+                link = (link.href = link.href.replace('wikipedia.org/zh/', 'wikipedia.org/wiki/'));
                 var abstract = $(abstracts[i]);
 
                 mapFirst[link] = abstract.find('span').length ? '' : '-';
