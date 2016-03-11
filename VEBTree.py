@@ -29,7 +29,7 @@ class VEBTree:
             if number < self.min:
                 number, self.min = self.min, number
 
-            if len(self.children) != 0:
+            if len(self.children) > 0:
                 index, remainder = divmod(number, self.child_range)
                 child = self.children[index]
                 if child.min == -1:
@@ -62,13 +62,13 @@ class VEBTree:
             return
 
         if len(self.children) == 0:
-            return self.max
-
-        for i in range(self.min // self.child_range, self.max // self.child_range + 1):
-            child = self.children[i]
-            drift = i * self.child_range
-            for value in child:
-                yield drift + value
+            yield self.max
+        else:
+            for i in range(self.min // self.child_range, self.max // self.child_range + 1):
+                child = self.children[i]
+                drift = i * self.child_range
+                for value in child:
+                    yield drift + value
 
 
 if __name__ == '__main__':
@@ -77,13 +77,14 @@ if __name__ == '__main__':
 
     def main():
         tree = VEBTree(128)
-        compare_list = []
+        compare_set = set()
 
-        for i in range(10):
-            rand_int = randint(0, 128)
-            compare_list.append(rand_int)
+        for i in range(1000):
+            rand_int = randint(0, 127)
+            compare_set.add(rand_int)
             tree.insert(rand_int)
 
+        compare_list = list(compare_set)
         compare_list.sort()
         for a, b in zip(tree, compare_list):
             print(a, b, tree.search(a))
