@@ -29,7 +29,7 @@ class VEBTree:
             if number < self.min:
                 number, self.min = self.min, number
 
-            if len(self.children) > 0:
+            if len(self.children) > 0 and self.min != number:
                 index, remainder = divmod(number, self.child_range)
                 child = self.children[index]
                 if child.min == -1:
@@ -75,19 +75,32 @@ if __name__ == '__main__':
     from random import randint
 
 
-    def main():
-        tree = VEBTree(128)
+    def main_1():
+        tree = VEBTree(1024)
         compare_set = set()
 
-        for i in range(1000):
-            rand_int = randint(0, 127)
-            compare_set.add(rand_int)
-            tree.insert(rand_int)
+        for i in range(100):
+            rand_int = randint(0, 1023)
+            if i not in compare_set:
+                compare_set.add(rand_int)
+                tree.insert(rand_int)
+                if rand_int not in tree:
+                    raise ValueError
 
         compare_list = list(compare_set)
-        compare_list.sort()
-        for a, b in zip(tree, compare_list):
-            print(a, b, tree.search(a))
+        tree_list = list(tree)
+        tree_set = set(tree_list)
+
+        print('compare len', len(compare_list))
+        print('tree_list', len(tree_list))
+        print('tree_set', len(tree_set))
+
+        for i in compare_list:
+            if i not in tree_list or i not in tree:
+                print(i, 'NO')
+                raise ValueError
+            else:
+                print(i, 'YES')
 
 
-    main()
+    main_1()
