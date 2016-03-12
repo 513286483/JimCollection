@@ -17,10 +17,39 @@ class VEBTree:
             self.cache = VEBTree(big)
 
     def range_min(self, range_from: int = 0, range_to: int = -1) -> int:
-        pass
+        # 循环到空节点，报错避免return
+        if self.min == -1:
+            raise Exception
 
-    def range_max(self, range_from: int = 0, range_to: int = -1) -> int:
-        pass
+        # 从0开始，则直接返回最小值
+        if range_from == 0:
+            return self.min
+
+        # 类似Search，匹配直接return
+        if range_from == self.min:
+            return self.min
+        elif range_from == self.max:
+            return self.max
+        elif len(self.children) == 0:
+            raise Exception
+
+        index_from, remainder_from = divmod(range_from, self.child_range)
+        if range_to == -1:
+            index_to, remainder_to = len(self.children) - 1, self.child_range - 1
+        else:
+            index_to, remainder_to = divmod(range_to, self.child_range)
+
+        child = self.children[index_from]
+        if child.min != -1 and child.min <= remainder_from <= child.max:
+            drift = index_from * self.child_range
+
+            if index_from < index_to:
+                return drift + child.range_min(remainder_from)
+            if index_from == index_to:
+                return drift + child.range_min(remainder_from, remainder_to)
+
+        index_min = self.cache.range_min(index_from + 1)
+        return index_min * self.child_range + self.children[index_min].min
 
     def insert(self, number: int):
         if self.min == -1:
@@ -29,7 +58,10 @@ class VEBTree:
             if number < self.min:
                 number, self.min = self.min, number
 
-            if len(self.children) > 0 and self.min != number:
+            elif number > self.max:
+                self.max = number
+
+            if number != self.min and len(self.children) > 0:
                 index, remainder = divmod(number, self.child_range)
                 child = self.children[index]
                 if child.min == -1:
@@ -38,18 +70,15 @@ class VEBTree:
                 else:
                     child.insert(remainder)
 
-            if number > self.max:
-                self.max = number
-
     def delete(self, number: int):
         pass
 
     def search(self, number: int) -> bool:
-        if self.min == -1:
-            return False
-
         if self.min == number or self.max == number:
             return True
+
+        if len(self.children) == 0:
+            return False
 
         index, remainder = divmod(number, self.child_range)
         return self.children[index].search(remainder)
@@ -75,32 +104,30 @@ if __name__ == '__main__':
     from random import randint
 
 
-    def main_1():
+    def main0():
         tree = VEBTree(1024)
         compare_set = set()
 
-        for i in range(100):
-            rand_int = randint(0, 1023)
-            if i not in compare_set:
-                compare_set.add(rand_int)
-                tree.insert(rand_int)
-                if rand_int not in tree:
-                    raise ValueError
+        for i in range(1000):
+            random = randint(0, 1023)
+            compare_set.add(random)
+            tree.insert(random)
 
         compare_list = list(compare_set)
+
         tree_list = list(tree)
         tree_set = set(tree_list)
 
-        print('compare len', len(compare_list))
+        print('compare_list', len(compare_list))
         print('tree_list', len(tree_list))
         print('tree_set', len(tree_set))
 
         for i in compare_list:
-            if i not in tree_list or i not in tree:
+            if i not in tree_set or not tree.search(i):
                 print(i, 'NO')
-                raise ValueError
+                raise Exception
             else:
-                print(i, 'YES')
+                print(i, 'OK')
 
 
-    main_1()
+    main0()
