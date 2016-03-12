@@ -20,7 +20,7 @@ class VEBTree:
         if self.min == -1:
             raise Exception
 
-        if range_from == 0:
+        if range_from <= self.min <= range_to:
             return self.min
 
         if range_from == self.min:
@@ -51,7 +51,9 @@ class VEBTree:
 
         if index_from < index_to:
             index_min = self.cache.range_min(index_from + 1, index_to)
-            return index_min * self.child_range + self.children[index_min].min
+            result = index_min * self.child_range + self.children[index_min].min
+            if result <= range_to:
+                return result
         raise Exception
 
     def insert(self, number: int):
@@ -143,7 +145,7 @@ if __name__ == '__main__':
         for i in sample:
             tree.insert(i)
 
-        for _ in range(100):
+        for _ in range(10000):
             random_0 = randint(0, 15)
             random_1 = randint(random_0, 15)
 
@@ -166,6 +168,7 @@ if __name__ == '__main__':
             else:
                 result = tree.range_min(random_0, random_1)
                 print('result:', result)
+                print('from:to', random_0, random_1)
                 print('expected:', value)
                 assert value == result
 
