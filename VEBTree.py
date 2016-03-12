@@ -17,15 +17,12 @@ class VEBTree:
             self.cache = VEBTree(big)
 
     def range_min(self, range_from: int = 0, range_to: int = -1) -> int:
-        # 循环到空节点，报错避免return
         if self.min == -1:
             raise Exception
 
-        # 从0开始，则直接返回最小值
         if range_from == 0:
             return self.min
 
-        # 类似Search，匹配直接return
         if range_from == self.min:
             return self.min
         elif range_from == self.max:
@@ -40,16 +37,22 @@ class VEBTree:
             index_to, remainder_to = divmod(range_to, self.child_range)
 
         child = self.children[index_from]
-        if child.min != -1 and child.min <= remainder_from <= child.max:
+        if child.min != -1:
             drift = index_from * self.child_range
 
             if index_from < index_to:
-                return drift + child.range_min(remainder_from)
-            if index_from == index_to:
+                remainder_to = self.child_range - 1
+
+            if remainder_from <= child.min <= remainder_to:
+                return drift + child.min
+
+            if child.min < remainder_from <= child.max:
                 return drift + child.range_min(remainder_from, remainder_to)
 
-        index_min = self.cache.range_min(index_from + 1)
-        return index_min * self.child_range + self.children[index_min].min
+        if index_from < index_to:
+            index_min = self.cache.range_min(index_from + 1, index_to)
+            return index_min * self.child_range + self.children[index_min].min
+        raise Exception
 
     def insert(self, number: int):
         if self.min == -1:
@@ -64,9 +67,10 @@ class VEBTree:
             if number != self.min and len(self.children) > 0:
                 index, remainder = divmod(number, self.child_range)
                 child = self.children[index]
+
                 if child.min == -1:
-                    child.min = child.max = remainder
                     self.cache.insert(index)
+                    child.min = child.max = remainder
                 else:
                     child.insert(remainder)
 
@@ -77,7 +81,7 @@ class VEBTree:
         if self.min == number or self.max == number:
             return True
 
-        if len(self.children) == 0:
+        if self.min == -1 or len(self.children) == 0:
             return False
 
         index, remainder = divmod(number, self.child_range)
@@ -104,7 +108,7 @@ if __name__ == '__main__':
     from random import randint
 
 
-    def main0():
+    def main_0():
         tree = VEBTree(1024)
         compare_set = set()
 
@@ -114,7 +118,6 @@ if __name__ == '__main__':
             tree.insert(random)
 
         compare_list = list(compare_set)
-
         tree_list = list(tree)
         tree_set = set(tree_list)
 
@@ -130,4 +133,41 @@ if __name__ == '__main__':
                 print(i, 'OK')
 
 
-    main0()
+    def main_1():
+        bucket = [0 for _ in range(16)]
+        sample = (2, 3, 4, 5, 7, 14, 15)
+        for i in sample:
+            bucket[i] = 1
+
+        tree = VEBTree(16)
+        for i in sample:
+            tree.insert(i)
+
+        for _ in range(100):
+            random_0 = randint(0, 15)
+            random_1 = randint(random_0, 15)
+
+            value = -1
+            for i in range(random_0, random_1 + 1):
+                if bucket[i]:
+                    value = i
+                    break
+
+            if value == -1:
+                try:
+                    result = tree.range_min(random_0, random_1)
+                except Exception:
+                    print('OK')
+                else:
+                    print()
+                    print('error result:', result)
+                    print('from:to', random_0, random_1)
+                    raise Exception
+            else:
+                result = tree.range_min(random_0, random_1)
+                print('result:', result)
+                print('expected:', value)
+                assert value == result
+
+
+    main_1()
