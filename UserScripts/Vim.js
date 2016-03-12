@@ -290,7 +290,7 @@ var Page = {
     up: ()=> scrollBy(0, -200),
 
     close: ()=> {
-        window.close();
+        top.close();
     },
 
     plus: ()=> {

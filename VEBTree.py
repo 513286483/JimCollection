@@ -119,7 +119,35 @@ class VEBTree:
                     child.insert(remainder)
 
     def delete(self, number: int):
-        pass
+        if self.min == self.max:
+            self.min = self.max = -1
+
+        elif len(self.children) == 0:
+            if number == 0:
+                self.min, self.max = 1, 1
+            else:
+                self.min, self.max = 0, 0
+
+        else:
+            if number == self.min:
+                number = self.min = self.range_min(number + 1)
+
+            index, remainder = divmod(number, self.child_range)
+            child = self.children[index]
+            child.delete(remainder)
+
+            if child.min == -1:
+                self.cache.delete(index)
+
+                if number == self.max:
+                    if self.cache.max == -1:
+                        self.max = self.min
+                    else:
+                        child = self.children[self.cache.max]
+                        self.max = self.cache.max * self.child_range + child.max
+
+            elif number == self.max:
+                self.max = index * self.child_range + child.max
 
     def search(self, number: int) -> bool:
         if self.min == number or self.max == number:
@@ -252,6 +280,29 @@ if __name__ == '__main__':
                 print('expected:', value)
 
 
-    main_0()
-    main_1()
-    main_2()
+    def main_3():
+        bucket = [0 for _ in range(16)]
+        sample = tuple(randint(0, 15) for _ in range(20))
+        for i in sample:
+            bucket[i] = 1
+
+        tree = VEBTree(16)
+        for i in sample:
+            tree.insert(i)
+
+        sample_set = set(sample)
+        while sample_set:
+            del_value = sample_set.pop()
+            tree.delete(del_value)
+
+            a = list(i for i in tree)
+            b = list(sample_set)
+            a.sort()
+            b.sort()
+
+            print(del_value)
+            if a != b:
+                raise Exception
+
+
+    main_3()
