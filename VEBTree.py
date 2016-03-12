@@ -1,4 +1,5 @@
 from math import floor, ceil, log2
+from contextlib import suppress
 from typing import List
 
 
@@ -20,14 +21,13 @@ class VEBTree:
         if self.min == -1:
             raise Exception
 
-        if range_from <= self.min <= range_to:
+        if range_from <= self.min and (self.min <= range_to or range_to == -1):
             return self.min
 
-        if range_from == self.min:
-            return self.min
-        elif range_from == self.max:
+        if range_from == self.max:
             return self.max
-        elif len(self.children) == 0:
+
+        if len(self.children) == 0:
             raise Exception
 
         index_from, remainder_from = divmod(range_from, self.child_range)
@@ -39,7 +39,6 @@ class VEBTree:
         child = self.children[index_from]
         if child.min != -1:
             drift = index_from * self.child_range
-
             if index_from < index_to:
                 remainder_to = self.child_range - 1
 
@@ -54,6 +53,49 @@ class VEBTree:
             result = index_min * self.child_range + self.children[index_min].min
             if result <= range_to:
                 return result
+        raise Exception
+
+    def range_max(self, range_from: int = 0, range_to: int = -1) -> int:
+        if self.min == -1:
+            raise Exception
+
+        if range_from <= self.max and (self.max <= range_to or range_to == -1):
+            return self.max
+
+        if range_to == self.min:
+            return self.min
+
+        if len(self.children) == 0:
+            raise Exception
+
+        index_from, remainder_from = divmod(range_from, self.child_range)
+        if range_to == -1:
+            index_to, remainder_to = len(self.children) - 1, self.child_range - 1
+        else:
+            index_to, remainder_to = divmod(range_to, self.child_range)
+
+        with suppress(Exception):
+            child = self.children[index_to]
+            if child.min != -1:
+                drift = index_to * self.child_range
+                if index_from < index_to:
+                    remainder_from = 0
+
+                if remainder_from <= child.max <= remainder_to:
+                    return drift + child.max
+
+                if child.min <= remainder_to < child.max:
+                    return drift + child.range_max(remainder_from, remainder_to)
+
+            if index_from < index_to:
+                index_max = self.cache.range_max(index_from, index_to - 1)
+                result = index_max * self.child_range + self.children[index_max].max
+                if result >= range_from:
+                    return result
+
+        # find nothing bigger than self.min
+        if range_from <= self.min <= range_to:
+            return self.min
         raise Exception
 
     def insert(self, number: int):
@@ -137,7 +179,7 @@ if __name__ == '__main__':
 
     def main_1():
         bucket = [0 for _ in range(16)]
-        sample = (2, 3, 4, 5, 7, 14, 15)
+        sample = tuple(randint(0, 15) for _ in range(20))
         for i in sample:
             bucket[i] = 1
 
@@ -173,4 +215,43 @@ if __name__ == '__main__':
                 assert value == result
 
 
+    def main_2():
+        bucket = [0 for _ in range(16)]
+        sample = tuple(randint(0, 15) for _ in range(20))
+        for i in sample:
+            bucket[i] = 1
+
+        tree = VEBTree(16)
+        for i in sample:
+            tree.insert(i)
+
+        for _ in range(10000):
+            random_0 = randint(0, 15)
+            random_1 = randint(random_0, 15)
+
+            value = -1
+            for i in reversed(range(random_0, random_1 + 1)):
+                if bucket[i]:
+                    value = i
+                    break
+
+            if value == -1:
+                try:
+                    result = tree.range_max(random_0, random_1)
+                except Exception:
+                    print('OK')
+                else:
+                    print()
+                    print('error result:', result)
+                    print('from:to', random_0, random_1)
+                    raise Exception
+            else:
+                result = tree.range_max(random_0, random_1)
+                print('result:', result)
+                print('from:to', random_0, random_1)
+                print('expected:', value)
+
+
+    main_0()
     main_1()
+    main_2()
