@@ -138,6 +138,9 @@ class VEBTree:
             index, remainder = divmod(number, self.child_range)
             child = self.children[index]
 
+            if child.min <= remainder <= child.max:
+                raise Exception
+
             if child.min == child.max:
                 self.cache.delete(index)
             child.delete(remainder)
@@ -180,7 +183,7 @@ class VEBTree:
 
 
 if __name__ == '__main__':
-    from random import randint
+    from random import randint, shuffle
 
 
     def main_0():
@@ -285,25 +288,58 @@ if __name__ == '__main__':
 
     def main_3():
         for i in range(100):
-            sample = [randint(0, 15) for _ in range(20)]
+            sample = [randint(0, 15) for _ in range(10)]
             sample = list(set(sample))
+            shuffle(sample)
 
             tree = VEBTree(16)
             for i in sample:
                 tree.insert(i)
 
             while sample:
-                del_value = sample.pop()
-                tree.delete(del_value)
+                print()
+                a = list(tree)
+                b = list(sample)
+                a.sort()
+                b.sort()
+                print('a', a)
+                assert a == b
+
+                exist_del_value = sample.pop()
+                print('try to del exist', exist_del_value)
+                tree.delete(exist_del_value)
 
                 a = list(tree)
                 b = list(sample)
                 a.sort()
                 b.sort()
 
-                print('.', end='')
-                if a != b:
-                    raise Exception
+                print('a', a)
+                assert a == b
+
+                null_del_value = randint(0, 15)
+                if null_del_value not in sample:
+                    print('try to del null value', null_del_value)
+                    try:
+                        tree.delete(null_del_value)
+                    except:
+                        print('a', list(tree))
+                    else:
+                        print('MISSED EXCEPTION')
+                        return
+
+
+    def main_4():
+        sample = [4, 7, 8, 11, 15]
+
+        tree = VEBTree(16)
+        for i in sample:
+            tree.insert(i)
+
+        with suppress(Exception):
+            tree.delete(12)
+        tree.delete(15)
+        print()
 
 
     main_3()
