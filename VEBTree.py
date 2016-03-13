@@ -135,16 +135,22 @@ class VEBTree:
             if number == self.min:
                 number = self.min = self.cache.min * self.child_range + self.children[self.cache.min].min
 
-            elif number == self.max:
-                with suppress(Exception):
-                    self.max = self.range_max(range_to=self.max - 1)
-
             index, remainder = divmod(number, self.child_range)
             child = self.children[index]
 
             if child.min == child.max:
                 self.cache.delete(index)
             child.delete(remainder)
+
+            if number == self.max:
+                if child.min == -1:
+                    child_cache = self.children[self.cache.max]
+                    if child_cache.max == -1:
+                        self.max = self.min
+                    else:
+                        self.max = self.cache.max * self.child_range + child_cache.max
+                else:
+                    self.max = index * self.child_range + child.max
 
     def search(self, number: int) -> bool:
         if self.min == number or self.max == number:
