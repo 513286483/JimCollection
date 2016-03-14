@@ -126,13 +126,13 @@ if __name__ == '__main__':
         pants.connect(belt, shoes)
         socks.connect(shoes)
 
-        objs = [shirt, belt, tie, jacket, undershorts, pants, shoes, socks, watch]
-        for i in objs:
+        clothes = [shirt, belt, tie, jacket, undershorts, pants, shoes, socks, watch]
+        for i in clothes:
             if i.color is WHITE:
                 i.build_dfs()
-        objs.sort(key=lambda x: x.time_back, reverse=True)
+        clothes.sort(key=lambda x: x.time_back, reverse=True)
 
-        print(objs)
+        print(clothes)
         print()
 
 
