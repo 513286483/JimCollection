@@ -6,6 +6,7 @@ for (var i = 0; i < fontQueue.length; i++) {
     inject(fontQueue[i]);
 }
 
+$('<style>@font-face{font-family:宋体;unicode-range:U+0000-007F;src:local(Arial);}</style>').appendTo('html');
 $(() => {
         transformElement(document.body);
         GM_setValue('fontQueue', fontQueue.slice(0, 30).join(','));
@@ -18,7 +19,7 @@ function inject(font) {
         '@font-face{font-family:' + font + ';src:local(' + font + ');}' +
         '@font-face{font-family:' + font + ';unicode-range:U+4E00-9FFF;src:local(Noto Sans CJK SC);}' +
         '</style>';
-    $(style).appendTo('html');
+    $(style).prependTo('html');
 }
 
 var cache;
