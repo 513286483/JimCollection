@@ -34,7 +34,7 @@ function main() {
     }
 
     else if (isEngine = (href.includes('baidu.com/s?'))) {
-        $('<style>#content_right{display:none}</style>').appendTo('html');
+        $('#content_right').hide();
 
         update = function () {
             var result = $('.c-container');
