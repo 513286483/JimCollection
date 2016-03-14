@@ -36,7 +36,7 @@ addEventListener('keypress', event => {
         var char = String.fromCharCode(event.keyCode).toUpperCase();
         switch (char) {
             case 'F':
-                Page.linkHint();
+                $('._hint').length ? Page.match(char) : Page.linkHint();
                 break;
 
             case 'J':
@@ -222,6 +222,26 @@ var Page = {
                     hints[i] = availableChars.pop();
                     if ((allHints[startChar] += '.').length === lengthB - 1) {
                         singletonChars.push(startChar);
+                    }
+                }
+            }
+
+            var availableChar = 'F';
+            for (i = 0; i < elements.length; i++) {
+                element = elements[i];
+                if (element.tagName === 'INPUT' &&
+                    element.type.search(/(button|checkbox|file|hidden|image|radio|reset|submit)/i) === -1) {
+                    availableChar = hints[i];
+                    hints[i] = 'F';
+                    break;
+                }
+            }
+
+            if (availableChar.length == 1) {
+                for (i = 0; i < hints.length; i++) {
+                    if (hints[i].length > 1) {
+                        hints[i] = availableChar;
+                        break
                     }
                 }
             }
