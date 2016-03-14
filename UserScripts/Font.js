@@ -7,6 +7,8 @@ for (var i = 0; i < fontQueue.length; i++) {
 }
 
 $('<style>@font-face{font-family:宋体;unicode-range:U+0000-007F;src:local(Arial);}</style>').appendTo('html');
+$('<style>@font-face{font-family:SimSun;unicode-range:U+0000-007F;src:local(Arial);}</style>').appendTo('html');
+
 $(() => {
         transformElement(document.body);
         GM_setValue('fontQueue', fontQueue.slice(0, 30).join(','));
