@@ -323,7 +323,7 @@ var Page = {
 
         if ((element.tagName === 'INPUT' && element
                 .type.search(/(button|checkbox|file|hidden|image|radio|reset|submit)/i) === -1) ||
-            (element.tagName === 'DIV' && element.hasAttribute('contenteditable')) || element.tagName === 'TEXTAREA') {
+            element.hasAttribute('contenteditable') || element.tagName === 'TEXTAREA') {
 
             element.focus();
             if (document.activeElement.tagName === 'BODY') {
@@ -362,8 +362,8 @@ var Page = {
 
     isFree: (event) => {
         var element = document.activeElement;
-        return element && element.tagName !== 'INPUT'
-            && element.tagName !== 'TEXTAREA' && !element.hasAttribute('contenteditable') && !event.ctrlKey;
+        return element && element.tagName !== 'INPUT' && element.tagName !== 'TEXTAREA'
+            && !element.hasAttribute('contenteditable') && !event.ctrlKey;
     }
 };
 
