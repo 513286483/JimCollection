@@ -357,14 +357,13 @@ var Page = {
             var nodes = $element.find('div, span').addBack();
 
             var beforeHTML = document.body.innerHTML;
-            var beforeText = document.body.innerText;
             out:for (var i = 0; i < nodes.length; i++) {
                 var node = nodes[i];
                 for (var j = 0; j < names.length; j++) {
                     var name = names[j];
 
                     name === 'invoke' ? node.click() : node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
-                    if (document.body.innerHTML !== beforeHTML && document.body.innerText !== beforeText) {
+                    if (document.body.innerHTML !== beforeHTML) {
                         break out;
                     }
                 }
