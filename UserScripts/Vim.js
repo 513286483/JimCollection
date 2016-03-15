@@ -162,6 +162,7 @@ var Page = {
                     if (overlapsX.filter(overlapsY).length === 0) {
                         Tree.insert(xTree, element._left, leftTo, element);
                         Tree.insert(yTree, element._top, topTo, element);
+                        element.siblingsY = overlapsY;
                         return true;
                     }
                 }
@@ -257,6 +258,12 @@ var Page = {
                 var hint = hints[i];
                 map[hint] = element;
 
+                element.siblingsY.each((i, elem) => {
+                    if (Math.abs(element._top - elem._top) <= 5) {
+                        element._top = elem._top;
+                        return false;
+                    }
+                });
                 var style = {
                     top: element._top,
                     left: element._left
@@ -331,7 +338,7 @@ var Page = {
             }
         }
 
-        else if (element.tagName === 'A' || element.tagName === 'INPUT') {
+        else if ((element.tagName === 'A' && element.href.includes('.')) || element.tagName === 'INPUT') {
             element.click();
         }
 
