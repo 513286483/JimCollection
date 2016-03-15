@@ -264,6 +264,7 @@ var Page = {
                         return false;
                     }
                 });
+
                 var style = {
                     top: element._top,
                     left: element._left
