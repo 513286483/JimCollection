@@ -344,7 +344,7 @@ var Page = {
             }
         }
 
-        else if ((element.tagName === 'A' && element.href.includes('.')) || element.tagName === 'INPUT') {
+        else if (element.tagName === 'A' || element.tagName === 'INPUT') {
             element.click();
         }
 
@@ -356,15 +356,14 @@ var Page = {
             var names = ['invoke', 'mousedown', 'mouseup', 'click'];
             var nodes = $element.find('div, span').addBack();
 
+            var beforeHTML = document.body.innerHTML;
+            var beforeText = document.body.innerText;
             out:for (var i = 0; i < nodes.length; i++) {
                 var node = nodes[i];
                 for (var j = 0; j < names.length; j++) {
                     var name = names[j];
 
-                    var beforeHTML = document.body.innerHTML;
-                    var beforeText = document.body.innerText;
-                    var event = new MouseEvent(name, {bubbles: true});
-                    name === 'invoke' ? node.click() : node.dispatchEvent(event);
+                    name === 'invoke' ? node.click() : node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
                     if (document.body.innerHTML !== beforeHTML && document.body.innerText !== beforeText) {
                         break out;
                     }

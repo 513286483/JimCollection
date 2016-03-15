@@ -10,8 +10,11 @@ $(document)
         if (link.parentElement.tagName === 'A') {
             link = link.parentElement;
         }
+
         const sign = 'link.zhihu.com/?target=';
         if (link.classList.contains('external') && link.href.includes(sign)) {
             link.href = decodeURIComponent(link.href.substr(link.href.indexOf(sign) + sign.length));
+        } else if (link.href === 'javascript:;') {
+            link.href = '#';
         }
     });
