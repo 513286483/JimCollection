@@ -111,7 +111,12 @@ var Page = {
 
             var clickElements = $(removeDuplicate(Page.clickElements))
                 .find('div, span')
-                .filter((i, element) => getComputedStyle(element).cursor.search(/(pointer|default)/i) !== -1);
+                .filter((i, element) => {
+                    var style = getComputedStyle(element);
+                    return style.cursor.search(/(pointer|default)/i) !== -1
+                        && !style.left.includes('-')
+                        && !style.top.includes('-')
+                });
             return purify(elements, clickElements);
 
             function purify(elements, clickElements) {
