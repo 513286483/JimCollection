@@ -330,7 +330,7 @@ if __name__ == '__main__':
 
 
     def main_4():
-        sample = [4, 7, 8, 11, 15]
+        sample = [7, 8, 11, 15]
 
         tree = VEBTree(16)
         for i in sample:

@@ -179,10 +179,10 @@ function toggleExcept(element) {
         element.scrollIntoView();
         element = $(element);
         element.add(element.parentsUntil(document.body)).siblings().map(
-            (i, x) => {
-                x = $(x);
-                if (x.is(':visible')) {
-                    x.visibleToggle().addClass('_hide');
+            (i, elem) => {
+                elem = $(elem);
+                if (elem.is(':visible')) {
+                    elem.visibleToggle().addClass('_hide');
                 }
             });
     } else {
