@@ -113,7 +113,8 @@ var Page = {
                 .find('div, span')
                 .filter((i, element) => {
                     var style = getComputedStyle(element);
-                    return (style.cursor === 'pointer' || element.classList.toString().includes('button'))
+                    return (style.cursor === 'pointer'
+                        || (style.cursor === 'default' && element.classList.toString().includes('button')))
                         && !style.left.includes('-') && !style.top.includes('-')
                 });
             return purify(elements, clickElements);
