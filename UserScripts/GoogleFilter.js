@@ -18,10 +18,9 @@ function main() {
                 if (link.hasAttribute('onmousedown')) {
                     link.removeAttribute('onmousedown');
                 }
-
                 link = (link.href = link.href.replace('wikipedia.org/zh/', 'wikipedia.org/wiki/'));
-                var abstract = $(abstracts[i]);
 
+                var abstract = $(abstracts[i]);
                 mapFirst[link] = abstract.find('span').length ? '' : '-';
                 mapFirst[link] += abstract.text();
 
@@ -34,8 +33,6 @@ function main() {
     }
 
     else if (isEngine = (href.includes('baidu.com/s?'))) {
-        $('<style>#content_right,#content_right *{display:none}</style>').appendTo('html');
-
         update = function () {
             var result = $('.c-container');
             result.map((i, element) => {
@@ -86,13 +83,9 @@ function main() {
         var record = GM_getValue('mapFirst');
         mapFirst = record ? JSON.parse(record) : {};
 
-        var abstract;
-        if (document.referrer.includes('baidu.com/link?url=')) {
-            href = document.referrer.match(/(url=)(.{5})/).pop();
-            abstract = mapFirst[href];
-        } else {
-            abstract = mapFirst[href] || mapFirst[href = document.referrer];
-        }
+        var abstract = document.referrer.includes('baidu.com/link?url=') ?
+            mapFirst[href = document.referrer.match(/(url=)(.{5})/).pop()]
+            : mapFirst[href] || mapFirst[href = document.referrer];
 
         if (abstract) {
             $(() => {
