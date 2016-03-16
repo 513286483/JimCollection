@@ -176,9 +176,9 @@ $.fn.visibleToggle = function () {
 function toggleExcept(element) {
     var hide = $('._hide');
     if (hide.length === 0) {
-        ((element) => setTimeout(() => element.scrollIntoView(), 1000))(element);
-        element = $(element);
-        element.add(element.parentsUntil(document.body)).siblings().map(
+        setTimeout(() => element.scrollIntoView(), 500);
+        var $element = $(element);
+        $element.add($element.parentsUntil(document.body)).siblings().map(
             (i, elem) => {
                 elem = $(elem);
                 if (elem.is(':visible')) {
