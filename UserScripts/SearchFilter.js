@@ -232,7 +232,7 @@ function estimate(xPath) {
     if (breakPoints.length === 0) {
         return xPath;
     } else {
-        var anchor = breakPoints[Math.ceil(breakPoints.length / 3) - 1];
+        var anchor = breakPoints[Math.round((breakPoints.length - 1) / 3)];
         var close = xPath.indexOf('/', anchor);
         if (close !== -1) {
             return xPath.substr(0, close);
