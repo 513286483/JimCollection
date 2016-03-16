@@ -65,8 +65,10 @@ addEventListener('keypress', event => {
 }, true);
 
 // General
-$('<style>._click{box-shadow:0 0 10px 0 black}</style>').appendTo('html');
-$(`<style>._hint{
+$(`<style>
+._click{box-shadow:0 0 10px 0 black}
+._plus{font-weight:bold;}
+._hint{
     background-color: rgba(173, 216, 230, 0.7);
     border-radius: 3px;
     box-shadow: 0 0 2px;
@@ -120,7 +122,7 @@ var Page = {
             return purify(elements, clickElements);
 
             function purify(elements, clickElements) {
-                function canTouch(i, element) {
+                function isDisplayed(i, element) {
                     var computedStyle = getComputedStyle(element);
                     if (computedStyle.display === 'none' ||
                         computedStyle.visibility === 'hidden' || computedStyle.opacity === '0') {
@@ -146,8 +148,8 @@ var Page = {
                     }
                 }
 
-                elements = elements.filter(canTouch);
-                clickElements = clickElements.filter(canTouch);
+                elements = elements.filter(isDisplayed);
+                clickElements = clickElements.filter(isDisplayed);
                 var xTree = Tree.create(0, document.documentElement.clientWidth);
                 var yTree = Tree.create(0, document.documentElement.clientHeight);
 
@@ -327,8 +329,8 @@ var Page = {
     },
 
     plus: ()=> {
-        Page.isPlus = true;
-        $('._hint').css('font-weight', 'bold');
+        Page.isPlus = !Page.isPlus;
+        $('._hint').toggleClass('_plus');
     },
 
     click: (element) => {
@@ -337,14 +339,10 @@ var Page = {
         if ((element.tagName === 'INPUT' && element
                 .type.search(/(button|checkbox|file|hidden|image|radio|reset|submit)/i) === -1) ||
             element.hasAttribute('contenteditable') || element.tagName === 'TEXTAREA') {
-
             element.focus();
-            if (document.activeElement.tagName === 'BODY') {
-                $element.parent().find('input, textarea').focus();
-            }
         }
 
-        else if (element.tagName === 'A' || element.tagName === 'INPUT') {
+        else if ((element.tagName === 'A' && element.href.includes('.')) || element.tagName === 'INPUT') {
             element.click();
         }
 
@@ -353,17 +351,17 @@ var Page = {
         }
 
         function mouseClick() {
-            var names = ['invoke', 'mousedown', 'mouseup', 'click'];
-            var nodes = $element.find('div, span').addBack();
+            var before = document.body.innerText;
+            var nodes = [element, ...$element.find('div, span').get()];
+            var names = ['mousedown', 'mouseup', 'click'];
 
-            var beforeHTML = document.body.innerHTML;
             out:for (var i = 0; i < nodes.length; i++) {
                 var node = nodes[i];
                 for (var j = 0; j < names.length; j++) {
                     var name = names[j];
 
-                    name === 'invoke' ? node.click() : node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
-                    if (document.body.innerHTML !== beforeHTML) {
+                    node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
+                    if (document.body.innerText !== before) {
                         break out;
                     }
                 }
