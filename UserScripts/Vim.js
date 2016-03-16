@@ -312,9 +312,8 @@ var Page = {
                 var element = Page.hintMap[Page.chars];
                 element.tagName === 'A' && Page.isPlus ? GM_openInTab(element.href, true) : Page.click(element);
 
-                var toggle;
-                (toggle = () => $(element).toggleClass('_click'))();
-                setTimeout(toggle, 500);
+                element = $(element).addClass('_click');
+                setTimeout(() => element.removeClass('_click'), 500);
                 Page.escape();
             }
         }
@@ -342,7 +341,8 @@ var Page = {
             element.focus();
         }
 
-        else if ((element.tagName === 'A' && element.href.includes('.')) || element.tagName === 'INPUT') {
+        else if ((element.tagName === 'A' && element.getAttribute('href').match(/(\/|\.)/i)) ||
+            element.tagName === 'INPUT') {
             element.click();
         }
 
@@ -351,17 +351,14 @@ var Page = {
         }
 
         function mouseClick() {
-            var before = document.body.innerText;
+            var before = document.body.innerHTML;
             var nodes = [element, ...$element.find('div, span').get()];
             var names = ['mousedown', 'mouseup', 'click'];
 
-            out:for (var i = 0; i < nodes.length; i++) {
-                var node = nodes[i];
-                for (var j = 0; j < names.length; j++) {
-                    var name = names[j];
-
+            out:for (var node of nodes) {
+                for (var name of names) {
                     node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
-                    if (document.body.innerText !== before) {
+                    if (document.body.innerHTML !== before) {
                         break out;
                     }
                 }
