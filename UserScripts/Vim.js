@@ -340,15 +340,11 @@ var Page = {
             element.focus();
         }
 
-        else if ((element.tagName === 'A' && !element.href.endsWith('#')) ||
-            element.tagName === 'INPUT') {
+        else if (element.tagName === 'A' || element.tagName === 'INPUT') {
             element.click();
         }
 
         else {
-            if (element.href && element.href.endsWith('#')) {
-                element.href = '##';
-            }
             var names = ['mousedown', 'mouseup', 'click'];
             for (var i = 0; i < names.length; i++) {
                 element.dispatchEvent(new MouseEvent(names[i], {bubbles: true}));
