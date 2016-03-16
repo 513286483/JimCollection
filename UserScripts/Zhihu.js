@@ -7,7 +7,7 @@ $(document)
     })
     .on('click', event => {
         var link = event.target;
-        if (link.parentElement.tagName === 'A') {
+        if (link.parentElement && link.parentElement.tagName === 'A') {
             link = link.parentElement;
         }
 
