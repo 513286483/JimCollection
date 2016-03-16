@@ -349,8 +349,9 @@ var Page = {
         }
 
         function stimulateClick() {
-            for (var type of ['mousedown', 'mouseup', 'click']) {
-                element.dispatchEvent(new MouseEvent(type, {bubbles: true}));
+            var names = ['mousedown', 'mouseup', 'click'];
+            for (var i = 0; i < names.length; i++) {
+                element.dispatchEvent(new MouseEvent(names[i], {bubbles: true}));
             }
         }
     },
