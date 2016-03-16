@@ -150,6 +150,7 @@ var Page = {
 
                 elements = elements.filter(isDisplayed);
                 clickElements = clickElements.filter(isDisplayed);
+
                 var xTree = Tree.create(0, document.documentElement.clientWidth);
                 var yTree = Tree.create(0, document.documentElement.clientHeight);
 
@@ -333,35 +334,23 @@ var Page = {
     },
 
     click: (element) => {
-        var $element = $(element);
-
-        if ((element.tagName === 'INPUT' && element
-                .type.search(/(button|checkbox|file|hidden|image|radio|reset|submit)/i) === -1) ||
+        if ((element.tagName === 'INPUT' &&
+            element.type.search(/(button|checkbox|file|hidden|image|radio|reset|submit)/i) === -1) ||
             element.hasAttribute('contenteditable') || element.tagName === 'TEXTAREA') {
             element.focus();
         }
 
-        else if ((element.tagName === 'A' && element.getAttribute('href').match(/(\/|\.)/i)) ||
-            element.tagName === 'INPUT') {
+        else if (element.tagName === 'A' || element.tagName === 'INPUT') {
             element.click();
         }
 
         else {
-            mouseClick();
+            stimulateClick();
         }
 
-        function mouseClick() {
-            var before = document.body.innerHTML;
-            var nodes = [element, ...$element.find('div, span').get()];
-            var names = ['mousedown', 'mouseup', 'click'];
-
-            for (var node of nodes) {
-                for (var name of names) {
-                    node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
-                }
-                if (document.body.innerHTML !== before) {
-                    break;
-                }
+        function stimulateClick() {
+            for (var type of ['mousedown', 'mouseup', 'click']) {
+                element.dispatchEvent(new MouseEvent(type, {bubbles: true}));
             }
         }
     },
