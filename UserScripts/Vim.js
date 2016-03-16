@@ -355,12 +355,12 @@ var Page = {
             var nodes = [element, ...$element.find('div, span').get()];
             var names = ['mousedown', 'mouseup', 'click'];
 
-            out:for (var node of nodes) {
+            for (var node of nodes) {
                 for (var name of names) {
                     node.dispatchEvent(new MouseEvent(name, {bubbles: true}));
-                    if (document.body.innerHTML !== before) {
-                        break out;
-                    }
+                }
+                if (document.body.innerHTML !== before) {
+                    break;
                 }
             }
         }
