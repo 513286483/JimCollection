@@ -8,9 +8,8 @@ from FibonacciHeap import FibHeap
 class VertexPrim(Vertex):
     def __init__(self, identifier):
         super().__init__(identifier)
-        self.key = inf
         self.parent = VertexPrim
-        self.is_q = True
+        self.is_in_tree = False
 
 
 a = VertexPrim('a')
@@ -66,27 +65,35 @@ def kl_mst():
 
 
 def prim_mst():
-    heap = FibHeap()
+    def get_weight(a, b):
+        return e_map.get(a + b) or e_map.get(b + a)
 
-    vertexes[0].key = 0
-    for vertex in vertexes:
-        heap.push(vertex.key, vertex)
+    possible_moves = FibHeap()
+    vertex = vertexes[0]
+    vertex.is_in_tree = True
 
-    while True:
-        try:
-            vertex = heap.pop().value
-            vertex.is_q = False
-        except Exception:
-            break
+    for adjacency in vertex.adjacency_list:
+        possible_moves.push(get_weight(vertex.identifier, adjacency.identifier), (vertex, adjacency))
 
-        for adjacency in vertex.adjacency_list:
-            weight = e_map.get(
-                vertex.identifier + adjacency.identifier) or e_map.get(adjacency.identifier + vertex.identifier)
+    count = 1
+    while count != len(vertexes):
+        best_move = possible_moves.pop().value
+        first, second = best_move
 
-            if adjacency.is_q and weight < adjacency.key:
-                adjacency.parent = vertex
-                vertex.key = weight
-    print()
+        if first.is_in_tree ^ second.is_in_tree:
+            count += 1
+
+            if first.is_in_tree:
+                cursor = second
+            else:
+                cursor = first
+            cursor.is_in_tree = True
+
+            for adjacency in cursor.adjacency_list:
+                possible_moves.push(get_weight(cursor.identifier, adjacency.identifier), (cursor, adjacency))
+
+            print(best_move)
+            print('---')
 
 
 prim_mst()
