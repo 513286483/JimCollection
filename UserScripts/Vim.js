@@ -12,7 +12,7 @@ Element.prototype.addEventListener = function (type, listener, userCapture) {
 // Event
 $(window).on('click resize scroll', () => Page.escape());
 
-addEventListener('keydown', event => {
+addEventListener('keydown', (event) => {
     var isFree = Page.isFree(event);
     var isTab = (event.code === 'Tab');
 
@@ -25,13 +25,13 @@ addEventListener('keydown', event => {
     }
 }, true);
 
-addEventListener('keyup', event => {
+addEventListener('keyup', (event) => {
     if (Page.isFree(event)) {
         event.stopImmediatePropagation();
     }
 }, true);
 
-addEventListener('keypress', event => {
+addEventListener('keypress', (event) => {
     if (Page.isFree(event)) {
         var char = String.fromCharCode(event.keyCode).toUpperCase();
         switch (char) {
@@ -99,7 +99,7 @@ var Page = {
             function removeDuplicate(elements) {
                 var result = [];
                 elements.map(
-                    element => {
+                    (element) => {
                         for (var i = 0; i < result.length; i++) {
                             if (result[i].contains(element)) {
                                 return;
@@ -295,7 +295,7 @@ var Page = {
         Page.isPlus = false;
     },
 
-    match: char => {
+    match: (char) => {
         var hints = $('._hint');
         if (hints.length) {
             Page.chars += char;

@@ -5,7 +5,7 @@ $(document)
     .on('copy', () => {
         GM_setClipboard(getSelection().toString(), 'text');
     })
-    .on('click', event => {
+    .on('click', (event) => {
         var link = event.target;
         if (link.parentElement && link.parentElement.tagName === 'A') {
             link = link.parentElement;
@@ -24,8 +24,8 @@ if (location.pathname === '/topic') {
         var topics = $('.topic-feed-item > a');
         for (var i = 0; i < topics.length; i++) {
             var topic = topics[i];
-            (topic => {
-                $.get(topic.href, data => {
+            ((topic) => {
+                $.get(topic.href, (data) => {
 
                     var page = $(data.replace(/<img[^>]*>/g, ''));
                     var counts = page.find('.count');

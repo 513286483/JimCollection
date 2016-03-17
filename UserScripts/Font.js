@@ -35,7 +35,7 @@ function transformElement(element, probe) {
     if ((probe || probe === undefined) && fontFamily !== cache && (probe = hasChinese(element))) {
         cache = fontFamily;
         fonts.map(
-            font => {
+            (font) => {
                 var curr = fontQueue.indexOf(font);
                 if (curr === -1) {
                     inject(font);

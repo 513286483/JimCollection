@@ -7,12 +7,12 @@ var names = $('a > [data-type="name"]');
 for (var i = 0; i < names.length; i++) {
     var name = names[i];
 
-    (name => {
+    ((name) => {
         GM_xmlhttpRequest({
             method: 'GET',
             url: markLink + name.innerText,
 
-            onload: data => {
+            onload: (data) => {
                 var page = $(data.responseText.replace(/<img[^>]*>/g, ''));
                 $(name).parent().find('[data-type="mark"]')
                        .text(page.find('.rating_nums').first().text());

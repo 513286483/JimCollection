@@ -118,7 +118,7 @@ function filter(abstract) {
     var element = document.evaluate(path).iterateNext();
     if (enoughText(element)) {
         toggleExcept(element);
-        $(document).keypress('B', event => {
+        $(document).keypress('B', (event) => {
             if (event.ctrlKey) {
                 toggleExcept(element);
             }

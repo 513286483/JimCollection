@@ -30,7 +30,7 @@ function translate(event) {
         GM_xmlhttpRequest({
             method: 'GET',
             url: requestLink,
-            onload: res => displayPopup(event.clientX, event.clientY, res.response)
+            onload: (res) => displayPopup(event.clientX, event.clientY, res.response)
         });
     }
 }
@@ -58,7 +58,7 @@ function displayPopup(x, y, response) {
             phoneticElement.innerText = '[' + phonetic + ']';
             phoneticElement.style.color = 'darkBlue';
             phoneticElement.style.cursor = 'pointer';
-            phoneticElement.addEventListener('mouseup', event => event.stopPropagation());
+            phoneticElement.addEventListener('mouseup', (event) => event.stopPropagation());
             header.appendChild(phoneticElement);
 
             var soundUrl = 'https://dict.youdao.com/dictvoice?type=2&audio=' + query;
@@ -67,8 +67,8 @@ function displayPopup(x, y, response) {
                 url: soundUrl,
                 responseType: 'arraybuffer',
 
-                onload: res => {
-                    audio.decodeAudioData(res.response, buffer => {
+                onload: (res) => {
+                    audio.decodeAudioData(res.response, (buffer) => {
                         phoneticElement.addEventListener('mouseup', () => {
                             var source = audio.createBufferSource();
                             source.buffer = buffer;
@@ -91,7 +91,7 @@ function displayPopup(x, y, response) {
         popup.appendChild(hr);
 
         var ul = document.createElement('ul');
-        basic['explains'].map(explain => {
+        basic['explains'].map((explain) => {
             var li = document.createElement('li');
             li.appendChild(document.createTextNode(explain));
             ul.appendChild(li);
