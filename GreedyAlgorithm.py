@@ -77,28 +77,6 @@ def heap_sort(root: List) -> List:
     return result
 
 
-'''
-sample = [(None, 1), (None, 4), (None, 1), (None, 6), (None, 9), (None, 0), (None, 2)]
-build(sample)
-print(sample)
-print(get_min(sample))
-print(pop_min(sample))
-
-print(sample)
-set_value(sample, 2, (None, 10))
-print(sample)
-
-insert(sample, (None, 14))
-print(sample)
-
-while True:
-    try:
-        print(pop_min(sample))
-    except Exception as e:
-        print(e)
-        break
-'''
-
 codes = [('a', 45), ('b', 13), ('c', 12), ('d', 16), ('e', 9), ('f', 5)]
 
 
