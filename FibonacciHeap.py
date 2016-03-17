@@ -90,7 +90,7 @@ class FibHeap:
             bucket[degree] = node
 
         self.children = list(bucket.values())
-        self.min_node = min(*self.children, FibNode)
+        self.min_node = min(self.children + [FibNode])
         return pop_node
 
     def decrease(self, decrease_node: FibNode, key):
