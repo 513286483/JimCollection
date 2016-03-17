@@ -130,7 +130,7 @@ var Page = {
                     }
 
                     var rect = element.getClientRects()[0];
-                    if (rect && rect.left >= 0 && rect.top >= 0 && rect.width && rect.height
+                    if (rect && rect.left >= 0 && rect.top >= 0 && rect.width > 1 && rect.height > 1
                         && rect.right <= document.documentElement.clientWidth
                         && rect.bottom <= document.documentElement.clientHeight) {
 
@@ -141,8 +141,7 @@ var Page = {
 
                         for (i = 0; i < positions.length; i++) {
                             var targetElement = document.elementFromPoint(positions[i][0], positions[i][1]);
-                            if (targetElement === element ||
-                                element.contains(targetElement) || targetElement.contains(element)) {
+                            if (targetElement === element || element.contains(targetElement)) {
                                 return true;
                             }
                         }
