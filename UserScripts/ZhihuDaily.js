@@ -15,7 +15,6 @@ for (var i = 0; i < links.length; i++) {
                     var titles = page.find('.question-title').filter((i, element) => element.innerText);
                     titles.length === 1 && titles.text().includes('？') ? link.text = titles.text() : link.text += '✓';
                 }
-
             });
         })(link);
     }
