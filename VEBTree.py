@@ -138,7 +138,7 @@ class VEBTree:
             index, remainder = divmod(number, self.child_range)
             child = self.children[index]
 
-            if child.min <= remainder <= child.max:
+            if not child.min <= remainder <= child.max:
                 raise Exception
 
             if child.min == child.max:
@@ -326,7 +326,7 @@ if __name__ == '__main__':
                         print('a', list(tree))
                     else:
                         print('MISSED EXCEPTION')
-                        return
+                        raise Exception
 
 
     def main_4():
