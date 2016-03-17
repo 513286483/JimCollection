@@ -1,5 +1,3 @@
-from math import inf
-
 from DisjointSet import SetPathCompressed as DisjointSet
 from ElementaryGraph import Vertex
 from FibonacciHeap import FibHeap

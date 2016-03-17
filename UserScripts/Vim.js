@@ -238,8 +238,9 @@ var Page = {
             var availableChar = 'F';
             for (i = 0; i < elements.length; i++) {
                 element = elements[i];
-                if (element.tagName === 'INPUT' &&
-                    element.type.search(/(button|checkbox|file|hidden|image|radio|reset|submit)/i) === -1) {
+                if ((element.tagName === 'INPUT' &&
+                    element.type.search(/(button|checkbox|file|hidden|image|radio|reset|submit)/i) === -1) ||
+                    element.hasAttribute('contenteditable') || element.tagName === 'TEXTAREA') {
                     availableChar = hints[i];
                     hints[i] = 'F';
                     break;
