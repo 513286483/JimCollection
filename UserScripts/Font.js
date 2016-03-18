@@ -25,11 +25,25 @@ var cache;
 function transformElement(element, probe) {
     var $element = $(element);
     var fontFamily = $element.css('font-family').replace(/'|"/g, '').toLowerCase();
-    var fonts = fontFamily.split(', ').filter(isUnique);
+    var fonts = render(fontFamily.split(', '));
 
-    if (!fonts.includes('arial')) {
-        fonts.push('arial');
-        $element.css('font-family', fonts.join());
+    function render(fonts) {
+        var isModified;
+
+        for (var i = 0; i < fonts.length; i++) {
+            var font = fonts[i];
+            if (font.match(/(sans-serif|serif)/)) {
+                isModified = (fonts[i] = 'arial');
+            } else if (font.match('monospace')) {
+                isModified = (fonts[i] = 'consolas');
+            }
+        }
+
+        fonts = fonts.filter(Boolean);
+        if (isModified) {
+            $element.css('font-family', fonts.join());
+        }
+        return fonts;
     }
 
     if ((probe || probe === undefined) && fontFamily !== cache && (probe = hasChinese(element))) {
@@ -59,8 +73,4 @@ function transformElement(element, probe) {
 
 function hasChinese(element) {
     return element.innerText && element.innerText.search(/[\u4E00-\u9FFF]/) !== -1;
-}
-
-function isUnique(font) {
-    return font && font.search(/(sans-serif|serif)/) === -1;
 }
