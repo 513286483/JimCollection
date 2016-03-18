@@ -25,7 +25,7 @@ var cache;
 function transformElement(element, probe) {
     var $element = $(element);
     var fontFamily = $element.css('font-family').replace(/'|"/g, '').toLowerCase();
-    var fonts = fontFamily.split(', ').filter(notDefault);
+    var fonts = fontFamily.split(', ').filter(isUnique);
 
     if (!fonts.includes('arial')) {
         fonts.push('arial');
@@ -61,6 +61,6 @@ function hasChinese(element) {
     return element.innerText && element.innerText.search(/[\u4E00-\u9FFF]/) !== -1;
 }
 
-function notDefault(font) {
-    return font && font.search(/(sans-serif|serif|monospace)/) === -1;
+function isUnique(font) {
+    return font && font.search(/(sans-serif|serif)/) === -1;
 }
