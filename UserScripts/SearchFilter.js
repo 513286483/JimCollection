@@ -169,11 +169,11 @@ function xPath(node) {
     return xPath(node.parentNode) + '/' + node.tagName + suffix;
 }
 
-$.fn.visibleToggle = function () {
-    return this.css('visibility', (i, visibility) => visibility === 'visible' ? 'hidden' : 'visible');
-};
-
 function toggleExcept(element) {
+    function toggle(elem) {
+        return elem.css('visibility', (i, visibility) => visibility === 'visible' ? 'hidden' : 'visible');
+    }
+
     var hide = $('._hide');
     if (hide.length === 0) {
         element.scrollIntoView();
@@ -182,11 +182,11 @@ function toggleExcept(element) {
             (i, elem) => {
                 elem = $(elem);
                 if (elem.is(':visible')) {
-                    elem.visibleToggle().addClass('_hide');
+                    toggle(elem.addClass('_hide'));
                 }
             });
     } else {
-        hide.visibleToggle();
+        toggle(hide);
     }
 }
 
