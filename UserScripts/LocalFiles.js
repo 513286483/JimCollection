@@ -9,7 +9,7 @@ if (location.pathname.includes('Movies')) {
         ((name) => {
             GM_xmlhttpRequest({
                 method: 'GET',
-                url: markLink + name.innerText,
+                url: markLink + name.innerText.replace(/\/.+/, ''),
 
                 onload: (data) => {
                     var page = $(data.responseText.replace(/<img[^>]*>/g, ''));
