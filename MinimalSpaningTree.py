@@ -30,14 +30,13 @@ g.connect(h, i, f)
 i.connect(c, h, g)
 h.connect(a, i, g)
 
-e_map = {
-    'ab': 4, 'bc': 8,
-    'cd': 7, 'de': 9,
-    'bh': 11, 'hi': 7,
-    'ic': 2, 'ig': 6,
-    'cf': 4, 'df': 14,
-    'ah': 8, 'hg': 1,
-    'gf': 2, 'fe': 10}
+e_map = {'ab': 4, 'bc': 8,
+         'cd': 7, 'de': 9,
+         'bh': 11, 'hi': 7,
+         'ic': 2, 'ig': 6,
+         'cf': 4, 'df': 14,
+         'ah': 8, 'hg': 1,
+         'gf': 2, 'fe': 10}
 
 vertexes = [a, b, c, d, e, f, g, h, i]
 v_map = {i.identifier: DisjointSet(i.identifier) for i in vertexes}

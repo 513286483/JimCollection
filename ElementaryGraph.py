@@ -1,5 +1,5 @@
-from math import inf
 from collections import deque
+from math import inf
 
 WHITE = object()
 GRAY = object()
