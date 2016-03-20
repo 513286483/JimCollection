@@ -66,7 +66,7 @@ class VertexDFS(Vertex):
         self.parent = VertexDFS
         self.transpose_list = []
         self.adjacency_set = set()
-        self.point_to = None
+        self.point_to = VertexDFS
 
     def __hash__(self):
         return hash(self.identifier)
@@ -106,36 +106,35 @@ class VertexDFS(Vertex):
                 self.adjacency_set.add(i)
         self.color = GRAY
 
-        root_flag = False
+        merge_flag = False
         for transpose_adjacency in self.transpose_list:
             if transpose_adjacency is root:
-                root_flag = True
+                merge_flag = True
                 continue
 
             if transpose_adjacency.color is WHITE:
                 if transpose_adjacency.merge_components(root):
-                    root_flag = True
+                    merge_flag = True
                     merge(root, transpose_adjacency)
 
         self.color = BLACK
-        return root_flag
+        return merge_flag
 
     def __repr__(self):
         return super().__repr__() + ' {}:{}'.format(self.time_go, self.time_back)
 
-    @classmethod
-    def remove_repeat(cls, graph):
-        new_graph = list(filter(lambda x: x.time_go != -1, graph))
-        for i in new_graph:
-            new_adj_set = set()
-            for j in i.adjacency_set:
-                if j.time_go == -1:
-                    j = j.point_to
-
-                if j is not i:
-                    new_adj_set.add(j)
-            i.adjacency_set = new_adj_set
-        return new_graph
+    @staticmethod
+    def remove_duplicate(graph):
+        other_graph = list(filter(lambda x: x.time_go != -1, graph))
+        for vertex in other_graph:
+            other_adjacency_set = set()
+            for adjacency in vertex.adjacency_set:
+                if adjacency.time_go == -1:
+                    adjacency = adjacency.point_to
+                if adjacency is not vertex:
+                    other_adjacency_set.add(adjacency)
+            vertex.adjacency_set = other_adjacency_set
+        return other_graph
 
 
 if __name__ == '__main__':
@@ -224,8 +223,8 @@ if __name__ == '__main__':
             if i.color is WHITE:
                 i.merge_components()
 
-        new_graph = VertexDFS.remove_repeat(graph)
-        print(new_graph)
+        other_graph = VertexDFS.remove_duplicate(graph)
+        print(other_graph)
         print()
 
 

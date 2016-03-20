@@ -2,12 +2,6 @@ from math import inf
 
 from ElementaryGraph import Vertex
 
-e_map = {'tx': 5, 'ty': 8,
-         'tz': -4, 'xt': -2,
-         'yx': -3, 'yz': 9,
-         'zx': 7, 'zs': 2,
-         'st': 6, 'sy': 7}
-
 
 class VertexBellmanFord(Vertex):
     def __init__(self, identifier: str):
@@ -28,19 +22,24 @@ class VertexBellmanFord(Vertex):
         return next_level_vertexes
 
 
-s = VertexBellmanFord('s')
-t = VertexBellmanFord('t')
-x = VertexBellmanFord('x')
-y = VertexBellmanFord('y')
-z = VertexBellmanFord('z')
-
-s.connect(t, y)
-t.connect(x, z, y)
-x.connect(t)
-y.connect(x, z)
-z.connect(x)
-
 if __name__ == '__main__':
+    e_map = {'tx': 5, 'ty': 8,
+             'tz': -4, 'xt': -2,
+             'yx': -3, 'yz': 9,
+             'zx': 7, 'zs': 2,
+             'st': 6, 'sy': 7}
+
+    s = VertexBellmanFord('s')
+    t = VertexBellmanFord('t')
+    x = VertexBellmanFord('x')
+    y = VertexBellmanFord('y')
+    z = VertexBellmanFord('z')
+
+    s.connect(t, y)
+    t.connect(x, z, y)
+    x.connect(t)
+    y.connect(x, z)
+    z.connect(x)
     vertexes = (s, t, x, y, z)
 
 
@@ -72,3 +71,4 @@ if __name__ == '__main__':
 
 
     main_bellman_ford()
+
