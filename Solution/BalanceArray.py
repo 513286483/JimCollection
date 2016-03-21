@@ -8,7 +8,7 @@ ARRAY_LEN = 20
 
 
 def main_balance():
-    # 生成完全平衡的数组
+    # 生成随机数组
     a = [randint(0, INT_TO) for _ in range(ARRAY_LEN)]
     b = [randint(0, INT_TO) for _ in range(ARRAY_LEN)]
 
@@ -16,10 +16,11 @@ def main_balance():
     sum_b = sum(b)
     diff = sum_a - sum_b
 
+    # 平衡数组
     offset = 1 if diff > 0 else -1
     for i in range(abs(diff)):
         b[i % ARRAY_LEN] += offset
-    print('Sum:', sum_a)
+    print('sum:', sum_a)
 
     # 打乱数组
     for i in range(ARRAY_LEN):
@@ -27,8 +28,8 @@ def main_balance():
         index_b = randint(0, ARRAY_LEN - 1)
         a[index_a], b[index_b] = b[index_b], a[index_a]
 
-    print('Sum - a:', sum(a))
-    print('Sum - b:', sum(b))
+    print('sum - a:', sum(a))
+    print('sum - b:', sum(b))
 
     def balance_greedy(array_a: list, array_b: list):
         temp_a = []
@@ -37,22 +38,21 @@ def main_balance():
         total = array_a + array_b
         total.sort()
 
-        swap_flag = False
+        flip_flag = False
         for i, j in zip(total[0::2], total[1::2]):
-            if swap_flag:
+            if flip_flag:
                 i, j = j, i
-
             temp_a.append(i)
             temp_b.append(j)
-            swap_flag = not swap_flag
+            flip_flag ^= True
 
-        print('Sum - a:', sum(temp_a))
-        print('Sum - b:', sum(temp_b))
+        print('sum - a:', sum(temp_a))
+        print('sum - b:', sum(temp_b))
         return temp_a, temp_b
 
     a, b = balance_greedy(a, b)
 
-    def balance_evolution(array_a: list, array_b: list, times=2000):
+    def balance_evolution(array_a: list, array_b: list, times=1000):
         diff = sum(array_a) - sum(array_b)
 
         for i in range(times):
@@ -62,25 +62,29 @@ def main_balance():
             index_a = randint(0, ARRAY_LEN - 1)
             index_b = randint(0, ARRAY_LEN - 1)
 
-            drift = array_a[index_a] - array_b[index_b]
-            if abs(diff - drift * 2) < abs(diff):
+            drift = (array_a[index_a] - array_b[index_b]) * 2
+            if abs(diff - drift) < abs(diff):
                 array_a[index_a], array_b[index_b] = array_b[index_b], array_a[index_a]
-                diff -= drift * 2
+                diff -= drift
 
         sum_a = sum(array_a)
         sum_b = sum(array_b)
-        print('Sum - a:', sum_a)
-        print('Sum - b:', sum_b)
-        print('Evo Times', i)
-
-        if sum_a == sum_b:
-            return True
+        print('final sum - a:', sum_a)
+        print('final sum - b:', sum_b)
+        return abs(sum_a - sum_b)
 
     return balance_evolution(a, b)
 
 
-failed_times = 0
-for i in range(1000):
-    if not main_balance():
-        failed_times += 1
-print('Balance Failed Times:', failed_times)
+max_diff = -1
+perfect_times = 0
+
+for i in range(10000):
+    diff = main_balance()
+    max_diff = max(max_diff, diff)
+
+    if diff == 0:
+        perfect_times += 1
+
+print('Perfect Times:', perfect_times)
+print(max_diff)
