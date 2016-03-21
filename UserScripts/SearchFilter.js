@@ -80,6 +80,8 @@ function main() {
     }
 
     else if (top === self) {
+        $('<style>._on{opacity:0.2}</style>').appendTo('html');
+
         var record = GM_getValue('mapFirst');
         mapFirst = record ? JSON.parse(record) : {};
 
@@ -89,15 +91,15 @@ function main() {
 
         if (abstract) {
             $(() => {
-                if (filter(abstract) === -1 && href !== document.referrer) {
-                    filter(JSON.parse(GM_getValue('mapSecond'))[href]);
+                if (clean(abstract) === -1 && href !== document.referrer) {
+                    clean(JSON.parse(GM_getValue('mapSecond'))[href]);
                 }
             });
         }
     }
 }
 
-function filter(abstract) {
+function clean(abstract) {
     var marks = abstract
         .substr(abstract.indexOf('-') + 1)
         .split('...')
@@ -170,10 +172,6 @@ function xPath(node) {
 }
 
 function toggleExcept(element) {
-    function toggle(elem) {
-        return elem.css('visibility', (i, visibility) => visibility === 'visible' ? 'hidden' : 'visible');
-    }
-
     var hide = $('._hide');
     if (hide.length === 0) {
         element.scrollIntoView();
@@ -182,11 +180,11 @@ function toggleExcept(element) {
             (i, elem) => {
                 elem = $(elem);
                 if (elem.is(':visible')) {
-                    toggle(elem.addClass('_hide'));
+                    elem.addClass('_hide _on');
                 }
             });
     } else {
-        toggle(hide);
+        hide.toggleClass('_on');
     }
 }
 

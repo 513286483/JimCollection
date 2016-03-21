@@ -18,7 +18,7 @@ function inject(font) {
         '@font-face{font-family:' + font + ';src:local(' + font + ');}' +
         '@font-face{font-family:' + font + ';unicode-range:U+4E00-9FFF;src:local(Noto Sans CJK SC);}' +
         '</style>';
-    $(style).prependTo('html');
+    $(style).appendTo('html');
 }
 
 var cache;
