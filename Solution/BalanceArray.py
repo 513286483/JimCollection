@@ -1,5 +1,8 @@
 from random import randint
 
+"""
+问题描述：https://www.zhihu.com/question/41507833/
+"""
 INT_TO = 1000
 ARRAY_LEN = 20
 
