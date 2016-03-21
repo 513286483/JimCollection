@@ -61,6 +61,7 @@ class FibHeap:
         push_node = FibNode(key, value)
         self.children.append(push_node)
         self.min_node = min(self.min_node, push_node)
+        return push_node
 
     def pop(self):
         for node in self.min_node.children:
