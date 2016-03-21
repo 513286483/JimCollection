@@ -91,7 +91,7 @@ function main() {
 
         if (abstract) {
             $(() => {
-                if (clean(abstract) === -1 && href !== document.referrer) {
+                if (!clean(abstract) && href !== document.referrer) {
                     clean(JSON.parse(GM_getValue('mapSecond'))[href]);
                 }
             });
@@ -125,8 +125,7 @@ function clean(abstract) {
                 toggleExcept(element);
             }
         });
-    } else {
-        return -1;
+        return true;
     }
 }
 
