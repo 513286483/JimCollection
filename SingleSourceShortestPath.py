@@ -1,11 +1,11 @@
 from math import inf
 
-from ElementaryGraph import Vertex
+from ElementaryGraph import Vertex, VertexDFS, WHITE
 
 
 class VertexBellmanFord(Vertex):
     def __init__(self, identifier: str):
-        super(VertexBellmanFord, self).__init__(identifier)
+        super().__init__(identifier)
         self.parent = VertexBellmanFord
         self.distance = inf  # type: int
         self.fee = 0
@@ -70,5 +70,49 @@ if __name__ == '__main__':
         print('OK')
 
 
-    main_bellman_ford()
+def relax_dfs(vertex, e_map):
+    for adjacency in vertex.adjacency_list:
+        distance = vertex.time_back + e_map.get(vertex.identifier + adjacency.identifier)
+        if distance < adjacency.time_back:
+            adjacency.parent = vertex
+            adjacency.time_back = distance
 
+
+if __name__ == '__main__':
+    r = VertexDFS('r')
+    s = VertexDFS('s')
+    t = VertexDFS('t')
+    x = VertexDFS('x')
+    y = VertexDFS('y')
+    z = VertexDFS('z')
+
+    r.connect(s, t)
+    s.connect(t, x)
+    t.connect(x, y, z)
+    x.connect(y, z)
+    y.connect(z)
+
+    graph = [r, s, t, x, y, z]
+    for i in graph:
+        if i.color is WHITE:
+            i.build_dfs()
+    graph.sort(key=lambda x: x.time_back, reverse=True)
+    print(graph)
+    print()
+    for i in graph:
+        i.time_back = inf
+        i.parent = VertexDFS
+
+    e_map = {'rs': 5, 'rt': 3,
+             'st': 2, 'sx': 6,
+             'tx': 7, 'ty': 4, 'tz': 2,
+             'xy': -1, 'xz': 1,
+             'yz': -2}
+
+    s.time_back = 0
+    for i in graph[1:]:
+        relax_dfs(i, e_map)
+    for vertex in graph:
+        if vertex.parent is not VertexDFS:
+            print(vertex, vertex.parent, e_map[vertex.parent.identifier + vertex.identifier])
+    print()
