@@ -345,7 +345,7 @@ var Page = {
         }
 
         else {
-            var names = ['mousedown', 'mouseup', 'click'];
+            var names = ['mousedown', 'mouseup', 'click', 'mouseout'];
             for (var i = 0; i < names.length; i++) {
                 element.dispatchEvent(new MouseEvent(names[i], {bubbles: true}));
             }
