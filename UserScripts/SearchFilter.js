@@ -80,7 +80,7 @@ function main() {
     }
 
     else if (top === self) {
-        $('<style>._on{opacity:0.2}</style>').appendTo('html');
+        $('<style>._on{visibility:hidden}</style>').appendTo('html');
 
         var record = GM_getValue('mapFirst');
         mapFirst = record ? JSON.parse(record) : {};
@@ -176,7 +176,7 @@ function toggleExcept(element) {
     if (hide.length === 0) {
         element.scrollIntoView();
         var $element = $(element);
-        $element.add($element.parentsUntil(document.body)).siblings().map(
+        $element.parentsUntil(document.body).siblings().map(
             (i, elem) => {
                 elem = $(elem);
                 if (elem.is(':visible')) {
