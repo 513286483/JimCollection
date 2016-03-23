@@ -3,8 +3,8 @@
 main();
 function main() {
     var href = location.href;
-    var mapFirst;
-    var mapSecond;
+    var mapMain;
+    var mapBackup;
 
     var update;
     var isEngine;
@@ -21,13 +21,13 @@ function main() {
                 link = (link.href = link.href.replace('wikipedia.org/zh/', 'wikipedia.org/wiki/'));
 
                 var abstract = $(abstracts[i]);
-                mapFirst[link] = abstract.find('span').length ? '' : '-';
-                mapFirst[link] += abstract.text();
+                mapMain[link] = abstract.find('span').length ? '' : '-';
+                mapMain[link] += abstract.text();
 
                 var emList = abstract.find('em');
-                mapSecond[link] =
+                mapBackup[link] =
                     emList.length ?
-                    '-' + emList.first().text() + '...' + emList.last().text() : extract(mapFirst[link]);
+                    '-' + emList.first().text() + '...' + emList.last().text() : extract(mapMain[link]);
             }
         };
     }
@@ -43,15 +43,15 @@ function main() {
                 if (link.length && abstract.length) {
                     link = link.attr('href').match(/(url=)(.{5})/).pop();
 
-                    mapFirst[link] = '-' +
+                    mapMain[link] = '-' +
                         abstract.contents()
                                 .filter((i, elem) => elem.nodeType === Node.TEXT_NODE || elem.tagName === 'EM')
                                 .text();
 
                     var emList = abstract.find('em');
-                    mapSecond[link] =
+                    mapBackup[link] =
                         emList.length ?
-                        '-' + emList.first().text() + '...' + emList.last().text() : extract(mapFirst[link]);
+                        '-' + emList.first().text() + '...' + emList.last().text() : extract(mapMain[link]);
                 }
             });
         };
@@ -59,13 +59,13 @@ function main() {
 
     function commit() {
         update();
-        GM_setValue('mapFirst', JSON.stringify(mapFirst));
-        GM_setValue('mapSecond', JSON.stringify(mapSecond));
+        GM_setValue('mapMain', JSON.stringify(mapMain));
+        GM_setValue('mapBackup', JSON.stringify(mapBackup));
     }
 
     if (isEngine) {
-        mapFirst = {};
-        mapSecond = {};
+        mapMain = {};
+        mapBackup = {};
 
         commit();
         var change;
@@ -82,17 +82,17 @@ function main() {
     else if (top === self) {
         $('<style>._on{visibility:collapse}</style>').appendTo('html');
 
-        var record = GM_getValue('mapFirst');
-        mapFirst = record ? JSON.parse(record) : {};
+        var record = GM_getValue('mapMain');
+        mapMain = record ? JSON.parse(record) : {};
 
         var abstract = document.referrer.includes('baidu.com/link?url=') ?
-            mapFirst[href = document.referrer.match(/(url=)(.{5})/).pop()]
-            : mapFirst[href] || mapFirst[href = document.referrer];
+            mapMain[href = document.referrer.match(/(url=)(.{5})/).pop()]
+            : mapMain[href] || mapMain[href = document.referrer];
 
         if (abstract) {
             $(() => {
                 if (!clean(abstract) && href !== document.referrer) {
-                    clean(JSON.parse(GM_getValue('mapSecond'))[href]);
+                    clean(JSON.parse(GM_getValue('mapBackup'))[href]);
                 }
             });
         }
