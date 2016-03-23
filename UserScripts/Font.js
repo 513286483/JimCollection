@@ -15,6 +15,22 @@ function inject(font) {
     $(style).appendTo('html');
 }
 
+$(window).on('load', () => {
+    probe();
+    travel(document.body);
+    GM_setValue('fontQueue', fontQueue.slice(0, 30).join(','));
+});
+
+function probe() {
+    var innerText = document.body.innerText.replace(/\s*/g, '');
+    var threshold = Math.floor(innerText.length / 10);
+    for (var i = 0; i < threshold; i++) {
+        if (innerText.charAt(i) in dict) {
+            return isTraditional = true;
+        }
+    }
+}
+
 var cache;
 var isTraditional;
 function travel(element, probe) {
@@ -89,22 +105,6 @@ function simplify(element) {
         return result;
     }
 }
-
-function probeTradition() {
-    var innerText = document.body.innerText.replace(/\s*/g, '');
-    var threshold = Math.floor(innerText.length / 10);
-    for (var i = 0; i < threshold; i++) {
-        if (innerText.charAt(i) in dict) {
-            return isTraditional = true;
-        }
-    }
-}
-
-$(window).on('load', () => {
-    probeTradition();
-    travel(document.body);
-    GM_setValue('fontQueue', fontQueue.slice(0, 30).join(','));
-});
 
 const dict = {
     '贊': '赞',

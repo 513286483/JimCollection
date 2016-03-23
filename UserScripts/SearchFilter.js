@@ -80,7 +80,7 @@ function main() {
     }
 
     else if (top === self) {
-        $('<style>._on{visibility:hidden}</style>').appendTo('html');
+        $('<style>._on{visibility:collapse}</style>').appendTo('html');
 
         var record = GM_getValue('mapFirst');
         mapFirst = record ? JSON.parse(record) : {};
