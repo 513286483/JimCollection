@@ -26,6 +26,7 @@ function probe() {
     var threshold = Math.floor(innerText.length / 10);
     for (var i = 0; i < threshold; i++) {
         if (innerText.charAt(i) in dict) {
+            document.documentElement.lang = 'zh-CN';
             return isTraditional = true;
         }
     }
@@ -2643,5 +2644,6 @@ const dict = {
     '鸘': '鹴',
     '鼂': '晁',
     '拚': '拼',
-    '倣': '仿'
+    '倣': '仿',
+    '釐': '厘'
 };
