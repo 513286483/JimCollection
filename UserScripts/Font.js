@@ -21,6 +21,7 @@ $(window).on('load', () => {
     GM_setValue('fontQueue', fontQueue.slice(0, 30).join(','));
 });
 
+var isTraditional;
 function probeLang() {
     var innerText = document.body.innerText.replace(/\s*/g, '');
     var threshold = Math.floor(innerText.length / 10);
@@ -33,7 +34,6 @@ function probeLang() {
 }
 
 var cache;
-var isTraditional;
 function travel(element, probe) {
     var $element = $(element);
     var fontFamily = $element.css('font-family').replace(/'|"/g, '').toLowerCase();

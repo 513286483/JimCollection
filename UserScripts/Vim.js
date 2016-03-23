@@ -129,9 +129,10 @@ var Page = {
                     }
 
                     var rect = element.getClientRects()[0];
-                    if (rect && rect.left >= 0 && rect.top >= 0 && rect.width > 1 && rect.height > 1
+                    if (rect && rect.left >= 0 && rect.top >= 0
                         && rect.right <= document.documentElement.clientWidth
-                        && rect.bottom <= document.documentElement.clientHeight) {
+                        && rect.bottom <= document.documentElement.clientHeight
+                        && (rect.width * rect.height > 1 || element.tagName === 'A')) {
 
                         element._left = rect.left;
                         element._top = rect.top;
