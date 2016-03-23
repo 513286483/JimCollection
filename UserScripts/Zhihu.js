@@ -29,7 +29,6 @@ if (location.pathname.startsWith('/story')) {
                 link.href = '#';
             }
         });
-
     if (location.pathname === '/topic') {
         $(() => {
             var topics = $('.topic-feed-item > a');

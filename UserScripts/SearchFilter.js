@@ -45,7 +45,7 @@ function main() {
 
                     mapFirst[link] = '-' +
                         abstract.contents()
-                                .filter((i, element) => element.nodeType === 3 || element.tagName === 'EM')
+                                .filter((i, elem) => elem.nodeType === Node.TEXT_NODE || elem.tagName === 'EM')
                                 .text();
 
                     var emList = abstract.find('em');

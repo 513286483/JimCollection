@@ -153,7 +153,7 @@ var Page = {
                 var xTree = Tree.create(0, document.documentElement.clientWidth);
                 var yTree = Tree.create(0, document.documentElement.clientHeight);
 
-                elements = elements.filter((i, element) => hasPlace(element));
+                elements = elements.filter((i, elem) => hasPlace(elem));
                 clickElements = clickElements.get().reverse().filter(hasPlace);
 
                 function hasPlace(element) {
