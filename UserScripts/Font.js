@@ -24,7 +24,7 @@ $(window).on('load', () => {
 var isTraditional;
 function probeLang() {
     var innerText = document.body.innerText.replace(/\s*/g, '');
-    var threshold = Math.floor(innerText.length / 10);
+    var threshold = Math.min(Math.floor(innerText.length / 10), 100);
     for (var i = 0; i < threshold; i++) {
         if (innerText.charAt(i) in dict) {
             document.documentElement.lang = 'zh-CN';
