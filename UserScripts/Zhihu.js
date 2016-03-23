@@ -1,8 +1,8 @@
 'use strict';
 
-if (location.pathname.startsWith('/story') && document.title.includes('深夜惊奇')) {
-    $(()=> {
-        $('div.content-inner > .question:first').nextAll().remove();
+if (location.pathname.startsWith('/story')) {
+    $(() => {
+        $('.question').not(':contains("查看知乎原文")').remove();
     });
 } else {
     $('<style>@media screen and (max-width: 1120px){.zu-top{display:none;}}</style>').appendTo('html');
