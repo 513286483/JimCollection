@@ -80,8 +80,6 @@ function main() {
     }
 
     else if (top === self) {
-        $('<style>._on{visibility:collapse}</style>').appendTo('html');
-
         var record = GM_getValue('mapMain');
         mapMain = record ? JSON.parse(record) : {};
 
@@ -90,6 +88,7 @@ function main() {
             : mapMain[href] || mapMain[href = document.referrer];
 
         if (abstract) {
+            $('<style>._on{visibility:collapse}</style>').appendTo('html');
             $(() => {
                 if (!clean(abstract) && href !== document.referrer) {
                     clean(JSON.parse(GM_getValue('mapBackup'))[href]);
