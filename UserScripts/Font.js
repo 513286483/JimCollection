@@ -16,12 +16,12 @@ function inject(font) {
 }
 
 $(window).on('load', () => {
-    probe();
+    probeLang();
     travel(document.body);
     GM_setValue('fontQueue', fontQueue.slice(0, 30).join(','));
 });
 
-function probe() {
+function probeLang() {
     var innerText = document.body.innerText.replace(/\s*/g, '');
     var threshold = Math.floor(innerText.length / 10);
     for (var i = 0; i < threshold; i++) {

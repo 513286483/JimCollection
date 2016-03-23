@@ -1,14 +1,8 @@
 'use strict';
 
-if (location.pathname.startsWith('/story')) {
+if (location.pathname.startsWith('/story') && document.title.includes('深夜惊奇')) {
     $(()=> {
-        var questions = $('div.content-inner > .question');
-        for (var i = 0; i < questions.length; i++) {
-            var question = $(questions[i]);
-            if (question.text().match(/(一点编辑手记|这篇文章有意思吗)/g)) {
-                question.remove();
-            }
-        }
+        $('div.content-inner > .question:first').nextAll().remove();
     });
 } else {
     $('<style>@media screen and (max-width: 1120px){.zu-top{display:none;}}</style>').appendTo('html');
