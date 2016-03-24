@@ -94,20 +94,12 @@ var Page = {
 
         function getElements() {
             var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable]');
-            var clickElements = $(Page.clickElements)
-                .find('div, span')
-                .filter((i, element) => {
-                    var style = getComputedStyle(element);
-                    return style.cursor === 'pointer' ||
-                        (style.cursor === 'default' && !style.left.includes('-') && !style.top.includes('-'))
-                });
-            return purify(elements, clickElements);
+            return purify(elements, Page.clickElements);
 
             function purify(elements, clickElements) {
-                function isDisplayed(i, element) {
-                    var computedStyle = getComputedStyle(element);
-                    if (computedStyle.visibility === 'hidden' || computedStyle.opacity === '0' ||
-                        computedStyle.display === 'none') {
+                function isDisplayed(element) {
+                    var style = getComputedStyle(element);
+                    if (style.visibility === 'hidden' || style.opacity === '0') {
                         return;
                     }
 
@@ -129,16 +121,16 @@ var Page = {
                     }
                 }
 
-                elements = elements.filter(isDisplayed);
+                elements = elements.filter((i, elem) => isDisplayed(elem));
                 clickElements = clickElements.filter(isDisplayed);
 
                 var xTree = Tree.create(0, innerWidth);
                 var yTree = Tree.create(0, innerHeight);
 
-                elements = elements.filter((i, elem) => hasPlace(elem));
-                clickElements = clickElements.get().reverse().filter(hasPlace);
+                elements = elements.filter((i, elem) => isExclusive(elem));
+                clickElements = clickElements.reverse().filter(isExclusive);
 
-                function hasPlace(element) {
+                function isExclusive(element) {
                     const length = 16;
                     var overlapsX = $();
                     var overlapsY = $();
