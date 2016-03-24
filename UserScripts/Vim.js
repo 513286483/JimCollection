@@ -4,7 +4,7 @@
 Element.prototype._addEventListener = Element.prototype.addEventListener;
 Element.prototype.addEventListener = function (type, listener, userCapture) {
     this._addEventListener(type, listener, userCapture);
-    if (this.tagName !== 'A' && type.match(/(mousedown|mouseup|click)/i)) {
+    if (this.tagName === 'DIV' && type.match(/(mousedown|mouseup|click)/i)) {
         Page.clickElements.push(this);
     }
 };
@@ -167,9 +167,9 @@ var Page = {
             var B = 'NOPQRSTUVWYZ' + Y + X;
             var lengthB = B.length;
 
-            var allHints = {};
+            var all = {};
             for (var i = 0; i < B.length; i++) {
-                allHints[B.charAt(i)] = B;
+                all[B.charAt(i)] = B;
             }
 
             for (i = 0; i < elements.length; i++) {
@@ -178,15 +178,15 @@ var Page = {
                 var y = Y.charAt(Math.round(element._top / innerHeight * (Y.length - 1)));
                 var x = X.charAt(Math.round(element._left / innerWidth * (X.length - 1)));
 
-                if (allHints[y].length === 0) {
+                if (all[y].length === 0) {
                     y = B.charAt(0);
                 }
-                if (!allHints[y].includes(x)) {
-                    x = allHints[y].charAt(0);
+                if (!all[y].includes(x)) {
+                    x = all[y].charAt(0);
                 }
 
-                allHints[y] = allHints[y].replace(x, '');
-                if (allHints[y] === '') {
+                all[y] = all[y].replace(x, '');
+                if (all[y] === '') {
                     B = B.replace(y, '');
                 }
 
@@ -197,9 +197,9 @@ var Page = {
             var singletonChars = [];
             for (i = 0; i < B.length; i++) {
                 var char = B.charAt(i);
-                if (allHints[char].length === lengthB) {
+                if (all[char].length === lengthB) {
                     availableChars.push(char);
-                } else if (allHints[char].length === lengthB - 1) {
+                } else if (all[char].length === lengthB - 1) {
                     singletonChars.push(char);
                 }
             }
@@ -210,7 +210,7 @@ var Page = {
                     hints[i] = startChar;
                 } else if (availableChars.length) {
                     hints[i] = availableChars.pop();
-                    if ((allHints[startChar] += '.').length === lengthB - 1) {
+                    if ((all[startChar] += '.').length === lengthB - 1) {
                         singletonChars.push(startChar);
                     }
                 }
