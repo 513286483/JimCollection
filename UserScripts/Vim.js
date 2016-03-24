@@ -100,13 +100,9 @@ var Page = {
             function purify(elements, clickElements) {
                 const length = 16;
 
-                function isDisplayed(element, probeFlag) {
-                    if (element.tagName === 'A') {
-                        return true;
-                    }
-
+                function isDisplayed(element, isClickable) {
                     var style = getComputedStyle(element);
-                    if (style.opacity === '0' || (probeFlag && style.cursor.search(/pointer|default/) === -1)) {
+                    if (style.opacity === '0' || (isClickable && style.cursor.search(/pointer|default/) === -1)) {
                         return;
                     }
 
