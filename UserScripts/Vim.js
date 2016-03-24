@@ -126,7 +126,7 @@ var Page = {
                 }
 
                 elements = elements.filter((i, elem) => isDisplayed(elem));
-                clickElements = clickElements.filter((i, elem) => isDisplayed(elem, true));
+                clickElements = clickElements.filter((i, elem) => isDisplayed(elem, 'check'));
 
                 var xTree = Tree.create(0, innerWidth);
                 var yTree = Tree.create(0, innerHeight);
