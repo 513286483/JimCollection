@@ -94,23 +94,6 @@ var Page = {
 
         function getElements() {
             var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable]');
-
-            function removeDuplicate(elements) {
-                var result = [];
-                elements.map(
-                    (element) => {
-                        for (var i = 0; i < result.length; i++) {
-                            if (result[i].contains(element)) {
-                                return;
-                            }
-                        }
-                        result.push(element);
-                    }
-                );
-                return result;
-            }
-
-            Page.clickElements = removeDuplicate(Page.clickElements);
             var clickElements = $(Page.clickElements)
                 .find('div, span')
                 .filter((i, element) => {
