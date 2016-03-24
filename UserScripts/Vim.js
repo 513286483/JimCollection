@@ -100,10 +100,9 @@ var Page = {
             function purify(elements, clickElements) {
                 const length = 16;
 
-                function isDisplayed(element) {
+                function isDisplayed(element, checkFlag) {
                     var style = getComputedStyle(element);
-                    if ((element.tagName.match(/div|span/i) && style.cursor.search(/pointer|default/) === -1) ||
-                        style.opacity === '0') {
+                    if (style.opacity === '0' || (checkFlag && style.cursor.search(/pointer|default/) === -1)) {
                         return;
                     }
 
@@ -127,7 +126,7 @@ var Page = {
                 }
 
                 elements = elements.filter((i, elem) => isDisplayed(elem));
-                clickElements = clickElements.filter((i, elem) => isDisplayed(elem));
+                clickElements = clickElements.filter((i, elem) => isDisplayed(elem, true));
 
                 var xTree = Tree.create(0, innerWidth);
                 var yTree = Tree.create(0, innerHeight);
