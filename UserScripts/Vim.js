@@ -118,7 +118,8 @@ var Page = {
 
                         for (i = 0; i < positions.length; i++) {
                             var targetElement = document.elementFromPoint(positions[i][0], positions[i][1]);
-                            if (targetElement === element) {
+                            if (targetElement === element ||
+                                (element.tagName === 'A' && element.contains(targetElement))) {
                                 return true;
                             }
                         }
