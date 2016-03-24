@@ -303,9 +303,7 @@ var Page = {
 
     up: ()=> scrollBy(0, -200),
 
-    close: ()=> {
-        top.close();
-    },
+    close: ()=> top.close(),
 
     plus: ()=> {
         Page.isPlus = !Page.isPlus;
