@@ -4,7 +4,7 @@
 Element.prototype._addEventListener = Element.prototype.addEventListener;
 Element.prototype.addEventListener = function (type, listener, userCapture) {
     this._addEventListener(type, listener, userCapture);
-    if (type.match(/(mousedown|mouseup|click)/i)) {
+    if (this.tagName !== 'A' && type.match(/(mousedown|mouseup|click)/i)) {
         Page.clickElements.push(this);
     }
 };
@@ -123,16 +123,14 @@ var Page = {
             function purify(elements, clickElements) {
                 function isDisplayed(i, element) {
                     var computedStyle = getComputedStyle(element);
-                    if (computedStyle.display === 'none' ||
-                        computedStyle.visibility === 'hidden' || computedStyle.opacity === '0') {
+                    if (computedStyle.visibility === 'hidden' || computedStyle.opacity === '0' ||
+                        computedStyle.display === 'none') {
                         return;
                     }
 
                     var rect = element.getClientRects()[0];
-                    if (rect && rect.left >= 0 && rect.top >= 0
-                        && rect.right <= document.documentElement.clientWidth
-                        && rect.bottom <= document.documentElement.clientHeight
-                        && (rect.width * rect.height > 1 || element.tagName === 'A')) {
+                    if (rect && rect.left >= 0 && rect.top >= 0 &&
+                        rect.right <= innerWidth && rect.bottom <= innerHeight) {
 
                         element._left = rect.left;
                         element._top = rect.top;
@@ -151,8 +149,8 @@ var Page = {
                 elements = elements.filter(isDisplayed);
                 clickElements = clickElements.filter(isDisplayed);
 
-                var xTree = Tree.create(0, document.documentElement.clientWidth);
-                var yTree = Tree.create(0, document.documentElement.clientHeight);
+                var xTree = Tree.create(0, innerWidth);
+                var yTree = Tree.create(0, innerHeight);
 
                 elements = elements.filter((i, elem) => hasPlace(elem));
                 clickElements = clickElements.get().reverse().filter(hasPlace);
@@ -194,8 +192,8 @@ var Page = {
             for (i = 0; i < elements.length; i++) {
                 var element = elements[i];
 
-                var y = Y.charAt(Math.round(element._top / document.documentElement.clientHeight * (Y.length - 1)));
-                var x = X.charAt(Math.round(element._left / document.documentElement.clientWidth * (X.length - 1)));
+                var y = Y.charAt(Math.round(element._top / innerHeight * (Y.length - 1)));
+                var x = X.charAt(Math.round(element._left / innerWidth * (X.length - 1)));
 
                 if (allHints[y].length === 0) {
                     y = B.charAt(0);
