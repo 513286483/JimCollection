@@ -100,9 +100,13 @@ var Page = {
             function purify(elements, clickElements) {
                 const length = 16;
 
-                function isDisplayed(element, checkFlag) {
+                function isDisplayed(element, probeFlag) {
+                    if (element.tagName === 'A') {
+                        return true;
+                    }
+
                     var style = getComputedStyle(element);
-                    if (style.opacity === '0' || (checkFlag && style.cursor.search(/pointer|default/) === -1)) {
+                    if (style.opacity === '0' || (probeFlag && style.cursor.search(/pointer|default/) === -1)) {
                         return;
                     }
 
@@ -126,7 +130,7 @@ var Page = {
                 }
 
                 elements = elements.filter((i, elem) => isDisplayed(elem));
-                clickElements = clickElements.filter((i, elem) => isDisplayed(elem, 'check'));
+                clickElements = clickElements.filter((i, elem) => isDisplayed(elem, true));
 
                 var xTree = Tree.create(0, innerWidth);
                 var yTree = Tree.create(0, innerHeight);
