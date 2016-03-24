@@ -64,7 +64,6 @@ addEventListener('keypress', (event) => {
     }
 }, true);
 
-// General
 $(`<style>
 ._click{box-shadow:0 0 10px 0 black}
 ._plus{font-weight:bold;}
@@ -111,7 +110,8 @@ var Page = {
                 return result;
             }
 
-            var clickElements = $(removeDuplicate(Page.clickElements))
+            Page.clickElements = removeDuplicate(Page.clickElements);
+            var clickElements = $(Page.clickElements)
                 .find('div, span')
                 .filter((i, element) => {
                     var style = getComputedStyle(element);
