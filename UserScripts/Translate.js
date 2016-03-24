@@ -108,14 +108,8 @@ function displayPopup(x, y, response) {
         popup.appendChild(document.createTextNode(map['translation']));
     }
 
-    popup.style.left =
-        x + popup.offsetWidth > document.documentElement.clientWidth ?
-        x - popup.offsetWidth + 'px' : x + 'px';
-
-    popup.style.top =
-        y + popup.offsetHeight > document.documentElement.clientHeight ?
-        y - popup.offsetHeight + 'px' : y + 'px';
-
+    popup.style.left = x + popup.offsetWidth > innerWidth ? x - popup.offsetWidth + 'px' : x + 'px';
+    popup.style.top = y + popup.offsetHeight > innerHeight ? y - popup.offsetHeight + 'px' : y + 'px';
     document.body.appendChild(popup);
 }
 
