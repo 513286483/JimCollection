@@ -94,7 +94,7 @@ var Page = {
 
         function getElements() {
             var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable]');
-            var clickElements = $(Page.clickElements).find('div, span');
+            var clickElements = $(Page.clickElements).find('div');
             return purify(elements, clickElements);
 
             function purify(elements, clickElements) {
@@ -112,11 +112,11 @@ var Page = {
                         element._left = rect.left;
                         element._top = rect.top;
                         var positions = [[element._left + 1, element._top + 1],
-                            [element._left + rect.width / 3, element._top + rect.height / 3]];
+                            [element._left + rect.width - 1, element._top + rect.height - 1]];
 
                         for (i = 0; i < positions.length; i++) {
                             var targetElement = document.elementFromPoint(positions[i][0], positions[i][1]);
-                            if (targetElement === element || element.contains(targetElement)) {
+                            if (targetElement === element) {
                                 return true;
                             }
                         }
@@ -243,7 +243,8 @@ var Page = {
                 map[hint] = element;
 
                 element.siblingsY.each((i, elem) => {
-                    if (Math.abs(element._top - elem._top) <= 5) {
+                    if (Math.abs(element._top - elem._top) <= 5 &&
+                        Math.abs(element._left - elem._left) <= innerWidth / 10) {
                         element._top = elem._top;
                         return false;
                     }
