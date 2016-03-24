@@ -94,12 +94,14 @@ var Page = {
 
         function getElements() {
             var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable]');
-            return purify(elements, Page.clickElements);
+            var clickElements = $(Page.clickElements).find('div, span');
+            return purify(elements, clickElements);
 
             function purify(elements, clickElements) {
                 function isDisplayed(element) {
                     var style = getComputedStyle(element);
-                    if (style.visibility === 'hidden' || style.opacity === '0') {
+                    if ((element.tagName.match(/div|span/i) && style.cursor.search(/pointer|default/) === -1) ||
+                        style.opacity === '0') {
                         return;
                     }
 
@@ -122,13 +124,13 @@ var Page = {
                 }
 
                 elements = elements.filter((i, elem) => isDisplayed(elem));
-                clickElements = clickElements.filter(isDisplayed);
+                clickElements = clickElements.filter((i, elem) => isDisplayed(elem));
 
                 var xTree = Tree.create(0, innerWidth);
                 var yTree = Tree.create(0, innerHeight);
 
                 elements = elements.filter((i, elem) => isExclusive(elem));
-                clickElements = clickElements.reverse().filter(isExclusive);
+                clickElements = clickElements.get().reverse().filter(isExclusive);
 
                 function isExclusive(element) {
                     const length = 16;
