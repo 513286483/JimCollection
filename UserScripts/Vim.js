@@ -98,6 +98,8 @@ var Page = {
             return purify(elements, clickElements);
 
             function purify(elements, clickElements) {
+                const length = 16;
+
                 function isDisplayed(element) {
                     var style = getComputedStyle(element);
                     if ((element.tagName.match(/div|span/i) && style.cursor.search(/pointer|default/) === -1) ||
@@ -111,8 +113,9 @@ var Page = {
 
                         element._left = rect.left;
                         element._top = rect.top;
-                        var positions = [[element._left + 1, element._top + 1],
-                            [element._left + rect.width - 1, element._top + rect.height - 1]];
+                        var positions = [[element._left + 1, element._top + 1], [
+                            Math.min(element._left + rect.width - 1, element._left + length),
+                            Math.min(element._top + rect.height - 1, element._top + length)]];
 
                         for (i = 0; i < positions.length; i++) {
                             var targetElement = document.elementFromPoint(positions[i][0], positions[i][1]);
@@ -133,7 +136,6 @@ var Page = {
                 clickElements = clickElements.get().reverse().filter(isExclusive);
 
                 function isExclusive(element) {
-                    const length = 16;
                     var overlapsX = $();
                     var overlapsY = $();
 
