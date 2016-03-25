@@ -4,7 +4,7 @@
 Element.prototype._addEventListener = Element.prototype.addEventListener;
 Element.prototype.addEventListener = function (type, listener, userCapture) {
     this._addEventListener(type, listener, userCapture);
-    if (this.tagName === 'DIV' && type.match(/(mousedown|mouseup|click)/i)) {
+    if (this.tagName === 'DIV' && type.match(/(mousedown|mouseup|click)/)) {
         Page.clickElements.push(this);
     }
 };
@@ -331,8 +331,8 @@ var Page = {
 
     isFree: (event) => {
         var element = document.activeElement;
-        return element && element.tagName !== 'INPUT' && element.tagName !== 'TEXTAREA'
-            && !element.hasAttribute('contenteditable') && !event.ctrlKey;
+        return !event.ctrlKey && (!element || element.hasAttribute('readonly') ||
+            (element.tagName.search(/INPUT|TEXTAREA/) === -1 && !element.hasAttribute('contenteditable')));
     }
 };
 
