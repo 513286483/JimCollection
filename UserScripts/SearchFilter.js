@@ -177,10 +177,7 @@ function toggleExcept(element) {
         var $element = $(element);
         $element.parentsUntil(document.body).siblings().map(
             (i, elem) => {
-                elem = $(elem);
-                if (elem.is(':visible')) {
-                    elem.addClass('_hide _on');
-                }
+                $(elem).addClass('_hide _on');
             });
     } else {
         hide.toggleClass('_on');
