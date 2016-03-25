@@ -132,7 +132,7 @@ var Page = {
                 var xTree = Tree.create(0, innerWidth);
                 var yTree = Tree.create(0, innerHeight);
 
-                elements = elements.filter((i, elem) => isExclusive(elem));
+                elements = elements.get().reverse().filter(isExclusive);
                 clickElements = clickElements.get().reverse().filter(isExclusive);
 
                 function isExclusive(element) {
@@ -152,7 +152,7 @@ var Page = {
                     }
                 }
 
-                return elements.add(clickElements);
+                return $(elements).add(clickElements);
             }
         }
 

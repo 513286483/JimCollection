@@ -43,7 +43,8 @@ class Matrix:
         return is_modified
 
 
-matrix = Matrix(W)
-while matrix.extend_shortest_paths():
-    matrix.extend_shortest_paths()
-print(matrix)
+def slow_matrix():
+    matrix = Matrix(W)
+    while matrix.extend_shortest_paths():
+        matrix.extend_shortest_paths()
+    print(matrix)
