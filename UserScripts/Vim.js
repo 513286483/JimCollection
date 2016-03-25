@@ -68,14 +68,14 @@ $(`<style>
 ._click{box-shadow:0 0 10px 0 black}
 ._plus{font-weight:bold;}
 ._hint{
-    background-color: rgba(173, 216, 230, 0.7);
-    border-radius: 3px;
-    box-shadow: 0 0 2px;
-    color: black;
-    font-family: consolas;
-    font-size: 13px;
-    position: fixed;
-    z-index: 2147483648
+    background-color:rgba(173, 216, 230, 0.7);
+    border-radius:3px;
+    box-shadow:0 0 2px;
+    color:black;
+    font-family:consolas;
+    font-size:13px;
+    position:fixed;
+    z-index:2147483648
 }</style>`).appendTo('html');
 
 var Page = {
@@ -245,7 +245,7 @@ var Page = {
                 map[hint] = element;
 
                 element.siblingsY.each((i, elem) => {
-                    if (Math.abs(element._top - elem._top) <= 5 &&
+                    if (Math.abs(element._top - elem._top) <= 10 &&
                         Math.abs(element._left - elem._left) <= innerWidth / 10) {
                         element._top = elem._top;
                         return false;
