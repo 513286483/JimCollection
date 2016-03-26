@@ -2,7 +2,7 @@
 
 if (location.pathname.startsWith('/story')) {
     $(() => {
-        $('.question').not(':contains("查看知乎原文")').remove();
+        $('.question:last-child').not(':contains("查看知乎原文")').remove();
     });
 } else {
     $('<style>@media screen and (max-width: 1120px){.zu-top{display:none;}}</style>').appendTo('html');
