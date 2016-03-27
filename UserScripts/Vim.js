@@ -13,26 +13,26 @@ Element.prototype.addEventListener = function (type, listener, userCapture) {
 $(window).on('click resize scroll', () => Page.escape());
 
 addEventListener('keydown', (event) => {
-    var isFree = Page.isFree(event);
     var isTab = (event.code === 'Tab');
+    var isCommand = Page.isCommand(event);
 
     if (isTab) {
         event.preventDefault();
         event.stopImmediatePropagation();
-        isFree ? Page.escape() : document.activeElement.blur();
-    } else if (isFree) {
+        isCommand ? Page.escape() : document.activeElement.blur();
+    } else if (isCommand) {
         event.stopImmediatePropagation();
     }
 }, true);
 
 addEventListener('keyup', (event) => {
-    if (Page.isFree(event)) {
+    if (Page.isCommand(event)) {
         event.stopImmediatePropagation();
     }
 }, true);
 
 addEventListener('keypress', (event) => {
-    if (Page.isFree(event)) {
+    if (Page.isCommand(event)) {
         var char = String.fromCharCode(event.keyCode).toUpperCase();
         switch (char) {
             case 'F':
@@ -58,7 +58,6 @@ addEventListener('keypress', (event) => {
             default:
                 Page.match(char);
         }
-
         event.preventDefault();
         event.stopImmediatePropagation();
     }
@@ -329,10 +328,14 @@ var Page = {
         }
     },
 
-    isFree: (event) => {
+    isCommand: (event) => {
         var element = document.activeElement;
-        return !event.ctrlKey && (!element || element.hasAttribute('readonly') ||
-            (element.tagName.search(/INPUT|TEXTAREA/) === -1 && !element.hasAttribute('contenteditable')));
+        var isInput = element && !element.hasAttribute('readonly') && (element.tagName.match(/INPUT|TEXTAREA/) ||
+            element.hasAttribute('contenteditable'));
+
+        var char = String.fromCharCode(event.keyCode).toUpperCase();
+        var isEffective = $('._hint').length || event.code === 'Tab' || 'FJKX'.includes(char);
+        return !event.ctrlKey && !isInput && isEffective;
     }
 };
 
