@@ -124,7 +124,6 @@ function clean(abstract) {
                 toggleExcept(element);
             }
         });
-
         return true;
     }
 }

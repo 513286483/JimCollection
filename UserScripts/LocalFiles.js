@@ -36,7 +36,7 @@ else if (location.pathname.includes('News')) {
     for (i = 0; i < links.length; i++) {
         var link = links[i];
 
-        if (link.innerText.search(/(·|？)/) === -1) {
+        if (link.innerText.search(/·|？/) === -1) {
             ((link) => {
                 GM_xmlhttpRequest({
                     method: 'GET',

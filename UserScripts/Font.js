@@ -45,7 +45,7 @@ function travel(element, probe) {
         for (var i = 0; i < fonts.length; i++) {
             var font = fonts[i];
             if (font.match(/(sans-serif|serif)/)) {
-                isModified = (fonts[i] = 'arial');
+                isModified = (fonts[i] = 'open sans');
             } else if (font.match('monospace')) {
                 isModified = (fonts[i] = 'consolas');
             }
