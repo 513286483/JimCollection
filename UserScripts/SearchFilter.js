@@ -84,8 +84,8 @@ function main() {
         mapMain = record ? JSON.parse(record) : {};
 
         var abstract = document.referrer.includes('baidu.com/link?url=') ?
-            mapMain[href = document.referrer.match(/(url=)(.{5})/).pop()]
-            : mapMain[href] || mapMain[href = document.referrer];
+            mapMain[href = document.referrer.match(/(url=)(.{5})/).pop()] :
+        mapMain[href] || mapMain[href = document.referrer];
 
         if (abstract) {
             $('<style>._on{visibility:collapse}</style>').appendTo('html');

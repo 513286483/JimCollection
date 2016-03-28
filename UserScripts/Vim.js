@@ -334,8 +334,8 @@ var Page = {
             element.hasAttribute('contenteditable'));
 
         var char = String.fromCharCode(event.keyCode).toUpperCase();
-        var isEffective = $('._hint').length || event.code === 'Tab' || 'FJKX'.includes(char);
-        return !event.ctrlKey && !isInput && isEffective;
+        var isUseful = $('._hint').length || 'FJKX'.includes(char);
+        return !event.ctrlKey && !isInput && isUseful;
     }
 };
 
