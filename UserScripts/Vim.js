@@ -146,7 +146,15 @@ var Page = {
                     if (overlapsX.filter(overlapsY).length === 0) {
                         Tree.insert(xTree, element._left, leftTo, element);
                         Tree.insert(yTree, element._top, topTo, element);
-                        element.siblingsY = overlapsY;
+
+                        overlapsY.map((i, elem) => {
+                            if (Math.abs(element._top - elem._top) <= 5 &&
+                                Math.abs(element._left - elem._left) <= innerWidth / 10) {
+                                element._top = elem._top;
+                                return false;
+                            }
+                        });
+
                         return true;
                     }
                 }
@@ -242,14 +250,6 @@ var Page = {
                 var element = elements[i];
                 var hint = hints[i];
                 map[hint] = element;
-
-                element.siblingsY.each((i, elem) => {
-                    if (Math.abs(element._top - elem._top) <= 10 &&
-                        Math.abs(element._left - elem._left) <= innerWidth / 10) {
-                        element._top = elem._top;
-                        return false;
-                    }
-                });
 
                 var style = {
                     top: element._top,
