@@ -47,10 +47,6 @@ addEventListener('keypress', (event) => {
                 Page.up();
                 break;
 
-            case 'X':
-                Page.close();
-                break;
-
             case ' ':
                 Page.plus();
                 break;
@@ -64,17 +60,17 @@ addEventListener('keypress', (event) => {
 }, true);
 
 $(`<style>
-._click{box-shadow:0 0 10px 0 black}
-._plus{font-weight:bold;}
+._click{box-shadow: 0 0 10px 0 black}
+._plus{font-weight: bold;}
 ._hint{
-    background-color:rgba(173, 216, 230, 0.7);
-    border-radius:3px;
-    box-shadow:0 0 2px;
-    color:black;
-    font-family:consolas;
-    font-size:13px;
-    position:fixed;
-    z-index:2147483648
+    background-color: rgba(173, 216, 230, 0.7);
+    border-radius: 3px;
+    box-shadow: 0 0 2px;
+    color: black;
+    font-family: consolas;
+    font-size: 13px;
+    position: fixed;
+    z-index: 2147483648
 }</style>`).appendTo('html');
 
 var Page = {
@@ -167,7 +163,7 @@ var Page = {
             var hints = [];
             var Y = 'ABCDEGHILM';
             var X = '1234567890';
-            var B = 'NOPQRSTUVWYZ' + Y + X;
+            var B = 'NOPQRSTUVWXYZ' + Y + X;
             var lengthB = B.length;
 
             var all = {};
@@ -235,7 +231,7 @@ var Page = {
                 for (i = 0; i < hints.length; i++) {
                     if (hints[i].length > 1) {
                         hints[i] = availableChar;
-                        break
+                        break;
                     }
                 }
             }
@@ -302,8 +298,6 @@ var Page = {
 
     up: ()=> scrollBy(0, -200),
 
-    close: ()=> top.close(),
-
     plus: ()=> {
         Page.isPlus = !Page.isPlus;
         $('._hint').toggleClass('_plus');
@@ -334,7 +328,7 @@ var Page = {
             element.hasAttribute('contenteditable'));
 
         var char = String.fromCharCode(event.keyCode).toUpperCase();
-        var isUseful = $('._hint').length || 'FJKX'.includes(char);
+        var isUseful = $('._hint').length || 'FJK'.includes(char);
         return !event.ctrlKey && !isInput && isUseful;
     }
 };

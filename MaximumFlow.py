@@ -60,14 +60,14 @@ class Vertex:
 
             for i in range(1, len(aug_path)):
                 edge_name = str(aug_path[i - 1]) + str(aug_path[i])
-                Vertex.residual_map[edge_name] -= min_residual
+                reverse_edge = str(aug_path[i]) + str(aug_path[i - 1])
 
+                Vertex.residual_map[edge_name] -= min_residual
                 if edge_name in Vertex.flow_map:
                     Vertex.flow_map[edge_name] += min_residual
                 else:
-                    Vertex.flow_map[str(aug_path[i]) + str(aug_path[i - 1])] -= min_residual
-
-                Vertex.residual_map[str(aug_path[i]) + str(aug_path[i - 1])] += min_residual
+                    Vertex.flow_map[reverse_edge] -= min_residual
+                Vertex.residual_map[reverse_edge] += min_residual
             return True
 
 
@@ -98,6 +98,3 @@ if __name__ == '__main__':
             if not s.augment_to(t):
                 break
         print()
-
-
-    ford_fulkerson_main()
