@@ -60,7 +60,7 @@ addEventListener('keypress', (event) => {
 }, true);
 
 $(`<style>
-._click{box-shadow: 0 0 10px 0 black}
+._click{box-shadow: inset 0 0 3px 0 black}
 ._plus{font-weight: bold;}
 ._hint{
     background-color: rgba(173, 216, 230, 0.7);
