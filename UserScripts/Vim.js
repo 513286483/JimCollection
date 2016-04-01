@@ -319,7 +319,7 @@ var Page = {
     scrollTop: (offset) => {
         var target = $(Page.target);
         var targets = target.add(target.parentsUntil('html'))
-                            .filter((i, elem) => elem.scrollHeight >= elem.offsetHeight && getComputedStyle(elem)
+                            .filter((i, elem) => elem.scrollHeight >= elem.clientHeight && getComputedStyle(elem)
                                 .overflow !== 'hidden');
 
         for (var i = 0; i < targets.length; i++) {
