@@ -77,12 +77,12 @@ $(`<style>
 }</style>`).appendTo('html');
 
 var Page = {
+    target: 'body',
     clickElements: [],
 
     chars: '',
     hintMap: {},
     isPlus: false,
-    target: 'body',
 
     linkHint: () => {
         Page.escape();
@@ -288,7 +288,6 @@ var Page = {
         Page.chars = '';
         Page.hintMap = {};
         Page.isPlus = false;
-        Page.target = 'body';
     },
 
     match: (char) => {
