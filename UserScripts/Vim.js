@@ -54,6 +54,7 @@ addEventListener('keypress', (event) => {
             default:
                 Page.match(char);
         }
+
         event.preventDefault();
         event.stopImmediatePropagation();
     }
@@ -215,24 +216,42 @@ var Page = {
                 }
             }
 
+            var singletonChar;
             var availableChar = 'F';
-            for (i = 0; i < elements.length; i++) {
+            for (i = 0; i < elements.length && availableChar === 'F'; i++) {
                 element = elements[i];
+
                 if ((element.tagName === 'INPUT' &&
                     element.type.search(/(button|checkbox|file|hidden|image|radio|reset|submit)/i) === -1) ||
                     element.hasAttribute('contenteditable') || element.tagName === 'TEXTAREA') {
-                    availableChar = hints[i];
-                    hints[i] = 'F';
-                    break;
+                    var hint = hints[i];
+                    hints[i] = availableChar;
+                    availableChar = hint;
+
+                    startChar = hint.charAt(0);
+                    if (availableChar.length > 1 && (all[startChar] += '.').length === lengthB - 1) {
+                        singletonChar = startChar;
+                    }
                 }
             }
 
-            if (availableChar.length == 1) {
-                for (i = 0; i < hints.length; i++) {
-                    if (hints[i].length > 1) {
-                        hints[i] = availableChar;
-                        break;
+            for (i = 0; availableChar.length === 1 && i < hints.length; i++) {
+                hint = hints[i];
+                if (hint.length > 1) {
+                    hints[i] = availableChar;
+                    availableChar = hint;
+
+                    startChar = hint.charAt(0);
+                    if ((all[startChar] += '.').length === lengthB - 1) {
+                        singletonChar = startChar;
                     }
+                }
+            }
+
+            for (i = 0; singletonChar && i < hints.length; i++) {
+                if (hints[i].startsWith(singletonChar)) {
+                    hints[i] = singletonChar;
+                    break;
                 }
             }
 
