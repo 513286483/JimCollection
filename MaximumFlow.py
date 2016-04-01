@@ -98,3 +98,8 @@ if __name__ == '__main__':
             if not s.augment_to(t):
                 break
         print()
+
+
+class VertexPushRelabel:
+    def __init__(self):
+        pass

@@ -10,7 +10,9 @@ Element.prototype.addEventListener = function (type, listener, userCapture) {
 };
 
 // Event
-$(window).on('click resize scroll', () => Page.escape());
+$(window)
+    .on('click resize scroll', () => Page.escape())
+    .on('click', (event) => Page.target = event.target);
 
 addEventListener('keydown', (event) => {
     var isTab = (event.code === 'Tab');
@@ -33,6 +35,9 @@ addEventListener('keyup', (event) => {
 
 addEventListener('keypress', (event) => {
     if (Page.isCommand(event)) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
         var char = String.fromCharCode(event.keyCode).toUpperCase();
         switch (char) {
             case 'F':
@@ -40,11 +45,11 @@ addEventListener('keypress', (event) => {
                 break;
 
             case 'J':
-                Page.down();
+                Page.scrollTop(200);
                 break;
 
             case 'K':
-                Page.up();
+                Page.scrollTop(-200);
                 break;
 
             case ' ':
@@ -54,9 +59,6 @@ addEventListener('keypress', (event) => {
             default:
                 Page.match(char);
         }
-
-        event.preventDefault();
-        event.stopImmediatePropagation();
     }
 }, true);
 
@@ -80,6 +82,7 @@ var Page = {
     chars: '',
     hintMap: {},
     isPlus: false,
+    target: 'body',
 
     linkHint: () => {
         Page.escape();
@@ -285,6 +288,7 @@ var Page = {
         Page.chars = '';
         Page.hintMap = {};
         Page.isPlus = false;
+        Page.target = 'body';
     },
 
     match: (char) => {
@@ -313,9 +317,20 @@ var Page = {
         }
     },
 
-    down: ()=> scrollBy(0, 200),
+    scrollTop: (offset) => {
+        var target = $(Page.target);
+        var targets = target.add(target.parentsUntil('html'))
+                            .filter((i, elem) => elem.scrollHeight >= elem.offsetHeight && getComputedStyle(elem)
+                                .overflow !== 'hidden');
 
-    up: ()=> scrollBy(0, -200),
+        for (var i = 0; i < targets.length; i++) {
+            target = targets[i];
+            var result = (target.scrollTop += offset);
+            if (result !== offset) {
+                break;
+            }
+        }
+    },
 
     plus: ()=> {
         Page.isPlus = !Page.isPlus;
