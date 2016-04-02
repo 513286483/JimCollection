@@ -92,7 +92,7 @@ var Page = {
         Page.hintMap = popupHints(elements, hints);
 
         function getElements() {
-            var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable]');
+            var elements = $('a, button, select, input, textarea, [role="button"], [contenteditable], [onclick]');
             var clickElements = $(Page.clickElements).find('div');
             return purify(elements, clickElements);
 
