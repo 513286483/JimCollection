@@ -10,7 +10,7 @@ Element.prototype.addEventListener = function (type, listener, userCapture) {
 };
 
 // Event
-$(Element)
+$(window)
     .on('click resize scroll', () => Page.escape())
     .on('click', (event) => Page.target = event.target);
 
