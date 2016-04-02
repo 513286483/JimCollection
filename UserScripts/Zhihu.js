@@ -6,7 +6,7 @@ if (location.pathname.startsWith('/story')) {
     });
 } else {
     $('<style>@media screen and (max-width: 1120px){.zu-top{display:none;}}</style>').appendTo('html');
-    $(document.body)
+    $(window)
         .on('copy', () => {
             GM_setClipboard(getSelection().toString(), 'text');
         })
@@ -15,7 +15,7 @@ if (location.pathname.startsWith('/story')) {
             if (link.parentElement && link.parentElement.tagName === 'A') {
                 link = link.parentElement;
             }
-            
+
             const sign = 'link.zhihu.com/?target=';
             if (link.classList.contains('external') && link.href.includes(sign)) {
                 link.href = decodeURIComponent(link.href.substr(link.href.indexOf(sign) + sign.length));
