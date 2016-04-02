@@ -117,7 +117,7 @@ function clean(abstract) {
     path = estimate(path);
 
     var element = document.evaluate(path).iterateNext();
-    if (enoughText(element)) {
+    if (enough(element)) {
         toggleExcept(element);
         $(document).keypress('B', (event) => {
             if (event.ctrlKey) {
@@ -243,6 +243,6 @@ function getText(element) {
     }
 }
 
-function enoughText(element) {
+function enough(element) {
     return purify(getText(element)).length > purify(getText(document.body)).length / 5;
 }
