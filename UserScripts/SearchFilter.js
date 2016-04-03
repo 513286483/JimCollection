@@ -112,7 +112,7 @@ function clean(abstract) {
 
     var path = open && close && (open !== close) ? intersection(open, close) : open || close;
     if (!path) {
-        return -1;
+        return false;
     }
     path = estimate(path);
 
@@ -131,11 +131,11 @@ function clean(abstract) {
 function findElement(mark) {
     var result = null;
 
-    function travelElement(element) {
+    function travel(element) {
         var children = element.children;
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
-            travelElement(child);
+            travel(child);
         }
 
         if (result === null &&
@@ -144,7 +144,7 @@ function findElement(mark) {
         }
     }
 
-    travelElement(document.body);
+    travel(document.body);
     return result;
 }
 
