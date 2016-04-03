@@ -18,7 +18,7 @@ function main() {
                 if (link.hasAttribute('onmousedown')) {
                     link.removeAttribute('onmousedown');
                 }
-                link = (link.href = link.href.replace('wikipedia.org/zh/', 'wikipedia.org/wiki/'));
+                link = link.href;
 
                 var abstract = $(abstracts[i]);
                 mapMain[link] = abstract.find('span').length ? '' : '-';

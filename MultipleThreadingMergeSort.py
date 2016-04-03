@@ -31,7 +31,7 @@ def merge(a: List[Number], b: List[Number], output_q: Queue = None) -> List[Numb
         return result
 
 
-# 此实现亦无法达到最价值O(log^3 n)
+# 此实现亦无法达到最佳值O(log^3 n)
 def merge_sort(root: List[Number], output_q: Queue = None) -> List[Number]:
     if len(root) == 1:
         result = root

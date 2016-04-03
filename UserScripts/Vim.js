@@ -77,7 +77,7 @@ $(`<style>
 }</style>`).appendTo('html');
 
 var Page = {
-    target: 'body',
+    target: '',
     clickElements: [],
 
     chars: '',
@@ -326,9 +326,10 @@ var Page = {
             target = targets[i];
             var result = (target.scrollTop += offset);
             if (result !== offset) {
-                break;
+                return;
             }
         }
+        scrollBy(0, offset);
     },
 
     plus: ()=> {
