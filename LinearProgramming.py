@@ -185,9 +185,9 @@ def simplex(coeffs_eq: Dict[int, Dict[int, float]], consts_eq: Dict[int, float],
                     break
         else:
             break
-
         coeffs_eq, consts_eq, coeffs_func, const_func = pivot(coeffs_eq, consts_eq, coeffs_func, const_func,
                                                               enter, leave)
+    
     for subscript, value in consts_eq.items():
         print('x_{}={}'.format(subscript, value))
     for subscript in coeffs_func:
