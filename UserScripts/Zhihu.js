@@ -15,7 +15,6 @@ if (location.pathname.startsWith('/story')) {
             if (link.parentElement && link.parentElement.tagName === 'A') {
                 link = link.parentElement;
             }
-
             const sign = 'link.zhihu.com/?target=';
             if (link.classList.contains('external') && link.href.includes(sign)) {
                 link.href = decodeURIComponent(link.href.substr(link.href.indexOf(sign) + sign.length));
@@ -23,24 +22,4 @@ if (location.pathname.startsWith('/story')) {
                 link.href = '#';
             }
         });
-    if (location.pathname === '/topic') {
-        $(() => {
-            var topics = $('.topic-feed-item > a');
-            for (var i = 0; i < topics.length; i++) {
-                var topic = topics[i];
-
-                ((topic) => {
-                    $.get(topic.href, (data) => {
-                        var page = $(data.replace(/<img[^>]*>/g, ''));
-                        var counts = page.find('.count');
-                        counts.sort((a, b) => -(a.innerText - b.innerText));
-
-                        counts.length > 0 ?
-                            topic.innerText = topic.innerText + ' ' + counts.length + ':' + counts.first().text() :
-                            topic.innerText += ' ✓';
-                    });
-                })(topic);
-            }
-        });
-    }
 }
