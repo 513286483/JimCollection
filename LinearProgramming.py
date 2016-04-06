@@ -159,3 +159,51 @@ if __name__ == '__main__':
 
 
     init_main()
+
+
+def simplex(coeffs_eq: Dict[int, Dict[int, float]], consts_eq: Dict[int, float], coeffs_func: Dict[int, float]):
+    coeffs_eq, consts_eq, coeffs_func, const_func = init_simplex(coeffs_eq, consts_eq, coeffs_func)
+
+    while True:
+        for x_index in sorted(coeffs_func.keys()):
+            if coeffs_func[x_index] > 0:
+                enter = x_index
+
+                leave = -1
+                slack = inf
+                for y_index in sorted(coeffs_eq.keys()):
+                    coeff = coeffs_eq[y_index][enter]
+                    if coeff > 0:
+                        curr_slack = consts_eq[y_index] / coeff
+                        if curr_slack < slack:
+                            slack = curr_slack
+                            leave = y_index
+
+                if leave == -1:
+                    raise Exception
+                else:
+                    break
+        else:
+            break
+
+        coeffs_eq, consts_eq, coeffs_func, const_func = pivot(coeffs_eq, consts_eq, coeffs_func, const_func,
+                                                              enter, leave)
+    for subscript, value in consts_eq.items():
+        print('x_{}={}'.format(subscript, value))
+    for subscript in coeffs_func:
+        print('x_{}= 0'.format(subscript))
+
+
+if __name__ == '__main__':
+    def simplex_main():
+        coeffs_eq = {4: {1: 1, 2: 1, 3: 3},
+                     5: {1: 2, 2: 2, 3: 5},
+                     6: {1: 4, 2: 1, 3: 2}}
+        consts_eq = {4: 30,
+                     5: 24,
+                     6: 36}
+        coeffs_func = {1: 3, 2: 1, 3: 2}
+        simplex(coeffs_eq, consts_eq, coeffs_func)
+
+
+    simplex_main()
