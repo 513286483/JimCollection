@@ -77,7 +77,7 @@ function travel(element, probe) {
         );
     }
 
-    if (probe && isTraditional) {
+    if (isTraditional && probe) {
         simplify(element);
     }
 
@@ -2645,5 +2645,6 @@ const dict = {
     '鼂': '晁',
     '拚': '拼',
     '倣': '仿',
-    '釐': '厘'
+    '釐': '厘',
+    '僕': '仆'
 };
