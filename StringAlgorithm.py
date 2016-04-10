@@ -100,7 +100,7 @@ def build_kmp_drift_list(pattern: str) -> List[int]:
     drift = 0
     for curr_char in pattern[1:]:
         while drift > 0 and curr_char != pattern[drift]:
-            # 得能续接的有哪些
+            # 得出能续接的有哪些，通过减小复用长度
             drift = drift_list[drift]
 
         if curr_char == pattern[drift]:
