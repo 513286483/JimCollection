@@ -14,7 +14,7 @@ $(window)
     .on('click resize scroll', () => Page.escape())
     .on('click', (event) => Page.target = event.target);
 
-addEventListener('keydown', (event) => {
+window.addEventListener('keydown', (event) => {
     var isTab = (event.code === 'Tab');
     var isCommand = Page.isCommand(event);
 
@@ -27,13 +27,13 @@ addEventListener('keydown', (event) => {
     }
 }, true);
 
-addEventListener('keyup', (event) => {
+window.addEventListener('keyup', (event) => {
     if (Page.isCommand(event)) {
         event.stopImmediatePropagation();
     }
 }, true);
 
-addEventListener('keypress', (event) => {
+window.addEventListener('keypress', (event) => {
     if (Page.isCommand(event)) {
         event.preventDefault();
         event.stopImmediatePropagation();
