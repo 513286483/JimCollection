@@ -14,53 +14,56 @@ $(window)
     .on('click resize scroll', () => Page.escape())
     .on('click', (event) => Page.target = event.target);
 
-window.addEventListener('keydown', (event) => {
-    var isTab = (event.code === 'Tab');
-    var isCommand = Page.isCommand(event);
+window ? register() : $(register);
+function register() {
+    addEventListener('keydown', (event) => {
+        var isTab = (event.code === 'Tab');
+        var isCommand = Page.isCommand(event);
 
-    if (isTab) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        isCommand ? Page.escape() : document.activeElement.blur();
-    } else if (isCommand) {
-        event.stopImmediatePropagation();
-    }
-}, true);
-
-window.addEventListener('keyup', (event) => {
-    if (Page.isCommand(event)) {
-        event.stopImmediatePropagation();
-    }
-}, true);
-
-window.addEventListener('keypress', (event) => {
-    if (Page.isCommand(event)) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        var char = String.fromCharCode(event.keyCode).toUpperCase();
-        switch (char) {
-            case 'F':
-                $('._hint').length ? Page.match(char) : Page.linkHint();
-                break;
-
-            case 'J':
-                Page.scrollTop(200);
-                break;
-
-            case 'K':
-                Page.scrollTop(-200);
-                break;
-
-            case ' ':
-                Page.plus();
-                break;
-
-            default:
-                Page.match(char);
+        if (isTab) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            isCommand ? Page.escape() : document.activeElement.blur();
+        } else if (isCommand) {
+            event.stopImmediatePropagation();
         }
-    }
-}, true);
+    }, true);
+
+    addEventListener('keyup', (event) => {
+        if (Page.isCommand(event)) {
+            event.stopImmediatePropagation();
+        }
+    }, true);
+
+    addEventListener('keypress', (event) => {
+        if (Page.isCommand(event)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var char = String.fromCharCode(event.keyCode).toUpperCase();
+            switch (char) {
+                case 'F':
+                    $('._hint').length ? Page.match(char) : Page.linkHint();
+                    break;
+
+                case 'J':
+                    Page.scrollTop(200);
+                    break;
+
+                case 'K':
+                    Page.scrollTop(-200);
+                    break;
+
+                case ' ':
+                    Page.plus();
+                    break;
+
+                default:
+                    Page.match(char);
+            }
+        }
+    }, true);
+}
 
 $(`<style>
 ._click{box-shadow: inset 0 0 3px 0 black}
