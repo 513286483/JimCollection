@@ -103,8 +103,8 @@
                         bubble.xTo += (parentRect.xTo + bubble.distance);
                         bubble.yTo = parentRect.yTo;
                     } else {
-                        bubble.xTo = parentRect.xTo;
                         bubble.yTo += (parentRect.yTo + bubble.distance);
+                        bubble.xTo = parentRect.xTo;
                     }
                 } else {
                     Bubble.initArray.push(id);
@@ -128,7 +128,7 @@
             var xTree = Tree.create(0, Bubble.xMax * 2);
             var yTree = Tree.create(0, Bubble.yMax * 2);
 
-            for (var i = 0; i < Bubble.initArray; i++) {
+            for (var i = 0; i < Bubble.initArray.length; i++) {
                 id = Bubble.initArray[i];
                 var position = positionPop(
                         id, Bubble.xMax - bubbleLength, Bubble.xMax, Bubble.yMax - bubbleLength, Bubble.yMax);
