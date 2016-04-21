@@ -1,4 +1,4 @@
-from asyncio import get_event_loop, Semaphore
+from asyncio import get_event_loop
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 from typing import Callable, BinaryIO, List
@@ -11,8 +11,9 @@ class FastIO:
 
     def read(self, offset: int, length: int):
         self.seek(offset)
-        self.file.read(length)
+        result = self.file.read(length)
         self.cursor = offset + length
+        return result
 
     def write(self, offset: int, data: bytes):
         self.seek(offset)
@@ -33,26 +34,31 @@ class FastIO:
 class AsyncFile:
     def __init__(self, filename: str, io_num=8):
         self.event_loop = get_event_loop()
-        self.semaphore = Semaphore(value=io_num)
         self.executor = ThreadPoolExecutor(max_workers=io_num)
         self.io_queue = deque((FastIO(filename) for _ in range(io_num)), maxlen=io_num)  # type: List[FastIO]
 
     async def read(self, offset: int, length: int):
-        with await self.semaphore:
+        def async_call():
             io = self.io_queue.pop()
-            result = await self.event_loop.run_in_executor(self.executor, io.read, offset, length)
+            result = io.read(offset, length)
             self.io_queue.append(io)
-        return result
+            return result
+
+        return await self.event_loop.run_in_executor(self.executor, async_call)
 
     async def write(self, offset: int, data: bytes):
-        with await self.semaphore:
+        def async_call():
             io = self.io_queue.pop()
-            await self.event_loop.run_in_executor(self.executor, io.write, offset, data)
+            io.write(offset, data)
             self.io_queue.append(io)
 
+        await self.event_loop.run_in_executor(self.executor, async_call)
+
     async def execute(self, offset: int, action: Callable[[BinaryIO], object]):
-        with await self.semaphore:
+        def async_call():
             io = self.io_queue.pop()
-            result = await self.event_loop.run_in_executor(self.executor, io.execute, offset, action)
+            result = io.execute(offset, action)
             self.io_queue.append(io)
-        return result
+            return result
+
+        return await self.event_loop.run_in_executor(self.executor, async_call)
