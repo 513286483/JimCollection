@@ -31,7 +31,7 @@ class FastIO:
 
 
 class AsyncFile:
-    def __init__(self, filename: str, io_num=20):
+    def __init__(self, filename: str, io_num=8):
         self.event_loop = get_event_loop()
         self.semaphore = Semaphore(value=io_num)
         self.executor = ThreadPoolExecutor(max_workers=io_num)
