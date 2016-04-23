@@ -11,14 +11,11 @@
             position: absolute;
             width: 60px;
         }
-
-        body {
-            background-repeat: no-repeat;
-        }
     </style>
 </head>
-<body>
-<!--tree.js + jQuery.js-->
+<body style="background-repeat: no-repeat">
+<script src="js/jquery-2.2.0.js"></script>
+<script src="js/tree.js"></script>
 <canvas id="default-canvas" style="display: none"></canvas>
 <script>
     'use strict';
@@ -72,6 +69,7 @@
     }
 </script>
 <script>
+    var xTree, yTree;
     const offset = 53;
     const bubbleLength = 60;
 
@@ -125,13 +123,16 @@
                 Bubble.getRect(id)
             }
 
-            var xTree = Tree.create(0, Bubble.xMax * 2);
-            var yTree = Tree.create(0, Bubble.yMax * 2);
+            var initExtra = (Bubble.initArray.length - 1) * bubbleLength;
+            xTree = Tree.create(0, Bubble.xMax * 2 + initExtra);
+            yTree = Tree.create(0, Bubble.yMax * 2 + initExtra);
 
+            var xMid = xTree.to / 2;
+            var yMid = yTree.to / 2;
+            var midLength = bubbleLength / 2;
             for (var i = 0; i < Bubble.initArray.length; i++) {
                 id = Bubble.initArray[i];
-                var position = positionPop(
-                        id, Bubble.xMax - bubbleLength, Bubble.xMax, Bubble.yMax - bubbleLength, Bubble.yMax);
+                var position = positionPop(id, xMid - midLength, xMid + midLength, yMid - midLength, yMid + midLength);
                 place(id, position);
             }
 
@@ -291,8 +292,8 @@
             }
 
             var canvas = document.getElementById('default-canvas');
-            canvas.width = 2 * Bubble.xMax;
-            canvas.height = 2 * Bubble.yMax;
+            canvas.width = xTree.to;
+            canvas.height = yTree.to;
 
             for (var id in Bubble.dic) {
                 var bubble = Bubble.dic[id];
