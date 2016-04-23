@@ -70,6 +70,7 @@
 </script>
 <script>
     var xTree, yTree;
+    var directions = ['bottom', 'left', 'top', 'right'];
     const offset = 53;
     const bubbleLength = 60;
 
@@ -82,7 +83,7 @@
         create: function (id, innerHTML, direction, distance, parent) {
             Bubble.dic[id] = {
                 innerHTML: innerHTML,
-                direction: direction,
+                direction: direction === 'random' ? directions[id % 4] : direction,
                 distance: distance,
                 parent: parent
             };
@@ -123,16 +124,16 @@
                 Bubble.getRect(id)
             }
 
-            var initExtra = (Bubble.initArray.length - 1) * bubbleLength;
+            var initExtra = Bubble.initArray.length * bubbleLength;
             xTree = Tree.create(0, Bubble.xMax * 2 + initExtra);
             yTree = Tree.create(0, Bubble.yMax * 2 + initExtra);
 
             var xMid = xTree.to / 2;
             var yMid = yTree.to / 2;
-            var midLength = bubbleLength / 2;
             for (var i = 0; i < Bubble.initArray.length; i++) {
                 id = Bubble.initArray[i];
-                var position = positionPop(id, xMid - midLength, xMid + midLength, yMid - midLength, yMid + midLength);
+                var position = positionPop(id, xMid - 2 * bubbleLength, xMid - bubbleLength,
+                        yMid - 2 * bubbleLength, yMid + xMid - bubbleLength);
                 place(id, position);
             }
 
@@ -328,14 +329,16 @@
 
     /* Sample */
     Bubble.create(1, '<div>1</div>');
-    Bubble.create(2, '<div>2</div>', 'bottom', distance, 1);
-    Bubble.create(3, '<div>3</div>', 'top', distance, 1);
-    Bubble.create(4, '<div>4</div>', 'left', distance, 1);
-    Bubble.create(5, '<div>5</div>', 'right', distance, 1);
-    Bubble.create(6, '<div>6</div>', 'right', distance, 5);
-    Bubble.create(7, '<div>7</div>', 'bottom', distance, 6);
-    Bubble.create(8, '<div>8</div>', 'bottom', distance, 6);
-    Bubble.create(9, '<div>9</div>', 'bottom', distance, 6);
+    Bubble.create(10, '<div>10</div>');
+    Bubble.create(11, '<div>11</div>');
+    Bubble.create(2, '<div>2</div>', 'random', distance, 1);
+    Bubble.create(3, '<div>3</div>', 'random', distance, 1);
+    Bubble.create(4, '<div>4</div>', 'random', distance, 1);
+    Bubble.create(5, '<div>5</div>', 'random', distance, 1);
+    Bubble.create(6, '<div>6</div>', 'random', distance, 5);
+    Bubble.create(7, '<div>7</div>', 'random', distance, 6);
+    Bubble.create(8, '<div>8</div>', 'random', distance, 6);
+    Bubble.create(9, '<div>9</div>', 'random', distance, 6);
     /* end */
 
     Bubble.display();
