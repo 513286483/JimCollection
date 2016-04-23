@@ -327,6 +327,38 @@
             $(document.body).css('background-image', 'url(' + canvas.toDataURL() + ')');
         }
     };
+
+    function shrink() {
+        var maxBottom = 0, maxRight = 0;
+        var minTop = Infinity, minLeft = Infinity;
+
+        var bubbles = $('.bubble');
+        for (var i = 0; i < bubbles.length; i++) {
+            var bubble = bubbles[i];
+
+            var left = parseInt(bubble.style.left);
+            var top = parseInt(bubble.style.top);
+            minLeft = Math.min(minLeft, left);
+            minTop = Math.min(minTop, top);
+
+            var right = left + bubbleLength;
+            var bottom = top + bubbleLength;
+            maxRight = Math.max(maxRight, right);
+            maxBottom = Math.max(maxBottom, bottom);
+        }
+
+        for (i = 0; i < bubbles.length; i++) {
+            bubble = bubbles[i];
+            bubble.style.left = parseInt(bubble.style.left) - minLeft + 'px';
+            bubble.style.top = parseInt(bubble.style.top) - minTop + 'px';
+        }
+
+        $(document.body).css({
+            'background-position': `-${minLeft}px -${minTop}px`,
+            'width': maxRight - minLeft + 'px',
+            'height': maxBottom - minTop + 'px'
+        })
+    }
 </script>
 <script>
     const distance = 300;
@@ -347,6 +379,7 @@
 
     Bubble.display();
     Bubble.link();
+    shrink();
 </script>
 </body>
 </html>
