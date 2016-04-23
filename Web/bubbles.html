@@ -22,11 +22,11 @@
 
     function lineConnect(canvas, to, from) {
         var h = Math.sqrt(Math.pow(to.left - from.left, 2) + Math.pow(to.top - from.top, 2));
-        var b = from.top - to.top;
+        var a = from.top - to.top;
 
-        var radians = Math.acos(b / h);
+        var radians = Math.acos(a / h);
         if (to.left < from.left) {
-            radians = 2 * Math.PI - radians;
+            radians = Math.PI * 2 - radians;
         }
 
         const padding = 10;
@@ -124,16 +124,20 @@
                 Bubble.getRect(id)
             }
 
-            var initExtra = Bubble.initArray.length * bubbleLength;
+            var initExtra = bubbleLength * 3;
             xTree = Tree.create(0, Bubble.xMax * 2 + initExtra);
             yTree = Tree.create(0, Bubble.yMax * 2 + initExtra);
 
             var xMid = xTree.to / 2;
             var yMid = yTree.to / 2;
+            var radiansUnit = Math.PI * 2 / Bubble.initArray.length;
             for (var i = 0; i < Bubble.initArray.length; i++) {
+                var radians = radiansUnit * (i + 1);
+                var x = xMid + Math.cos(radians) * bubbleLength * 1.5;
+                var y = yMid + Math.sin(radians) * bubbleLength * 1.5;
+
                 id = Bubble.initArray[i];
-                var position = positionPop(id, xMid - 2 * bubbleLength, xMid - bubbleLength,
-                        yMid - 2 * bubbleLength, yMid + xMid - bubbleLength);
+                var position = positionPop(id, x, x + bubbleLength, y, y + bubbleLength);
                 place(id, position);
             }
 
@@ -325,7 +329,7 @@
     };
 </script>
 <script>
-    const distance = 200;
+    const distance = 300;
 
     /* Sample */
     Bubble.create(1, '<div>1</div>');
