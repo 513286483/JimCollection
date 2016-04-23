@@ -14,8 +14,6 @@
     </style>
 </head>
 <body style="background-repeat: no-repeat">
-<script src="js/jquery-2.2.0.js"></script>
-<script src="js/tree.js"></script>
 <canvas id="default-canvas" style="display: none"></canvas>
 <script>
     'use strict';
@@ -380,6 +378,10 @@
     Bubble.display();
     Bubble.link();
     shrink();
+
+    var iframe = top.window.document.getElementById('graph-iframe');
+    iframe.height = self.document.body.scrollHeight;
+    iframe.width = self.document.body.scrollWidth;
 </script>
 </body>
 </html>
