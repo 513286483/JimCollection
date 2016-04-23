@@ -1,6 +1,7 @@
 from asyncio import get_event_loop
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor
+from os.path import getsize
 from typing import Callable, BinaryIO, List
 
 
@@ -33,6 +34,7 @@ class FastIO:
 
 class AsyncFile:
     def __init__(self, filename: str, io_num=8):
+        self.size = getsize(filename)
         self.event_loop = get_event_loop()
         self.executor = ThreadPoolExecutor(max_workers=io_num)
         self.io_queue = deque((FastIO(filename) for _ in range(io_num)), maxlen=io_num)  # type: List[FastIO]
@@ -47,6 +49,8 @@ class AsyncFile:
         return await self.event_loop.run_in_executor(self.executor, async_call)
 
     async def write(self, offset: int, data: bytes):
+        self.size = max(self.size, offset + len(data))
+
         def async_call():
             io = self.io_queue.pop()
             io.write(offset, data)
@@ -55,6 +59,7 @@ class AsyncFile:
         await self.event_loop.run_in_executor(self.executor, async_call)
 
     async def execute(self, offset: int, action: Callable[[BinaryIO], object]):
+        # read-only
         def async_call():
             io = self.io_queue.pop()
             result = io.execute(offset, action)
@@ -62,3 +67,13 @@ class AsyncFile:
             return result
 
         return await self.event_loop.run_in_executor(self.executor, async_call)
+
+    async def append(self, data: bytes):
+        self.size += len(data)
+
+        def async_call():
+            io = self.io_queue.pop()
+            io.write(self.size - len(data), data)
+            self.io_queue.append(io)
+
+        await self.event_loop.run_in_executor(self.executor, async_call)
