@@ -173,8 +173,7 @@ function toggleExcept(element) {
     var hide = $('._hide');
     if (hide.length === 0) {
         element.scrollIntoView();
-        var $element = $(element);
-        $element.parentsUntil(document.body).siblings().map(
+        $(element).parentsUntil(document.body).siblings().map(
             (i, elem) => {
                 $(elem).addClass('_hide _on');
             });

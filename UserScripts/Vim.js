@@ -14,7 +14,7 @@ $(window)
     .on('click resize scroll', () => Page.escape())
     .on('click', (event) => Page.target = event.target);
 
-window ? register() : $(register);
+window ? register() : setTimeout(register, 100);
 function register() {
     addEventListener('keydown', (event) => {
         var isTab = (event.code === 'Tab');

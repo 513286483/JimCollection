@@ -69,11 +69,12 @@ class AsyncFile:
         return await self.event_loop.run_in_executor(self.executor, async_call)
 
     async def append(self, data: bytes):
+        offset = self.size
         self.size += len(data)
 
         def async_call():
             io = self.io_queue.pop()
-            io.write(self.size - len(data), data)
+            io.write(offset, data)
             self.io_queue.append(io)
 
         await self.event_loop.run_in_executor(self.executor, async_call)
