@@ -243,5 +243,5 @@ function getText(element) {
 }
 
 function enough(element) {
-    return purify(getText(element)).length > purify(getText(document.body)).length / 5;
+    return purify(getText(element)).length > purify(getText(document.body)).length / 4;
 }
