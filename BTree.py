@@ -33,7 +33,7 @@ class BTreeNode:
             self.children = []  # type: List[BTreeNode]
 
     def __repr__(self):
-        return str(self.nodes)
+        return '|' + ', '.join(str(i) for i in self.nodes) + '|'
 
 
 class BTree:
@@ -86,9 +86,14 @@ class BTree:
 
     def delete(self, key):
         def travel(init_node: BTreeNode, key):
+            first = init_node.nodes[0]
+            for i in init_node.nodes[1:]:
+                assert first < i
+                first = 1
+
             key_index = bisect(init_node.nodes, key) - 1
 
-            if key_index >= 0 and init_node.nodes[key_index] == key:
+            if key_index >= 0 and init_node.nodes[key_index].key == key:
                 if init_node.is_leaf:
                     del init_node.nodes[key_index]
 
@@ -97,14 +102,24 @@ class BTree:
                     right_child = init_node.children[key_index + 1]
 
                     if len(left_child.nodes) >= self.min_degree:
-                        last_node = left_child.nodes[-1]
+                        last_node = left_child.nodes.pop()
+                        ori_node = init_node.nodes[key_index]
                         init_node.nodes[key_index] = last_node
-                        travel(left_child, last_node.key)
+                        right_child.nodes.insert(0, ori_node)
+                        if not left_child.is_leaf:
+                            last_child = left_child.children.pop()
+                            right_child.children.insert(0, last_child)
+                        return travel(right_child, key)
 
                     elif len(right_child.nodes) >= self.min_degree:
-                        first_node = right_child.nodes[0]
+                        first_node = right_child.nodes.pop(0)
+                        ori_node = init_node.nodes[key_index]
                         init_node.nodes[key_index] = first_node
-                        travel(right_child, first_node.key)
+                        left_child.nodes.append(ori_node)
+                        if not right_child.is_leaf:
+                            first_child = right_child.children.pop(0)
+                            left_child.children.append(first_child)
+                        return travel(left_child, key)
 
                     else:
                         del_node = init_node.nodes[key_index]
@@ -112,57 +127,53 @@ class BTree:
                         del init_node.children[key_index + 1]
 
                         left_child.nodes.append(del_node)
-                        left_child.nodes.extend(right_child.nodes)
+                        left_child.nodes += right_child.nodes
                         if not left_child.is_leaf:
-                            left_child.children.extend(right_child.children)
-                        travel(left_child, del_node.key)
+                            left_child.children += right_child.children
+                        return travel(left_child, del_node.key)
 
             elif not init_node.is_leaf:
+                key_index += 1
                 left_sibling, cursor, right_sibling = (init_node.children[key_index + i]
-                                                       if 0 <= key_index + i < len(init_node.children)
-                                                       else False for i in range(3))
+                                                       if 0 <= key_index + i < len(init_node.children) else None
+                                                       for i in (-1, 0, 1))
 
                 if len(cursor.nodes) < self.min_degree:
                     if left_sibling and len(left_sibling.nodes) >= self.min_degree:
-                        cursor.nodes.insert(0, init_node.nodes[key_index])
+                        cursor.nodes.insert(0, init_node.nodes.pop(key_index - 1))
+                        init_node.nodes.insert(key_index - 1, left_sibling.nodes.pop())
                         if not cursor.is_leaf:
                             cursor.children.insert(0, left_sibling.children.pop())
-                        init_node.nodes[key_index] = left_sibling.nodes.pop()
 
                     elif right_sibling and len(right_sibling.nodes) >= self.min_degree:
-                        cursor.nodes.append(init_node.nodes[key_index + 1])
+                        cursor.nodes.append(init_node.nodes.pop(key_index))
+                        init_node.nodes.insert(key_index, right_sibling.nodes.pop(0))
                         if not cursor.is_leaf:
                             cursor.children.append(right_sibling.children.pop(0))
-                        init_node.nodes[key_index + 1] = right_sibling.nodes.pop(0)
 
                     else:
                         if left_sibling:
+                            del_node = init_node.nodes[key_index - 1]
+                            del init_node.nodes[key_index - 1]
+                            del init_node.children[key_index - 1]
+
+                            cursor.nodes = [*left_sibling.nodes, del_node, *cursor.nodes]
+                            if not cursor.is_leaf:
+                                cursor.children = [*left_sibling.children, *cursor.children]
+
+                        elif right_sibling:
                             del_node = init_node.nodes[key_index]
                             del init_node.nodes[key_index]
                             del init_node.children[key_index + 1]
 
-                            left_sibling.nodes.append(del_node)
-                            left_sibling.nodes.extend(cursor.nodes)
-                            if not left_sibling.is_leaf:
-                                left_sibling.children.extend(cursor.children)
-                            cursor = left_sibling
-
-                        else:
-                            del_node = init_node.nodes[key_index + 1]
-                            del init_node.nodes[key_index + 1]
-                            del init_node.children[key_index + 2]
-
-                            cursor.nodes.append(del_node)
-                            cursor.nodes.extend(right_sibling.nodes)
-                            right_sibling.nodes = cursor.nodes
-                            if not right_sibling.is_leaf:
-                                cursor.children.extend(right_sibling.children)
-                                right_sibling.children = cursor.children
-                            cursor = right_sibling
+                            cursor.nodes = [*cursor.nodes, del_node, *right_sibling.nodes]
+                            if not cursor.is_leaf:
+                                cursor.children = [*cursor.children, *right_sibling.children]
 
                         if init_node is self.root and len(self.root.nodes) == 0:
                             self.root = cursor
-                travel(cursor, key)
+
+                return travel(cursor, key)
 
         travel(self.root, key)
 
@@ -183,23 +194,42 @@ class BTree:
 
 
 if __name__ == '__main__':
+    from random import randint, choice
+
+    STD = 5000
+
+
     def main():
-        tree = BTree(min_degree=2)
-        for i in range(1, 800):
+        tree = BTree(min_degree=3)
+
+        expected = set()
+        for i in range(STD):
+            expected.add(randint(0, STD))
+        expected = list(expected)
+        expected.sort()
+
+        def test():
+            output = [i for i in tree]
+            if output == expected:
+                return True
+            else:
+                return False
+
+        for i in expected:
             tree.insert(i, i)
-        for i in tree:
-            print(i)
-            print(tree.search(i.key))
 
-        for i in range(1, 800):
-            print('del {}'.format(i))
-            tree.delete(i)
-            for j in tree:
-                assert j
+        for i in range(STD // 10):
+            if randint(0, 1):
+                i = choice(expected)
+                print('del {}'.format(i))
+                tree.delete(i)
+                expected.remove(i)
 
-        for i in tree:
-            print(i)
-            print(tree.search(i.key))
+            if not test():
+                assert False
+
+        for i in expected:
+            assert i == tree.search(i)
 
 
     main()
