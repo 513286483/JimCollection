@@ -86,11 +86,6 @@ class BTree:
 
     def delete(self, key):
         def travel(init_node: BTreeNode, key):
-            first = init_node.nodes[0]
-            for i in init_node.nodes[1:]:
-                assert first < i
-                first = 1
-
             key_index = bisect(init_node.nodes, key) - 1
 
             if key_index >= 0 and init_node.nodes[key_index].key == key:
