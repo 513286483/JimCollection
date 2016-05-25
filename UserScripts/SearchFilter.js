@@ -18,7 +18,6 @@ function main() {
                 if (link.hasAttribute('onmousedown')) {
                     link.removeAttribute('onmousedown');
                 }
-                link = (link.href = link.href.replace('wikipedia.org/zh/', 'wikipedia.org/wiki/'));
 
                 var abstract = $(abstracts[i]);
                 mapMain[link] = abstract.find('span').length ? '' : '-';
@@ -88,7 +87,6 @@ function main() {
         mapMain[href] || mapMain[href = document.referrer];
 
         if (abstract) {
-            $('<style>._on{visibility:collapse}</style>').appendTo('html');
             $(() => {
                 if (!clean(abstract) && href !== document.referrer) {
                     clean(JSON.parse(GM_getValue('mapBackup'))[href]);
@@ -117,13 +115,8 @@ function clean(abstract) {
     path = estimate(path);
 
     var element = document.evaluate(path).iterateNext();
-    if (enough(element)) {
-        toggleExcept(element);
-        $(document).keypress('B', (event) => {
-            if (event.ctrlKey) {
-                toggleExcept(element);
-            }
-        });
+    if (enoughText(element)) {
+        element.scrollIntoView();
         return true;
     }
 }
@@ -167,19 +160,6 @@ function xPath(node) {
 
     var suffix = count > 1 ? '[' + count + ']' : '';
     return xPath(node.parentNode) + '/' + node.tagName + suffix;
-}
-
-function toggleExcept(element) {
-    var hide = $('._hide');
-    if (hide.length === 0) {
-        element.scrollIntoView();
-        $(element).parentsUntil(document.body).siblings().map(
-            (i, elem) => {
-                $(elem).addClass('_hide _on');
-            });
-    } else {
-        hide.toggleClass('_on');
-    }
 }
 
 function purify(text) {
@@ -242,6 +222,6 @@ function getText(element) {
     }
 }
 
-function enough(element) {
+function enoughText(element) {
     return purify(getText(element)).length > purify(getText(document.body)).length / 2;
 }
